@@ -791,7 +791,7 @@ extern int ra_mtd_read(int num, loff_t from, size_t len, u_char *buf);
 typedef struct usb_device_id USB_DEVICE_ID;
 
 // TODO: shiang-usw, fine tune BULKAGGRE_SIZE, origianl is 60
-#define BULKAGGRE_SIZE				100 /* 100 */
+#define BULKAGGRE_SIZE				10 /* 100 */
 
 /* Prototypes of completion funuc. */
 #define RtmpUsbBulkOutDataPacketComplete		RTUSBBulkOutDataPacketComplete
