@@ -16,7 +16,6 @@
 
 #include <linux/delay.h>
 #include "mt76x2.h"
-#include "mt76x2_trace.h"
 
 void mt76x2_set_irq_mask(struct mt76x2_dev *dev, u32 clear, u32 set)
 {
@@ -46,8 +45,6 @@ irqreturn_t mt76x2_irq_handler(int irq, void *dev_instance)
 
 	if (!test_bit(MT76_STATE_INITIALIZED, &dev->mt76.state))
 		return IRQ_NONE;
-
-	trace_dev_irq(dev, intr, dev->irqmask);
 
 	intr &= dev->irqmask;
 

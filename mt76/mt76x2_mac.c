@@ -18,7 +18,6 @@
 #include "mt76x2.h"
 #include "mt76x2_mcu.h"
 #include "mt76x2_eeprom.h"
-#include "mt76x2_trace.h"
 
 void mt76x2_mac_set_bssid(struct mt76x2_dev *dev, u8 idx, const u8 *addr)
 {
@@ -439,8 +438,6 @@ void mt76x2_mac_poll_tx_status(struct mt76x2_dev *dev, bool irq)
 	if (!test_bit(MT76_STATE_RUNNING, &dev->mt76.state))
 		return;
 
-	trace_mac_txstat_poll(dev);
-
 	while (!irq || !kfifo_is_full(&dev->txstatus_fifo)) {
 		u32 stat1, stat2;
 
@@ -462,7 +459,6 @@ void mt76x2_mac_poll_tx_status(struct mt76x2_dev *dev, bool irq)
 		stat.rate = FIELD_GET(MT_TX_STAT_FIFO_RATE, stat1);
 		stat.retry = FIELD_GET(MT_TX_STAT_FIFO_EXT_RETRY, stat2);
 		stat.pktid = FIELD_GET(MT_TX_STAT_FIFO_EXT_PKTID, stat2);
-		trace_mac_txstat_fetch(dev, &stat);
 
 		if (!irq) {
 			mt76x2_send_tx_status(dev, &stat, &update);
@@ -486,7 +482,6 @@ mt76x2_mac_queue_txdone(struct mt76x2_dev *dev, struct sk_buff *skb,
 	txi->jiffies = jiffies;
 	txi->wcid = txwi->wcid;
 	txi->pktid = txwi->pktid;
-	trace_mac_txdone_add(dev, txwi->wcid, txwi->pktid);
 	mt76x2_tx_complete(dev, skb);
 }
 
