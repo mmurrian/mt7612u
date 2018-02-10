@@ -3714,12 +3714,10 @@ VOID RTMPIoctlQueryBaTable(
 	u8 TotalEntry, i, j, index;
 	QUERYBA_TABLE		*BAT;
 
-	BAT = vmalloc(sizeof(QUERYBA_TABLE));
+	BAT = vzalloc(sizeof(QUERYBA_TABLE));
 
 	if (BAT == NULL)
 		return;
-
-	memset(BAT, sizeof(QUERYBA_TABLE));
 
 	TotalEntry = pAd->MacTab.Size;
 	index = 0;
