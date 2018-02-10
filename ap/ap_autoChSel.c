@@ -508,7 +508,6 @@ static inline u8 SelectClearChannelCCA(
 			}
 			else
 			{ /* 2.4G Hz */
-				u8 ExChannel_idx = 0;
 				if (pAd->ChannelList[channel_idx].Channel == 14)
 				{
 					dirtyness = 0xFFFFFFFF;
@@ -865,7 +864,8 @@ static inline u8 SelectClearChannelApCnt(
 	/* RULE 3. if not available, then co-use a channel that has minimum interference (dirtyness=31,32) */
 	for (dirty = 30; dirty <= 32; dirty++)
 	{
-		bool candidate[MAX_NUM_OF_CHANNELS+1], candidate_num=0;
+		bool candidate[MAX_NUM_OF_CHANNELS+1];
+		int candidate_num = 0;
 		u8 min_ApCnt = 255;
 		final_channel = 0;
 
