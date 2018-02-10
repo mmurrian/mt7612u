@@ -168,12 +168,7 @@ int RTMPAllocAdapterBlock(struct os_cookie *handle, struct rtmp_adapter **ppAdap
 	for (index = 0; index < MAX_LEN_OF_BSS_TABLE; index++)
 	{
 		pAd->ProbeRespIE[index].pIe =
-			kmalloc(MAX_VIE_LEN, GFP_ATOMIC);
-
-		if (pAd->ProbeRespIE[index].pIe == NULL)
-			RTMPZeroMemory(pAd->ProbeRespIE[index].pIe, MAX_VIE_LEN);
-		else
-			pAd->ProbeRespIE[index].pIe = NULL;
+			kzalloc(MAX_VIE_LEN, GFP_ATOMIC);
 	}
 
 	DBGPRINT_S(Status, ("<-- RTMPAllocAdapterBlock, Status=%x\n", Status));
