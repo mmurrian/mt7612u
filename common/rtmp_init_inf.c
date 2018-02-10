@@ -356,25 +356,16 @@ int rt28xx_init(struct rtmp_adapter *pAd)
 	}
 
 	/* Set up the Mac address*/
-#ifdef CONFIG_AP_SUPPORT
-	RtmpOSNetDevAddrSet(pAd->OpMode, pAd->net_dev, &pAd->CurrentAddress[0], NULL);
-#endif /* CONFIG_AP_SUPPORT */
-#ifdef CONFIG_STA_SUPPORT
+#if defined(CONFIG_AP_SUPPORT) || defined(CONFIG_STA_SUPPORT)
+	DBGPRINT(RT_DEBUG_OFF, ("MT7612U MAC Address = %02x:%02x:%02x:%02x:%02x:%02x\n",
+						PRINT_MAC(pAd->CurrentAddress)));
 	memmove(&pAd->StaCfg.wdev.if_addr[0], &pAd->CurrentAddress[0], MAC_ADDR_LEN);
 	RtmpOSNetDevAddrSet(pAd->OpMode, pAd->net_dev, &pAd->CurrentAddress[0], (u8 *)(pAd->StaCfg.dev_name));
-	memmove(&pAd->StaCfg.wdev.if_addr[0], &pAd->CurrentAddress[0], MAC_ADDR_LEN);
 #endif /* CONFIG_STA_SUPPORT */
 
 
 	/* assign function pointers*/
 
-
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-
-	}
-#endif /* CONFIG_AP_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
