@@ -4245,8 +4245,6 @@ VOID NicGetTxRawCounters(
 	IN TX_STA_CNT0_STRUC *pStaTxCnt0,
 	IN TX_STA_CNT1_STRUC *pStaTxCnt1);
 
-ULONG RTMPCompareMemory(VOID *pSrc1, VOID *pSrc2, ULONG Length);
-
 VOID AtoH(char *src, u8 *dest, int destlen);
 u8 BtoH(char ch);
 

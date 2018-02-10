@@ -582,8 +582,8 @@ bool PeerWpaMessageSanity(
 		u8 ZeroReplay[LEN_KEY_DESC_REPLAY];
 
         memset(ZeroReplay, 0, LEN_KEY_DESC_REPLAY);
-		if ((RTMPCompareMemory(pMsg->KeyDesc.ReplayCounter, pEntry->R_Counter, LEN_KEY_DESC_REPLAY) != 1) &&
-			(RTMPCompareMemory(pMsg->KeyDesc.ReplayCounter, ZeroReplay, LEN_KEY_DESC_REPLAY) != 0))
+		if ((memcmp(pMsg->KeyDesc.ReplayCounter, pEntry->R_Counter, LEN_KEY_DESC_REPLAY) <= 0) &&
+			(memcmp(pMsg->KeyDesc.ReplayCounter, ZeroReplay, LEN_KEY_DESC_REPLAY) != 0))
     	{
 			bReplayDiff = true;
     	}
@@ -2272,14 +2272,14 @@ VOID WpaDerivePTK(
 	memset(concatenation, 0, 76);
 
 	/* Get smaller address*/
-	if (RTMPCompareMemory(SA, AA, 6) == 1)
+	if (memcmp(SA, AA, 6) > 0)
 		memmove(concatenation, AA, 6);
 	else
 		memmove(concatenation, SA, 6);
 	CurrPos += 6;
 
 	/* Get larger address*/
-	if (RTMPCompareMemory(SA, AA, 6) == 1)
+	if (memcmp(SA, AA, 6) > 0)
 		memmove(&concatenation[CurrPos], SA, 6);
 	else
 		memmove(&concatenation[CurrPos], AA, 6);
@@ -2290,18 +2290,18 @@ VOID WpaDerivePTK(
 	CurrPos += 6;
 
 	/* Get smaller Nonce*/
-	if (RTMPCompareMemory(ANonce, SNonce, 32) == 0)
+	if (memcmp(ANonce, SNonce, 32) == 0)
 		memmove(&concatenation[CurrPos], temp, 32);	/* patch for ralink proprietary STA-key issue*/
-	else if (RTMPCompareMemory(ANonce, SNonce, 32) == 1)
+	else if (memcmp(ANonce, SNonce, 32) > 0)
 		memmove(&concatenation[CurrPos], SNonce, 32);
 	else
 		memmove(&concatenation[CurrPos], ANonce, 32);
 	CurrPos += 32;
 
 	/* Get larger Nonce*/
-	if (RTMPCompareMemory(ANonce, SNonce, 32) == 0)
+	if (memcmp(ANonce, SNonce, 32) == 0)
 		memmove(&concatenation[CurrPos], temp, 32);	/* patch for ralink proprietary STA-key issue*/
-	else if (RTMPCompareMemory(ANonce, SNonce, 32) == 1)
+	else if (memcmp(ANonce, SNonce, 32) > 0)
 		memmove(&concatenation[CurrPos], ANonce, 32);
 	else
 		memmove(&concatenation[CurrPos], SNonce, 32);

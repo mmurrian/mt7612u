@@ -1516,7 +1516,7 @@ VOID LinkUp(struct rtmp_adapter *pAd, u8 BssType)
 		/* Check the new SSID with last SSID */
 		while (Cancelled == true) {
 			if (pAd->CommonCfg.LastSsidLen == pAd->CommonCfg.SsidLen) {
-				if (RTMPCompareMemory(pAd->CommonCfg.LastSsid, pAd->CommonCfg.Ssid, pAd->CommonCfg.LastSsidLen) == 0) {
+				if (memcmp(pAd->CommonCfg.LastSsid, pAd->CommonCfg.Ssid, pAd->CommonCfg.LastSsidLen) == 0) {
 					/* Link to the old one no linkdown is required. */
 					break;
 				}
