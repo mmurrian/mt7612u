@@ -556,7 +556,7 @@ ULONG BuildIntolerantChannelRep(struct rtmp_adapter *pAd, u8 *pDest)
 			*(pDest + ReadOffset) = IE_2040_BSS_INTOLERANT_REPORT;  /* IE*/
 			*(pDest + ReadOffset + 1) = 1+ idx;	/* Len = RegClass byte + channel byte.*/
 			*(pDest + ReadOffset + 2) = TmpRegClass;	/* Len = RegClass byte + channel byte.*/
-			RTMPMoveMemory(pDest + ReadOffset + 3, ChannelList, idx);
+			memmove(pDest + ReadOffset + 3, ChannelList, idx);
 
 			FrameLen += (3 + idx);
 			ReadOffset += (3 + idx);
