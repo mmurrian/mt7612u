@@ -349,7 +349,7 @@ static int __mt76u_dma_fw(struct rtmp_adapter *ad,
 		DBGPRINT(RT_DEBUG_ERROR, ("upload fw timeout\n"));
 		return ret;
 	}
-	DBGPRINT(RT_DEBUG_OFF, ("."));
+	DBGPRINT(RT_DEBUG_TRACE, ("."));
 
 	mac_value = mt76u_reg_read(ad, TX_CPU_PORT_FROM_FCE_CPU_DESC_INDEX);
 	mac_value++;
@@ -371,8 +371,8 @@ static int mt76u_dma_fw(struct rtmp_adapter *ad,
 	while (len > 0) {
 		int sent_len = min(len, sent_len_max);
 
-		DBGPRINT(RT_DEBUG_OFF, ("pos = %d\n", pos));
-		DBGPRINT(RT_DEBUG_OFF, ("sent_len = %d\n", sent_len));
+		DBGPRINT(RT_DEBUG_TRACE, ("pos = %d\n", pos));
+		DBGPRINT(RT_DEBUG_TRACE, ("sent_len = %d\n", sent_len));
 
 		__mt76u_dma_fw(ad, dma_buf,
 				data + pos, sent_len,
@@ -423,8 +423,7 @@ load_patch_protect:
 		}
 
 		if (loop >= GET_SEMAPHORE_RETRY_MAX) {
-			DBGPRINT(RT_DEBUG_ERROR,
-				 ("%s: can not get the hw semaphore\n", __func__));
+			dev_err(&udev->dev, "%s: can not get the hw semaphore\n", __func__);
 			return -ETIMEDOUT;
 		}
 	}
@@ -752,7 +751,7 @@ loadfw_protect:
 		goto error0;
 	}
 
-	DBGPRINT(RT_DEBUG_OFF, ("loading fw"));
+	dev_info(&udev->dev,"loading fw");
 
 	pos = (cap->load_iv) ? 0x40 : 0x00;
 	fw_chunk_len = ilm_len - pos;
@@ -783,7 +782,6 @@ loadfw_protect:
 	if (ret < 0)
 		goto  error2;
 	/* Upload new 64 bytes interrupt vector or reset andes */
-	DBGPRINT(RT_DEBUG_OFF, ("\n"));
 	usb_load_ivb(ad, fw_image);
 
 	/* Check MCU if ready */
