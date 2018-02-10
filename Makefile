@@ -76,17 +76,11 @@ HAS_RESOURCE_BOOT_ALLOC=n
 
 #################################################
 
-WFLAGS := -g -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX -Wall -Wstrict-prototypes -Wno-trigraphs
+WFLAGS := -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX -Wall -Wstrict-prototypes -Wno-trigraphs
 WFLAGS += -DSYSTEM_LOG_SUPPORT -DRT28xx_MODE=$(RT28xx_MODE) -DCHIPSET=$(MODULE) -DDBG_DIAGNOSE -DDBG_RX_MCS -DDBG_TX_MCS
 #APsoc Specific
 WFLAGS += -DCONFIG_RA_NAT_NONE
 #end of /* APsoc Specific */
-
-WFLAGS += -I$(RT28xx_DIR)/include
-
-
-
-
 
 ifeq ($(HAS_KTHREAD_SUPPORT),y)
 WFLAGS += -DKTHREAD_SUPPORT
@@ -257,8 +251,6 @@ EXTRA_CFLAGS := $(WFLAGS)
 #RT28xx_DIR = home directory of RT28xx source code
 RT28xx_DIR = $(shell pwd)
 
-PLATFORM = PC
-
 #APSOC
 
 #RELEASE Package
@@ -421,8 +413,6 @@ MOD_NAME = $(MODULE)
 # Module Base
 #
 ###############################################################################
-
-obj-m := $(MOD_NAME).o
 
 #ifdef CONFIG_AP_SUPPORT
 ifeq ($(RT28xx_MODE),AP)
@@ -588,58 +578,11 @@ $(MOD_NAME)-objs += \
         common/frq_cal.o
 endif
 
+obj-$(CONFIG_MT7612U) := $(MOD_NAME).o
 
-# Declare the contents of the .PHONY variable as phony.  We keep that
-# information in a variable so we can use it in if_changed and friends.
-.PHONY: $(PHONY)
+#EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+# There is RT_BIG_ENDIAN define is sources that controls endianness
+# And it doesn't #defined anywhere (?)
 
-
-
-MAKE = make
-
-ifeq ($(PLATFORM),PC)
-# Linux 2.6
-KSRC = /lib/modules/$(shell uname -r)/build
-CROSS_COMPILE =
-EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
-EXTRA_CFLAGS += -Wno-unused
-SUBARCH := $(shell uname -m | sed -e s/i.86/i386/)
-ARCH ?= $(SUBARCH)
-endif
-
-export RT28xx_DIR RT28xx_MODE KSRC CROSS_COMPILE CROSS_COMPILE_INCLUDE PLATFORM RELEASE CHIPSET MODULE  KSRC
-
-all: modules
-
-modules:
-	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(PWD) modules
-
-clean:
-	rm -f */*.o
-	rm -f */.*.{cmd,flags,d}
-	rm -f *.{o,ko,mod.{o,c}}
-	rm -f */*/*.{o,ko,mod.{o,c}}
-	rm -f */*/.*.{cmd,flags,d}
-	rm -f */*/*/*.{o,ko,mod.{o,c}}
-	rm -f */*/*/.*.{cmd,flags,d}
-	rm -fr .tmp_versions
-	rm -f Module.symvers
-	rm -f Modules.symvers
-	rm -f Module.markers
-	rm -f modules.order
-
-installfw:
-	cp -n firmware/* /lib/firmware
-
-help:
-	@echo "options :"
-	@echo "modules		build this module"
-	@echo "installfw	install firmware file"
-	@echo "clean		clean"
-	@echo "help		this help text"
-
-# Declare the contents of the .PHONY variable as phony.  We keep that information in a variable
-.PHONY: $(PHONY)
-
-
-
+ccflags-y += -I$(srctree)/$(src)/include
+ccflags-y += $(EXTRA_CFLAGS)
