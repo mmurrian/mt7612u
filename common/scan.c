@@ -606,7 +606,7 @@ VOID BuildEffectedChannelList(
 	u8 	i, j, k;
 	u8 	UpperChannel = 0, LowerChannel = 0;
 
-	RTMPZeroMemory(EChannel, 11);
+	memset(EChannel, 0, 11);
 	DBGPRINT(RT_DEBUG_TRACE, ("BuildEffectedChannelList:CtrlCh=%d,CentCh=%d,AuxCtrlCh=%d,AuxExtCh=%d\n",
 								pAd->CommonCfg.Channel, pAd->CommonCfg.CentralChannel,
 								pAd->MlmeAux.AddHtInfo.ControlChan,

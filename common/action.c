@@ -518,7 +518,7 @@ ULONG BuildIntolerantChannelRep(struct rtmp_adapter *pAd, u8 *pDest)
 	u8 		RegClassArray[7] = {0, 11,12, 32, 33, 54,55}; /* Those regulatory class has channel in 2.4GHz. See Annex J.*/
 
 
-	RTMPZeroMemory(ChannelList, MAX_TRIGGER_EVENT);
+	memset(ChannelList, 0, MAX_TRIGGER_EVENT);
 
 	/* Find every regulatory class*/
 	for ( k = 0;k < 7;k++)

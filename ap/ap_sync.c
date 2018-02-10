@@ -1191,7 +1191,7 @@ VOID ApSiteSurvey(
 	}
 	pAd->Mlme.ApSyncMachine.CurrState = AP_SYNC_IDLE;
 
-	RTMPZeroMemory(ScanReq.Ssid, MAX_LEN_OF_SSID);
+	memset(ScanReq.Ssid, 0, MAX_LEN_OF_SSID);
 	ScanReq.SsidLen = 0;
 	if (pSsid)
 	{

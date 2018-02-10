@@ -31,6 +31,7 @@
 #include "mcu.h"
 
 #include <linux/interrupt.h>
+#include <linux/list.h>
 
 struct rtmp_adapter;
 struct _BANK_RF_REG_PAIR;

@@ -3085,7 +3085,7 @@ VOID BssTableInit(BSS_TABLE *Tab)
 		Tab->BssEntry[i].Rssi = -127;	/* initial the rssi as a minimum value */
 		if (pOldAddr)
 		{
-			RTMPZeroMemory(pOldAddr, MAX_VIE_LEN);
+			memset(pOldAddr, 0, MAX_VIE_LEN);
 			Tab->BssEntry[i].pVarIeFromProbRsp = pOldAddr;
 		}
 	}
@@ -3211,7 +3211,7 @@ VOID BssTableDeleteEntry(BSS_TABLE *Tab, u8 *pBssid, u8 Channel)
 				memmove(&(Tab->BssEntry[j]), &(Tab->BssEntry[j + 1]), sizeof(BSS_ENTRY));
 				if (pOldAddr)
 				{
-					RTMPZeroMemory(pOldAddr, MAX_VIE_LEN);
+					memset(pOldAddr, 0, MAX_VIE_LEN);
 					memmove(pOldAddr,
 								   Tab->BssEntry[j + 1].pVarIeFromProbRsp,
 								   Tab->BssEntry[j + 1].VarIeFromProbeRspLen);
@@ -3223,7 +3223,7 @@ VOID BssTableDeleteEntry(BSS_TABLE *Tab, u8 *pBssid, u8 Channel)
 			memset(&(Tab->BssEntry[Tab->BssNr - 1]), 0, sizeof(BSS_ENTRY));
 			if (pOldAddr)
 			{
-				RTMPZeroMemory(pOldAddr, MAX_VIE_LEN);
+				memset(pOldAddr, 0, MAX_VIE_LEN);
 				Tab->BssEntry[Tab->BssNr - 1].pVarIeFromProbRsp = pOldAddr;
 			}
 

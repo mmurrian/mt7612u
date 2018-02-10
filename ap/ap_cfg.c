@@ -3719,7 +3719,7 @@ VOID RTMPIoctlQueryBaTable(
 	if (BAT == NULL)
 		return;
 
-	RTMPZeroMemory(BAT, sizeof(QUERYBA_TABLE));
+	memset(BAT, sizeof(QUERYBA_TABLE));
 
 	TotalEntry = pAd->MacTab.Size;
 	index = 0;
