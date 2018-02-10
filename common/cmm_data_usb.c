@@ -178,7 +178,7 @@ VOID ComposePsPoll(struct rtmp_adapter *pAd)
 					BSSID_WCID, data_len, 0, 0,
 					(u8) pAd->CommonCfg.MlmeTransmit.field.MCS,
 					IFS_BACKOFF, &pAd->CommonCfg.MlmeTransmit);
-	RTMPMoveMemory((VOID *)&buf[TXWISize + MT_DMA_HDR_LEN], (VOID *)&pAd->PsPollFrame, data_len);
+	memmove((VOID *)&buf[TXWISize + MT_DMA_HDR_LEN], (VOID *)&pAd->PsPollFrame, data_len);
 	/* Append 4 extra zero bytes. */
 	pAd->PsPollContext.BulkOutSize = MT_DMA_HDR_LEN + TXWISize + data_len + 4;
 }
@@ -213,7 +213,7 @@ VOID ComposeNullFrame(struct rtmp_adapter *pAd)
 					BSSID_WCID, data_len, 0, 0,
 					(u8)pAd->CommonCfg.MlmeTransmit.field.MCS,
 					IFS_BACKOFF, &pAd->CommonCfg.MlmeTransmit);
-	RTMPMoveMemory((VOID *)&buf[TXWISize + MT_DMA_HDR_LEN], (VOID *)&pAd->NullFrame, data_len);
+	memmove((VOID *)&buf[TXWISize + MT_DMA_HDR_LEN], (VOID *)&pAd->NullFrame, data_len);
 	pAd->NullContext.BulkOutSize = MT_DMA_HDR_LEN + TXWISize + data_len + 4;
 }
 
@@ -886,7 +886,7 @@ VOID RtmpUSBNullFrameKickOut(
 #ifdef RT_BIG_ENDIAN
 		RTMPWIEndianChange(pAd, (u8 *)txwi, TYPE_TXWI);
 #endif /* RT_BIG_ENDIAN */
-		RTMPMoveMemory(&pWirelessPkt[TXWISize + MT_DMA_HDR_LEN], pNullFrame, frameLen);
+		memmove(&pWirelessPkt[TXWISize + MT_DMA_HDR_LEN], pNullFrame, frameLen);
 #ifdef RT_BIG_ENDIAN
 		RTMPFrameEndianChange(pAd, (u8 *)&pWirelessPkt[MT_DMA_HDR_LEN + TXWISize], DIR_WRITE, false);
 #endif /* RT_BIG_ENDIAN */

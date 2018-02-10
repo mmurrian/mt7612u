@@ -1936,7 +1936,7 @@ void RTMPSetSTAPassPhrase(struct rtmp_adapter *pAd, char *PassPh)
 	if (ret == true)
 	{
 		memset(pAd->StaCfg.WpaPassPhrase, 0, 64);
-		RTMPMoveMemory(pAd->StaCfg.WpaPassPhrase, PassPh, strlen(PassPh));
+		memmove(pAd->StaCfg.WpaPassPhrase, PassPh, strlen(PassPh));
 		pAd->StaCfg.WpaPassPhraseLen= strlen(PassPh);
 
 	    if ((wdev->AuthMode == Ndis802_11AuthModeWPAPSK) ||
@@ -1993,7 +1993,7 @@ int RecoverConnectInfo(
 #endif // WPA_SUPPLICANT_SUPPORT //
 	pAd->StaCfg.DefaultKeyId = pAd->StaCtIf.DefaultKeyId;
 	memmove( pAd->StaCfg.PMK, pAd->StaCtIf.PMK, 32);
-	RTMPMoveMemory(pAd->StaCfg.WpaPassPhrase, pAd->StaCtIf.WpaPassPhrase, pAd->StaCfg.WpaPassPhraseLen);
+	memmove(pAd->StaCfg.WpaPassPhrase, pAd->StaCtIf.WpaPassPhrase, pAd->StaCfg.WpaPassPhraseLen);
 	pAd->StaCfg.WpaPassPhraseLen = pAd->StaCtIf.WpaPassPhraseLen;
 	for (idx = 0; idx < 4; idx++)
 	{
@@ -2042,7 +2042,7 @@ int StoreConnectInfo(
 	pAd->StaCtIf.IEEE8021X = pAd->StaCfg.wdev.IEEE8021X;
 #endif // WPA_SUPPLICANT_SUPPORT //
 	memmove(pAd->StaCtIf.PMK, pAd->StaCfg.PMK, 32);
-	RTMPMoveMemory(pAd->StaCtIf.WpaPassPhrase, pAd->StaCfg.WpaPassPhrase, pAd->StaCfg.WpaPassPhraseLen);
+	memmove(pAd->StaCtIf.WpaPassPhrase, pAd->StaCfg.WpaPassPhrase, pAd->StaCfg.WpaPassPhraseLen);
 	pAd->StaCtIf.WpaPassPhraseLen = pAd->StaCfg.WpaPassPhraseLen;
 
 	for (idx = 0; idx < 4; idx++)

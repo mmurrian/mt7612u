@@ -1308,7 +1308,7 @@ VOID PeerBeaconAtScanAction(
 				{
 					pBssEntry->VarIeFromProbeRspLen = LenVIE;
 					memset(pBssEntry->pVarIeFromProbRsp, 0, MAX_VIE_LEN);
-					RTMPMoveMemory(pBssEntry->pVarIeFromProbRsp, pVIE, LenVIE);
+					memmove(pBssEntry->pVarIeFromProbRsp, pVIE, LenVIE);
 				}
 			}
 		}
@@ -1551,7 +1551,7 @@ VOID PeerBeaconAtJoinAction(
 				(wdev->DesiredHtPhyInfo.bHtEnable) &&
 				(WMODE_CAP_N(pAd->CommonCfg.PhyMode) && bAllowNrate))
 			{
-   				RTMPMoveMemory(&pAd->MlmeAux.AddHtInfo, &ie_list->AddHtInfo, SIZE_ADD_HT_INFO_IE);
+   				memmove(&pAd->MlmeAux.AddHtInfo, &ie_list->AddHtInfo, SIZE_ADD_HT_INFO_IE);
 
                 		/* StaActive.SupportedHtPhy.MCSSet stores Peer AP's 11n Rx capability */
 				memmove(pAd->StaActive.SupportedPhyInfo.MCSSet, ie_list->HtCapability.MCSSet, 16);

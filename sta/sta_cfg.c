@@ -2825,7 +2825,7 @@ INT RtmpIoctl_rt_ioctl_siwencodeext(struct rtmp_adapter *pAd, VOID *pData, ULONG
                 	if (wdev->AuthMode == Ndis802_11AuthModeWPANone)
                 	{
                 		memset(pAd->StaCfg.PMK, 0, LEN_PMK);
-                		RTMPMoveMemory(pAd->StaCfg.PMK, pIoctlSec->pData, pIoctlSec->length);
+                		memmove(pAd->StaCfg.PMK, pIoctlSec->pData, pIoctlSec->length);
                 	}
 					else
 					{
@@ -2853,7 +2853,7 @@ INT RtmpIoctl_rt_ioctl_siwencodeext(struct rtmp_adapter *pAd, VOID *pData, ULONG
 				if (wdev->AuthMode == Ndis802_11AuthModeWPANone)
             	{
             		memset(pAd->StaCfg.PMK, 0, LEN_PMK);
-            		RTMPMoveMemory(pAd->StaCfg.PMK, pIoctlSec->pData, pIoctlSec->length);
+            		memmove(pAd->StaCfg.PMK, pIoctlSec->pData, pIoctlSec->length);
             	}
 				else
 				{
