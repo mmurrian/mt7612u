@@ -1621,45 +1621,6 @@ ULONG RTMPCompareMemory(VOID *pSrc1, VOID *pSrc2, ULONG Length)
 	return (0);
 }
 
-/*
-	========================================================================
-
-	Routine Description:
-		Copy data from memory block 1 to memory block 2
-
-	Arguments:
-		pDest		Pointer to destination memory address
-		pSrc		Pointer to source memory address
-		Length		Copy size
-
-	Return Value:
-		None
-
-	IRQL = PASSIVE_LEVEL
-	IRQL = DISPATCH_LEVEL
-
-	Note:
-
-	========================================================================
-*/
-VOID RTMPMoveMemory(VOID *pDest, VOID *pSrc, ULONG Length)
-{
-	u8 *pMem1;
-	u8 *pMem2;
-	UINT	Index;
-
-	ASSERT((Length==0) || (pDest && pSrc));
-
-	pMem1 = (u8 *) pDest;
-	pMem2 = (u8 *) pSrc;
-
-	for (Index = 0; Index < Length; Index++)
-	{
-		pMem1[Index] = pMem2[Index];
-	}
-}
-
-
 VOID UserCfgExit(struct rtmp_adapter *pAd)
 {
 #ifdef RT_CFG80211_SUPPORT

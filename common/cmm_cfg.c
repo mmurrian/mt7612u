@@ -1280,7 +1280,7 @@ INT Set_SiteSurvey_Proc(
 		if ((arg != NULL) &&
 			(strlen(arg) <= MAX_LEN_OF_SSID))
 		{
-			RTMPMoveMemory(Ssid.Ssid, arg, strlen(arg));
+			memmove(Ssid.Ssid, arg, strlen(arg));
 			Ssid.SsidLength = strlen(arg);
 		}
 
