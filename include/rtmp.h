@@ -6828,7 +6828,7 @@ VOID asic_tune_be_wmm(
 INT Show_Diag_Proc(struct rtmp_adapter *pAd, char *arg);
 #endif
 
-static struct usb_device *mt7612u_to_usb_dev(struct rtmp_adapter *ad)
+static inline struct usb_device *mt7612u_to_usb_dev(struct rtmp_adapter *ad)
 {
 	return ad->OS_Cookie->pUsb_Dev;
 }
