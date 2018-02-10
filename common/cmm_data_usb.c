@@ -170,7 +170,8 @@ VOID ComposePsPoll(struct rtmp_adapter *pAd)
 	buf = &pAd->PsPollContext.TransferBuffer->field.WirelessPacket[0];
 	txinfo = (struct mt7612_txinfo_pkt *)buf;
 	txwi = (struct mt7612u_txwi *)&buf[MT_DMA_HDR_LEN];
-	RTMPZeroMemory(buf, 100);
+	/* XXX why 100? */
+	memset(buf, 0, 100);
 	data_len = sizeof (PSPOLL_FRAME);
 	rlt_usb_write_txinfo(txinfo, data_len + TXWISize, true,
 						ep2dmaq(MGMTPIPEIDX));
@@ -203,7 +204,8 @@ VOID ComposeNullFrame(struct rtmp_adapter *pAd)
 	COPY_MAC_ADDR(pAd->NullFrame.Addr2, pAd->CurrentAddress);
 	COPY_MAC_ADDR(pAd->NullFrame.Addr3, pAd->CommonCfg.Bssid);
 	buf = &pAd->NullContext.TransferBuffer->field.WirelessPacket[0];
-	RTMPZeroMemory(buf, 100);
+	/* XXX Why 100? */
+	memset(buf, 0, 100);
 	txinfo = (struct mt7612_txinfo_pkt *)buf;
 	txwi = (struct mt7612u_txwi *)&buf[MT_DMA_HDR_LEN];
 	rlt_usb_write_txinfo(txinfo,
@@ -877,7 +879,8 @@ VOID RtmpUSBNullFrameKickOut(
 		pNullContext->InUse = true;
 		pWirelessPkt = (u8 *)&pNullContext->TransferBuffer->field.WirelessPacket[0];
 
-		RTMPZeroMemory(&pWirelessPkt[0], 100);
+		/* XXX Why 100? */
+		memset(&pWirelessPkt[0], 0, 100);
 		txinfo = (struct mt7612_txinfo_pkt *)&pWirelessPkt[0];
 		rlt_usb_write_txinfo(txinfo, (unsigned short)(frameLen + TXWISize), true, ep2dmaq(MGMTPIPEIDX));
 		txwi = (struct mt7612u_txwi *)&pWirelessPkt[MT_DMA_HDR_LEN];

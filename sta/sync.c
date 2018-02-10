@@ -187,7 +187,7 @@ VOID MlmeForceJoinReqAction(
 	RTMPCancelTimer(&pAd->MlmeAux.BeaconTimer, &TimerCancelled);
 
 	{
-		RTMPZeroMemory(pAd->MlmeAux.Ssid, MAX_LEN_OF_SSID);
+		memset(pAd->MlmeAux.Ssid, 0, MAX_LEN_OF_SSID);
 		memmove(pAd->MlmeAux.Ssid, pAd->StaCfg.ConnectinfoSsid, pAd->StaCfg.ConnectinfoSsidLen);
 		pAd->MlmeAux.SsidLen = pAd->StaCfg.ConnectinfoSsidLen;
 	}
@@ -614,7 +614,7 @@ VOID MlmeJoinReqAction(
 	/* If AP's SSID is not hidden, it is OK for updating ssid to MlmeAux again. */
 	if (pBss->Hidden == 0)
 	{
-		RTMPZeroMemory(pAd->MlmeAux.Ssid, MAX_LEN_OF_SSID);
+		memset(pAd->MlmeAux.Ssid, 0, MAX_LEN_OF_SSID);
 		memmove(pAd->MlmeAux.Ssid, pBss->Ssid, pBss->SsidLen);
 		pAd->MlmeAux.SsidLen = pBss->SsidLen;
 	}
@@ -913,8 +913,8 @@ VOID rtmp_dbg_sanity_diff(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 
 	memset(&QbssLoad, 0, sizeof(QBSS_LOAD_PARM)); /* woody */
 
-	RTMPZeroMemory(pHtCapability, sizeof(HT_CAPABILITY_IE));
-	RTMPZeroMemory(pAddHtInfo, sizeof(ADD_HT_INFO_IE));
+	memset(pHtCapability, 0, sizeof(HT_CAPABILITY_IE));
+	memset(pAddHtInfo, 0, sizeof(ADD_HT_INFO_IE));
 
 	memset(Ssid, 0, MAX_LEN_OF_SSID);
 
@@ -1307,7 +1307,7 @@ VOID PeerBeaconAtScanAction(
 				if (pBssEntry->pVarIeFromProbRsp)
 				{
 					pBssEntry->VarIeFromProbeRspLen = LenVIE;
-					RTMPZeroMemory(pBssEntry->pVarIeFromProbRsp, MAX_VIE_LEN);
+					memset(pBssEntry->pVarIeFromProbRsp, 0, MAX_VIE_LEN);
 					RTMPMoveMemory(pBssEntry->pVarIeFromProbRsp, pVIE, LenVIE);
 				}
 			}
@@ -1545,7 +1545,7 @@ VOID PeerBeaconAtJoinAction(
 
 			CentralChannel = ie_list->Channel;
 
-			RTMPZeroMemory(&pAd->MlmeAux.HtCapability, SIZE_HT_CAP_IE);
+			memset(&pAd->MlmeAux.HtCapability, 0, SIZE_HT_CAP_IE);
 			/* filter out un-supported ht rates */
 			if (((ie_list->HtCapabilityLen > 0) || (ie_list->PreNHtCapabilityLen > 0)) &&
 				(wdev->DesiredHtPhyInfo.bHtEnable) &&
@@ -1584,11 +1584,11 @@ VOID PeerBeaconAtJoinAction(
 				{
 					VHT_OP_INFO *vht_op = &ie_list->vht_op_ie.vht_op_info;
 
-					RTMPZeroMemory(&pAd->MlmeAux.vht_cap, sizeof(VHT_CAP_IE));
+					memset(&pAd->MlmeAux.vht_cap, 0, sizeof(VHT_CAP_IE));
 					memmove(&pAd->MlmeAux.vht_cap, &ie_list->vht_cap_ie, ie_list->vht_cap_len);
 					pAd->MlmeAux.vht_cap_len = ie_list->vht_cap_len;
 
-					RTMPZeroMemory(&pAd->MlmeAux.vht_op, sizeof(VHT_OP_IE));
+					memset(&pAd->MlmeAux.vht_op, 0, sizeof(VHT_OP_IE));
 					memmove(&pAd->MlmeAux.vht_op, &ie_list->vht_op_ie, ie_list->vht_op_len);
 					pAd->MlmeAux.vht_op_len = ie_list->vht_op_len;
 
@@ -1614,9 +1614,9 @@ VOID PeerBeaconAtJoinAction(
 				pAd->StaActive.SupportedPhyInfo.bVhtEnable = false;
 				pAd->StaActive.SupportedPhyInfo.vht_bw = VHT_BW_2040;
 				pAd->MlmeAux.NewExtChannelOffset = 0xff;
-				RTMPZeroMemory(&pAd->MlmeAux.HtCapability, SIZE_HT_CAP_IE);
+				memset(&pAd->MlmeAux.HtCapability, 0, SIZE_HT_CAP_IE);
 				pAd->MlmeAux.HtCapabilityLen = 0;
-				RTMPZeroMemory(&pAd->MlmeAux.AddHtInfo, SIZE_ADD_HT_INFO_IE);
+				memset(&pAd->MlmeAux.AddHtInfo, 0, SIZE_ADD_HT_INFO_IE);
 			}
 
 			pAd->hw_cfg.cent_ch = CentralChannel;

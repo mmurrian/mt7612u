@@ -285,7 +285,7 @@ VOID AsicUpdateProtect(
 	mt76u_reg_write(pAd, TX_RTS_CFG, MacReg);
 
 	/* Initial common protection settings*/
-	RTMPZeroMemory(Protect, sizeof(Protect));
+	memset(Protect, 0, sizeof(Protect));
 	ProtCfg4.word = 0;
 	ProtCfg.word = 0;
 	ProtCfg.field.TxopAllowGF40 = 1;

@@ -171,7 +171,7 @@ int RTMPAllocAdapterBlock(struct os_cookie *handle, struct rtmp_adapter **ppAdap
 			kmalloc(MAX_VIE_LEN, GFP_ATOMIC);
 
 		if (pAd->ProbeRespIE[index].pIe == NULL)
-			RTMPZeroMemory(pAd->ProbeRespIE[index].pIe, MAX_VIE_LEN);
+			memset(pAd->ProbeRespIE[index].pIe, 0, MAX_VIE_LEN);
 		else
 			pAd->ProbeRespIE[index].pIe = NULL;
 	}
@@ -1625,41 +1625,6 @@ ULONG RTMPCompareMemory(VOID *pSrc1, VOID *pSrc2, ULONG Length)
 	/* Equal*/
 	return (0);
 }
-
-
-/*
-	========================================================================
-
-	Routine Description:
-		Zero out memory block
-
-	Arguments:
-		pSrc1		Pointer to memory address
-		Length		Size
-
-	Return Value:
-		None
-
-	IRQL = PASSIVE_LEVEL
-	IRQL = DISPATCH_LEVEL
-
-	Note:
-
-	========================================================================
-*/
-VOID RTMPZeroMemory(VOID *pSrc, ULONG Length)
-{
-	u8 *pMem;
-	ULONG	Index = 0;
-
-	pMem = (u8 *) pSrc;
-
-	for (Index = 0; Index < Length; Index++)
-	{
-		pMem[Index] = 0x00;
-	}
-}
-
 
 /*
 	========================================================================
