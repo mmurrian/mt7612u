@@ -1579,48 +1579,6 @@ VOID NICUpdateRawCounters(struct rtmp_adapter *pAd)
 
 }
 
-/*
-	========================================================================
-
-	Routine Description:
-		Compare two memory block
-
-	Arguments:
-		pSrc1		Pointer to first memory address
-		pSrc2		Pointer to second memory address
-
-	Return Value:
-		0:			memory is equal
-		1:			pSrc1 memory is larger
-		2:			pSrc2 memory is larger
-
-	IRQL = DISPATCH_LEVEL
-
-	Note:
-
-	========================================================================
-*/
-ULONG RTMPCompareMemory(VOID *pSrc1, VOID *pSrc2, ULONG Length)
-{
-	u8 *pMem1;
-	u8 *pMem2;
-	ULONG	Index = 0;
-
-	pMem1 = (u8 *) pSrc1;
-	pMem2 = (u8 *) pSrc2;
-
-	for (Index = 0; Index < Length; Index++)
-	{
-		if (pMem1[Index] > pMem2[Index])
-			return (1);
-		else if (pMem1[Index] < pMem2[Index])
-			return (2);
-	}
-
-	/* Equal*/
-	return (0);
-}
-
 VOID UserCfgExit(struct rtmp_adapter *pAd)
 {
 #ifdef RT_CFG80211_SUPPORT
