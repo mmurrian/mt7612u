@@ -1037,16 +1037,6 @@ int RtmpOSNetDevAddrSet(
 	IN u8 *pMacAddr,
 	IN u8 *dev_name)
 {
-#ifdef CONFIG_STA_SUPPORT
-	/* work-around for the SuSE due to it has it's own interface name management system. */
-	RT_CONFIG_IF_OPMODE_ON_STA(OpMode) {
-		if (dev_name != NULL) {
-			memset(dev_name, 0, 16);
-			memmove(dev_name, net_dev->name, strlen(net_dev->name));
-		}
-	}
-#endif /* CONFIG_STA_SUPPORT */
-
 	memmove(net_dev->dev_addr, pMacAddr, 6);
 
 	return 0;
