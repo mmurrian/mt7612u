@@ -1621,41 +1621,6 @@ ULONG RTMPCompareMemory(VOID *pSrc1, VOID *pSrc2, ULONG Length)
 	return (0);
 }
 
-
-/*
-	========================================================================
-
-	Routine Description:
-		Zero out memory block
-
-	Arguments:
-		pSrc1		Pointer to memory address
-		Length		Size
-
-	Return Value:
-		None
-
-	IRQL = PASSIVE_LEVEL
-	IRQL = DISPATCH_LEVEL
-
-	Note:
-
-	========================================================================
-*/
-VOID RTMPZeroMemory(VOID *pSrc, ULONG Length)
-{
-	u8 *pMem;
-	ULONG	Index = 0;
-
-	pMem = (u8 *) pSrc;
-
-	for (Index = 0; Index < Length; Index++)
-	{
-		pMem[Index] = 0x00;
-	}
-}
-
-
 /*
 	========================================================================
 
