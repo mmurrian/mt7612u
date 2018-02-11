@@ -2184,9 +2184,7 @@ bool mt7612u_wait_pdma_usecs(struct rtmp_adapter *pAd, int round, int wait_us)
 
 INT rtmp_asic_top_init(struct rtmp_adapter *pAd)
 {
-	uint32_t mac_val;
-
-	if (IS_MT76x2U(pAd)) {
+	if (IS_MT76x2(pAd)) {
 		pAd->mac_rev = mt76u_reg_read(pAd, MT_MAC_CSR0);
 
 		if ((pAd->mac_rev == 0xffffffff) || (pAd->mac_rev == 0))

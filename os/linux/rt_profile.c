@@ -165,8 +165,6 @@ static const struct dev_id_name_map id_name_list[]=
 
 };
 
-static int probe_cnt = 1;
-
 VOID get_dev_config_idx(struct rtmp_adapter *pAd)
 {
 	INT idx = 0;
@@ -193,44 +191,10 @@ u8 *get_dev_name_prefix(struct rtmp_adapter *pAd, INT dev_type)
 	return NULL;
 }
 
-
-static u8 *get_dev_profile(struct rtmp_adapter *pAd)
-{
-	u8 *src = NULL;
-
-	{
-#ifdef CONFIG_AP_SUPPORT
-		IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-		{
-#if defined(CONFIG_RT_FIRST_CARD) && defined(CONFIG_RT_SECOND_CARD)
-			INT card_idx = pAd->dev_idx;
-
-			if (card_idx == 0)
-				src = FIRST_AP_PROFILE_PATH;
-			else if (card_idx == 1)
-				src = SECOND_AP_PROFILE_PATH;
-			else
-#endif /* defined(CONFIG_RT_FIRST_CARD) || defined(CONFIG_RT_SECOND_CARD) */
-				src = AP_PROFILE_PATH;
-		}
-#endif /* CONFIG_AP_SUPPORT */
-
-#ifdef CONFIG_STA_SUPPORT
-		IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
-		{
-			src = STA_PROFILE_PATH;
-		}
-#endif /* CONFIG_STA_SUPPORT */
-	}
-
-	return src;
-}
-
-
 int RTMPReadParametersHook(struct rtmp_adapter *pAd)
 {
 	INT retval = NDIS_STATUS_FAILURE;
-	ULONG buf_size = MAX_INI_BUFFER_SIZE, fsize;
+	ULONG buf_size = MAX_INI_BUFFER_SIZE;
 	char *buffer = NULL;
 
 #ifdef HOSTAPD_SUPPORT
@@ -706,10 +670,6 @@ INT RTMP_AP_IoctlPrepare(struct rtmp_adapter *pAd, VOID *pCB)
 	struct os_cookie *pObj;
 	unsigned short index;
 	INT	Status = NDIS_STATUS_SUCCESS;
-#ifdef CONFIG_APSTA_MIXED_SUPPORT
-	INT cmd = 0xff;
-#endif /* CONFIG_APSTA_MIXED_SUPPORT */
-
 
 	pObj =  pAd->OS_Cookie;
 

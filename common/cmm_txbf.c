@@ -52,7 +52,6 @@ UINT dataRate[] = {65, 130, 195, 260, 390, 520, 585, 650,
 VOID rtmp_asic_set_bf(
 	IN struct rtmp_adapter *pAd)
 {
-	UINT8 byteValue = 0;
 	UINT Value32;
 
 
@@ -722,7 +721,6 @@ VOID handleBfFb(
 	IN	struct rtmp_adapter *pAd,
 	IN	RX_BLK			*pRxBlk)
 {
-	struct mt7612u_rxwi *pRxWI = pRxBlk->pRxWI;
 	MAC_TABLE_ENTRY *pEntry = NULL;
 
 	if (pRxBlk->wcid >= MAX_LEN_OF_MAC_TABLE)

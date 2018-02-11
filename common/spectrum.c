@@ -1145,7 +1145,6 @@ VOID EnqueueMeasurementRep(
 	IN uint8_t * pReportInfo)
 {
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen;
 	HEADER_802_11 ActHdr;
 	MEASURE_REPORT_INFO MeasureRepIE;
@@ -1199,7 +1198,6 @@ VOID EnqueueTPCReq(
 	IN u8 DialogToken)
 {
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen;
 
 	HEADER_802_11 ActHdr;
@@ -1251,7 +1249,6 @@ VOID EnqueueTPCRep(
 	IN UINT8 LinkMargin)
 {
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen;
 
 	HEADER_802_11 ActHdr;
@@ -2067,7 +2064,6 @@ INT Set_MeasureReq_Proc(
 
 	HEADER_802_11 ActHdr;
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen;
 
 	pOutBuffer = kmalloc(MGMT_DMA_BUFFER_SIZE, GFP_ATOMIC);  /*Get an unused nonpaged memory*/

@@ -105,26 +105,6 @@ enum pkt_tx_status{
 	DROP_TXQ_ENQ_FAIL = 10,
 };
 
-struct reason_id_str{
-	INT id;
-	char *code_str;
-};
-
-static struct reason_id_str pkt_drop_code[]={
-		{PKT_SUCCESS, "TxSuccess"},
-		{INVALID_PKT_LEN, "pkt error"},
-		{INVALID_TR_WCID, "invalid TR wcid"},
-		{INVALID_TR_ENTRY, "wrong TR entry type"},
-		{INVALID_WDEV, "Invalid wdev"},
-		{INVALID_ETH_TYPE, "ether type check fail"},
-		{DROP_PORT_SECURE, "port not secure"},
-		{DROP_PSQ_FULL, "PsQ full"},
-		{DROP_TXQ_FULL, "TxQ full"},
-		{DROP_TX_JAM, "Tx jam"},
-		{DROP_TXQ_ENQ_FAIL, "TxQ EnQ fail"},
-};
-
-
 /*
 	========================================================================
 	Routine Description:
@@ -2618,10 +2598,6 @@ VOID APRxErrorHandle(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 {
 	MAC_TABLE_ENTRY *pEntry = NULL;
 	struct mt7612u_rxinfo *pRxInfo = pRxBlk->pRxInfo;
-	PCIPHER_KEY pWpaKey;
-	u8 						FromWhichBSSID = BSS0;
-	u8 		Wcid;
-	PHEADER_802_11	pHeader = pRxBlk->pHeader;
 
 	if (pRxInfo->CipherErr)
 		INC_COUNTER64(pAd->WlanCounters.WEPUndecryptableCount);
@@ -2667,7 +2643,6 @@ VOID APRxErrorHandle(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 }
 
 
-static int dump_next_valid = 0;
 bool APCheckVaildDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 {
 	HEADER_802_11 *pHeader = pRxBlk->pHeader;

@@ -70,35 +70,6 @@ void mt7612u_bbp_set_rxpath(struct rtmp_adapter *pAd, int rxpath)
 //DBGPRINT(RT_DEBUG_OFF, ("%s(): rxpath=%d, After write, Get AGC1_R0=0x%x,\n", __FUNCTION__, rxpath, agc));
 }
 
-
-static u8 vht_prim_ch_val[] = {
-	42, 36, 0,
-	42, 40, 1,
-	42, 44, 2,
-	42, 48, 3,
-	58, 52, 0,
-	58, 56, 1,
-	58, 60, 2,
-	58, 64, 3,
-	106, 100, 0,
-	106, 104, 1,
-	106, 108, 2,
-	106, 112, 3,
-	122, 116, 0,
-	122, 120, 1,
-	122, 124, 2,
-	122, 128, 3,
-	138, 132, 0,
-	138, 136, 1,
-	138, 140, 2,
-	138, 144, 3,
-	155, 149, 0,
-	155, 153, 1,
-	155, 157, 2,
-	155, 161, 3
-};
-
-
 void mt7612u_bbp_set_ctrlch(struct rtmp_adapter *pAd, u8 ext_ch)
 {
 	uint32_t agc, agc_r0 = 0;
@@ -183,9 +154,6 @@ void mt7612u_bbp_set_bw(struct rtmp_adapter *pAd, u8 bw)
 	uint32_t core, core_r1 = 0;
 	uint32_t agc, agc_r0 = 0;
 
-#if defined(MT76x0) || defined(MT76x2)
-	uint32_t core_r4;
-#endif /* defined(MT76x0) || defined(MT76x2) */
 	uint32_t ret;
 
 

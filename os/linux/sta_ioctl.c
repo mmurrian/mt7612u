@@ -1424,41 +1424,6 @@ rt_ioctl_giwencode(struct net_device *dev,
 }
 
 
-static int
-rt_private_get_statistics(struct net_device *dev, struct iw_request_info *info,
-		struct iw_point *wrq, char *extra)
-{
-	INT				Status = 0;
-    VOID   *pAd = NULL;
-
-	GET_PAD_FROM_NET_DEV(pAd, dev);
-
-	/*check if the interface is down */
-/*    if(!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_IN_USE)) */
-	if (RTMP_DRIVER_IOCTL_SANITY_CHECK(pAd, NULL) != NDIS_STATUS_SUCCESS)
-    {
-       	DBGPRINT(RT_DEBUG_TRACE, ("INFO::Network is down!\n"));
-        return -ENETDOWN;
-	}
-
-    if (extra == NULL)
-    {
-        wrq->length = 0;
-        return -EIO;
-    }
-
-    memset(extra, 0x00, IW_PRIV_SIZE_MASK);
-
-
-	RTMP_STA_IoctlHandle(pAd, NULL, CMD_RTPRIV_IOCTL_STA_IW_GET_STATISTICS, 0,
-						extra, IW_PRIV_SIZE_MASK, RT_DEV_PRIV_FLAGS_GET(dev));
-
-    wrq->length = strlen(extra) + 1; /* 1: size of '\0' */
-    DBGPRINT(RT_DEBUG_TRACE, ("<== rt_private_get_statistics, wrq->length = %d\n", wrq->length));
-
-    return Status;
-}
-
 #ifdef SIOCSIWMLME
 int rt_ioctl_siwmlme(struct net_device *dev,
 			   struct iw_request_info *info,
@@ -2055,7 +2020,6 @@ INT rt28xx_sta_ioctl(struct net_device *net_dev, struct ifreq *rq, INT cmd)
 	RTMP_IOCTL_INPUT_STRUCT rt_wrq, *wrq = &rt_wrq;
 /*	bool				StateMachineTouched = false; */
 	INT					Status = NDIS_STATUS_SUCCESS;
-	unsigned short 			subcmd;
 	uint32_t 			org_len;
 
 	GET_PAD_FROM_NET_DEV(pAd, net_dev);

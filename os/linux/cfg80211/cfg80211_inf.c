@@ -41,8 +41,9 @@ extern INT ApCliAllowToSendPacket(
 
 bool CFG80211DRV_OpsChgVirtualInf(struct rtmp_adapter *pAd, VOID *pData)
 {
+#ifdef RT_CFG80211_P2P_SINGLE_DEVICE
 	PCFG80211_CTRL pCfg80211_ctrl = &pAd->cfg80211_ctrl;
-	struct mt7612u_cfg80211_cb *p80211CB = pAd->pCfg80211_CB;
+#endif
 	UINT newType, oldType;
 	CMD_RTPRIV_IOCTL_80211_VIF_PARM *pVifParm;
 	pVifParm = (CMD_RTPRIV_IOCTL_80211_VIF_PARM *)pData;
@@ -467,7 +468,6 @@ VOID RTMP_CFG80211_VirtualIF_Init(
 {
 	struct RTMP_OS_NETDEV_OP_HOOK netDevHook, *pNetDevOps;
 	struct net_device *new_dev_p;
-	struct rtmp_wifi_dev *wdev;
 
 	CHAR preIfName[12];
 	UINT devNameLen = strlen(pDevName);
@@ -576,9 +576,6 @@ VOID RTMP_CFG80211_VirtualIF_Remove(
 	IN	struct net_device *		  dev_p,
 	IN  uint32_t                DevType)
 {
-	bool isGoOn = false;
-	struct rtmp_wifi_dev *wdev;
-
 	if (dev_p)
 	{
 		RTMP_CFG80211_RemoveVifEntry(pAd, dev_p);
@@ -587,7 +584,6 @@ VOID RTMP_CFG80211_VirtualIF_Remove(
 			/* Never Opened When New Netdevice on */
 			RtmpOSNetDevDetach(dev_p);
 		}
-
 
 		if (dev_p->ieee80211_ptr)
 		{

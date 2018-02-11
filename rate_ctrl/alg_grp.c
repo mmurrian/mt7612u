@@ -972,41 +972,6 @@ u8 MlmeSelectTxRateAdapt(
 }
 
 /*
-	MlmeRAEstimateThroughput - estimate Throughput based on PER and PHY rate
-		pEntry - the MAC table entry for this STA
-		pCurrTxRate - pointer to Rate table entry for rate
-		TxErrorRatio - the PER
-*/
-static ULONG MlmeRAEstimateThroughput(
-	IN struct rtmp_adapter *pAd,
-	IN MAC_TABLE_ENTRY *pEntry,
-	IN RTMP_RA_GRP_TB *pCurrTxRate,
-	IN ULONG TxErrorRatio)
-{
-	ULONG estTP = (100-TxErrorRatio)*pCurrTxRate->dataRate;
-
-	/*  Adjust rates for MCS32-40MHz mapped to MCS0-20MHz and for non-CCK 40MHz */
-	if (pCurrTxRate->CurrMCS == MCS_32)
-	{
-#ifdef DBG_CTRL_SUPPORT
-		if ((pAd->CommonCfg.DebugFlags & DBF_DISABLE_20MHZ_MCS0)==0)
-			estTP /= 2;
-#endif /* DBG_CTRL_SUPPORT */
-	}
-	else if ((pCurrTxRate->Mode==MODE_HTMIX) || (pCurrTxRate->Mode==MODE_HTGREENFIELD))
-	{
-		if (pEntry->MaxHTPhyMode.field.BW==BW_40
-#ifdef DBG_CTRL_SUPPORT
-			|| (pAd->CommonCfg.DebugFlags & DBF_FORCE_40MHZ)
-#endif /* DBG_CTRL_SUPPORT */
-		)
-			estTP *= 2;
-	}
-
-	return estTP;
-}
-
-/*
 	MlmeRAHybridRule - decide whether to keep the new rate or use old rate
 		pEntry - the MAC table entry for this STA
 		pCurrTxRate - pointer to Rate table entry for new up rate
@@ -1022,9 +987,6 @@ bool MlmeRAHybridRule(
 	IN ULONG			NewTxOkCount,
 	IN ULONG			TxErrorRatio)
 {
-	ULONG newTP, oldTP;
-
-
 
     DBGPRINT(RT_DEBUG_TRACE, ("RAA : Tx OK Counter %ld %ld\n", NewTxOkCount , pEntry->LastTxOkCount));
 
@@ -1057,7 +1019,9 @@ VOID MlmeNewRateAdapt(
 {
 	unsigned short 	phyRateLimit20 = 0;
 	bool		bTrainUp = false;
+#ifdef TXBF_AWARE
 	bool 	invertTxBf = false;
+#endif
 	u8 *pTable = pEntry->pTable;
 	u8 CurrRateIdx = pEntry->CurrTxRateIndex;
 	RTMP_RA_GRP_TB *pCurrTxRate = PTX_RA_GRP_ENTRY(pTable, CurrRateIdx);
@@ -1071,7 +1035,9 @@ VOID MlmeNewRateAdapt(
 
 	if (TxErrorRatio >= TrainDown)
 	{
+#ifdef TXBF_AWARE
 		RTMP_RA_GRP_TB *pDownRate, *pLastNonBfRate;
+#endif
 
 		/*  Downgrade TX quality if PER >= Rate-Down threshold */
 		MlmeSetTxQuality(pEntry, CurrRateIdx, DRS_TX_QUALITY_WORST_BOUND);
@@ -2131,7 +2097,7 @@ VOID MlmeDynamicTxRateSwitchingAdapt(
 		if (pEntry->wcid >= 1 && pEntry->wcid <= 8)
 		{
 			WCID_TX_CNT_STRUC wcidTxCnt;
-			uint32_t regAddr, offset;
+			uint32_t regAddr;
 			ULONG HwTxCnt, HwErrRatio = 0;
 
 			regAddr = WCID_TX_CNT_0 + (pEntry->wcid - 1) * 4;

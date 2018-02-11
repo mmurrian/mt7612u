@@ -255,31 +255,6 @@ static bool wmode_valid(struct rtmp_adapter *pAd, enum WIFI_MODE wmode)
 }
 
 
-static bool wmode_valid_and_correct(struct rtmp_adapter *pAd, u8* wmode)
-{
-	bool ret = true;
-	u8 mode = *wmode;
-
-	if (WMODE_CAP_5G(*wmode) && (!PHY_CAP_5G(pAd->chipCap.phy_caps)))
-	{
-		*wmode = *wmode & ~(WMODE_A | WMODE_AN | WMODE_AC);
-	}
-	else if (WMODE_CAP_2G(*wmode) && (!PHY_CAP_2G(pAd->chipCap.phy_caps)))
-	{
-		*wmode = *wmode & ~(WMODE_B | WMODE_G | WMODE_GN);
-	}
-	else if (WMODE_CAP_N(*wmode) && RTMP_TEST_MORE_FLAG(pAd, fRTMP_ADAPTER_DISABLE_DOT_11N))
-	{
-		*wmode = *wmode & ~(WMODE_GN | WMODE_AN);
-	}
-
-	if ( *wmode == 0 )
-		ret = false;
-
-	return ret;
-}
-
-
 bool wmode_band_equal(u8 smode, u8 tmode)
 {
 	bool eq = false;
@@ -652,7 +627,6 @@ INT	RT_CfgSetAutoFallBack(
 	IN 	struct rtmp_adapter *	pAd,
 	IN	char *		arg)
 {
-	TX_RTY_CFG_STRUC tx_rty_cfg;
 	u8 AutoFallBack = (u8)simple_strtol(arg, 0, 10);
 
 	if (AutoFallBack)
@@ -707,7 +681,7 @@ INT RTMP_COM_IoctlHandle(
 	IN	ULONG					Data)
 {
 	struct os_cookie *pObj = pAd->OS_Cookie;
-	INT Status = NDIS_STATUS_SUCCESS, i;
+	INT Status = NDIS_STATUS_SUCCESS;
 
 
 	pObj = pObj; /* avoid compile warning */
@@ -1154,7 +1128,7 @@ INT RTMP_COM_IoctlHandle(
 		{
 			RT_CMD_IOCTL_RATE *pRate = (RT_CMD_IOCTL_RATE *)pData;
 			HTTRANSMIT_SETTING HtPhyMode;
-			UINT8 BW = 0, GI = 0, MCS = 0;
+			UINT8 BW = 0, GI = 0;
 
 			{
 				memcpy(&HtPhyMode, &pAd->ApCfg.MBSSID[pObj->ioctl_if].wdev.HTPhyMode, sizeof(HTTRANSMIT_SETTING));

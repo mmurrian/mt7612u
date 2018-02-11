@@ -807,7 +807,6 @@ VOID MacTableReset(struct rtmp_adapter *pAd)
 	bool Cancelled;
 #ifdef CONFIG_AP_SUPPORT
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen = 0;
 	HEADER_802_11 DeAuthHdr;
 	unsigned short Reason;

@@ -390,7 +390,6 @@ VOID RTMPWriteTxWI_Data(struct rtmp_adapter *pAd, struct mt7612u_txwi *txwi, TX_
 VOID RTMPWriteTxWI_Cache(struct rtmp_adapter *pAd, struct mt7612u_txwi *txwi, TX_BLK *pTxBlk)
 {
 	HTTRANSMIT_SETTING *pTransmit = pTxBlk->pTransmit;
-	HTTRANSMIT_SETTING tmpTransmit;
 	MAC_TABLE_ENTRY *pMacEntry = pTxBlk->pMacEntry;
 	u8 pkt_id;
 	u8 bw, mcs, stbc, phy_mode, sgi, ldpc;
@@ -661,7 +660,7 @@ VOID ReSyncBeaconTime(struct rtmp_adapter *pAd)
 
 VOID rtmp_mac_bcn_buf_init(IN struct rtmp_adapter *pAd)
 {
-	int idx, tb_size;
+	int idx;
 	struct rtmp_chip_cap *pChipCap = &pAd->chipCap;
 
 

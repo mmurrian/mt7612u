@@ -1280,8 +1280,6 @@ VOID MlmeSetTxRate(
 	struct rtmp_wifi_dev *wdev = &pAd->StaCfg.wdev;
 	u8 MaxMode = MODE_OFDM;
 	u8 tx_mode = pTxRate->Mode;
-	u8 tx_bw = pTxRate->BW;
-	HTTRANSMIT_SETTING *tx_setting = &pAd->StaCfg.wdev.HTPhyMode;
 
 	MaxMode = MODE_HTGREENFIELD;
 

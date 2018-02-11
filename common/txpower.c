@@ -173,14 +173,11 @@ VOID AsicExtraPowerOverMAC(struct rtmp_adapter *pAd)
  */
 VOID AsicAdjustTxPower(struct rtmp_adapter *pAd)
 {
-	INT i, j;
-	CHAR Value;
 	CHAR Rssi = -127;
 	CHAR DeltaPwr = 0;
 	CHAR TxAgcCompensate = 0;
 	CHAR DeltaPowerByBbpR1 = 0;
 	CHAR TotalDeltaPower = 0; /* (non-positive number) including the transmit power controlled by the MAC and the BBP R1 */
-	CONFIGURATION_OF_TX_POWER_CONTROL_OVER_MAC CfgOfTxPwrCtrlOverMAC = {0};
 
 #ifdef CONFIG_STA_SUPPORT
 	if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_IDLE_RADIO_OFF))
@@ -287,7 +284,5 @@ VOID AsicPercentageDeltaPower(
 
 VOID AsicCompensatePowerViaBBP(struct rtmp_adapter *pAd, CHAR *pTotalDeltaPower)
 {
-	u8 mdsm_drop_pwr;
-
 
 }

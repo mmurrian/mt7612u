@@ -1523,7 +1523,7 @@ VOID NICUpdateRawCounters(struct rtmp_adapter *pAd)
 #ifdef DBG_DIAGNOSE
 	{
 		RtmpDiagStruct *pDiag;
-		u8 ArrayCurIdx, i;
+		u8 ArrayCurIdx;
 		struct dbg_diag_info *diag_info;
 
 		pDiag = &pAd->DiagStruct;
@@ -2637,7 +2637,6 @@ bool PairEP(struct rtmp_adapter *pAd, UINT8 EP)
 INT RtmpRaDevCtrlInit(struct rtmp_adapter *pAd)
 {
 	UINT8 i;
-	uint32_t ret;
 
 #ifdef CONFIG_STA_SUPPORT
 	pAd->OpMode = OPMODE_STA;

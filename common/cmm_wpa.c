@@ -504,8 +504,6 @@ VOID RTMPToWirelessSta(
 			Status = STASendPacket(pAd, pPacket);
 			if (Status == NDIS_STATUS_SUCCESS)
 			{
-				u8   Index;
-
 				/* Dequeue one frame from TxSwQueue0..3 queue and process it*/
 				/* There are three place calling dequeue for TX ring.*/
 				/* 1. Here, right after queueing the frame.*/
@@ -1751,7 +1749,6 @@ VOID MlmeDeAuthAction(
     u8 *         pOutBuffer = NULL;
     ULONG           FrameLen = 0;
     HEADER_802_11   DeAuthHdr;
-    int     NStatus;
 
     if (pEntry) {
         /* Send out a Deauthentication request frame*/

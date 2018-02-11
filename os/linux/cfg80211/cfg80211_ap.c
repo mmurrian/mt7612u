@@ -91,7 +91,7 @@ static void CFG80211DRV_UpdateApSettingFromBeacon(struct rtmp_adapter *pAd, UINT
 	u8 *wmm_ie = NULL;
 
 	const u8 *supp_rates_ie = NULL;
-	const u8 *ext_supp_rates_ie = NULL, *ht_cap = NULL, *ht_info = NULL;
+	const u8 *ht_cap = NULL, *ht_info = NULL;
 
 	const u8 CFG_HT_OP_EID = WLAN_EID_HT_OPERATION;
 
@@ -570,7 +570,6 @@ bool CFG80211DRV_ApKeyAdd(struct rtmp_adapter *pAd, void *pData)
 	    pKeyInfo->KeyType == RT_CMD_80211_KEY_WEP104) {
 		pWdev->WepStatus = Ndis802_11WEPEnabled;
 		{
-			u8 CipherAlg;
 			CIPHER_KEY	*pSharedKey;
 			struct os_cookie *pObj;
 

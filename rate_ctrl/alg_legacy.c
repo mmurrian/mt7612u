@@ -1226,7 +1226,7 @@ VOID StaQuickResponeForRateUpExec(
 			if (pEntry->wcid >= 1 && pEntry->wcid <= 8)
 			{
 				WCID_TX_CNT_STRUC wcidTxCnt;
-				uint32_t regAddr, offset;
+				uint32_t regAddr;
 				ULONG HwTxCnt, HwErrRatio = 0;
 
 				regAddr = WCID_TX_CNT_0 + (pEntry->wcid - 1) * 4;

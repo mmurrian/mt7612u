@@ -4665,10 +4665,6 @@ static INT Set_AP_VENDOR_SPECIFIC_IE(
 	IN char *IE,
 	IN uint32_t IELen)
 {
-	struct os_cookie *pObj = pAd->OS_Cookie;
-	u8 apidx = pObj->ioctl_if;
-
-
 	switch (OUIType) {
 		default:
 			DBGPRINT(RT_DEBUG_ERROR, ("%s: Unknown OUIType = %d\n", __FUNCTION__, OUIType));
