@@ -4,42 +4,17 @@ else
 RT28xx_MODE = $(WIFI_MODE)
 endif
 
-# CHIPSET
-# rt2860, rt2870, rt2880, rt2070, rt3070, rt3090, rt3572, rt3062, rt3562, rt3593, rt3573
-# rt3562(for rt3592), rt3050, rt3350, rt3352, rt5350, rt5370, rt5390, rt5572, rt5592,
-# rt8592(for rt85592),
-# mt7601e, mt7601u,
-# mt7650e, mt7630e, mt7610e, mt7650u, mt7630u, mt7610u
-# mt7662e, mt7632e, mt7612e, mt7662u, mt7632u, mt7612u
-
-ifeq ($(CHIPSET),)
-CHIPSET = mt7612u mt7662u mt7632u
-endif
-
-MODULE = $(word 1, $(CHIPSET))
+MODULE = mt7612u
 
 # Support Wpa_Supplicant
 # i.e. wpa_supplicant -Dralink
 HAS_WPA_SUPPLICANT=y
 
-
 # Support Native WpaSupplicant for Network Maganger
 # i.e. wpa_supplicant -Dwext
-HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=n
+HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=y
 
-# Support for Multiple Cards
-HAS_MC_SUPPORT=n
-
-#Support for PCI-MSI
-HAS_MSI_SUPPORT=n
-
-HAS_KTHREAD_SUPPORT=n
-
-
-
-
-
-
+HAS_KTHREAD_SUPPORT=y
 
 #Support statistics count
 HAS_STATS_COUNT=y
@@ -55,29 +30,20 @@ HAS_CFG80211_SUPPORT=y
 HAS_CFG80211_SCAN_SIGNAL_AVG_SUPPORT=y
 #Cfg80211-based P2P Support
 #Cfg80211-based P2P Mode Selection (must one be chosen)
-HAS_CFG80211_P2P_CONCURRENT_DEVICE=n
+HAS_CFG80211_P2P_CONCURRENT_DEVICE=y
 HAS_CFG80211_P2P_SINGLE_DEVICE=n
-HAS_CFG80211_P2P_STATIC_CONCURRENT_DEVICE=n
 
 HAS_CFG80211_P2P_MULTI_CHAN_SUPPORT=n
 
 #Support RFKILL hardware block/unblock LINUX-only function
-HAS_RFKILL_HW_SUPPORT=n
+HAS_RFKILL_HW_SUPPORT=y
 
-HAS_TEMPERATURE_TX_ALC=n
-
-HAS_NEW_RATE_ADAPT_SUPPORT=n
-
-HAS_WOW_IFDOWN_SUPPORT=n
-
-HAS_SWITCH_CHANNEL_OFFLOAD=n
-
-HAS_RESOURCE_BOOT_ALLOC=n
+HAS_NEW_RATE_ADAPT_SUPPORT=y
 
 #################################################
 
 WFLAGS := -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX -Wall -Wstrict-prototypes -Wno-trigraphs
-WFLAGS += -DSYSTEM_LOG_SUPPORT -DRT28xx_MODE=$(RT28xx_MODE) -DCHIPSET=$(MODULE) -DDBG_DIAGNOSE -DDBG_RX_MCS -DDBG_TX_MCS
+WFLAGS += -DSYSTEM_LOG_SUPPORT -DRT28xx_MODE=$(RT28xx_MODE) -DDBG_DIAGNOSE -DDBG_RX_MCS -DDBG_TX_MCS
 #APsoc Specific
 WFLAGS += -DCONFIG_RA_NAT_NONE
 #end of /* APsoc Specific */
@@ -92,30 +58,11 @@ endif
 #
 ###############################################################################
 
-
 ifeq ($(RT28xx_MODE),AP)
 WFLAGS += -DCONFIG_AP_SUPPORT -DMBSS_SUPPORT -DDBG -DDOT1X_SUPPORT -DAP_SCAN_SUPPORT -DSCAN_SUPPORT
 
 ifeq ($(HAS_HOSTAPD_SUPPORT),y)
 WFLAGS += -DHOSTAPD_SUPPORT
-endif
-
-ifeq ($(HAS_NEW_RATE_ADAPT_SUPPORT),y)
-WFLAGS += -DNEW_RATE_ADAPT_SUPPORT
-endif
-
-ifeq ($(HAS_STATS_COUNT),y)
-WFLAGS += -DSTATS_COUNT_SUPPORT
-endif
-
-ifeq ($(HAS_CFG80211_SUPPORT),y)
-WFLAGS += -DRT_CFG80211_SUPPORT -DWPA_SUPPLICANT_SUPPORT
-ifeq ($(HAS_RFKILL_HW_SUPPORT),y)
-WFLAGS += -DRFKILL_HW_SUPPORT
-endif
-ifeq ($(HAS_CFG80211_SCAN_SIGNAL_AVG_SUPPORT),y)
-WFLAGS += -DCFG80211_SCAN_SIGNAL_AVG
-endif
 endif
 
 endif #// endif of RT2860_MODE == AP //
@@ -125,7 +72,6 @@ endif #// endif of RT2860_MODE == AP //
 # config for STA mode
 #
 ########################################################
-
 
 ifeq ($(RT28xx_MODE),STA)
 WFLAGS += -DCONFIG_STA_SUPPORT -DSCAN_SUPPORT -DDBG
@@ -137,35 +83,9 @@ WFLAGS += -DNATIVE_WPA_SUPPLICANT_SUPPORT
 endif
 endif
 
-ifeq ($(HAS_NEW_RATE_ADAPT_SUPPORT),y)
-WFLAGS += -DNEW_RATE_ADAPT_SUPPORT
-endif
-
-ifeq ($(HAS_STATS_COUNT),y)
-WFLAGS += -DSTATS_COUNT_SUPPORT
-endif
-
-ifeq ($(HAS_CFG80211_SUPPORT),y)
-WFLAGS += -DRT_CFG80211_SUPPORT -DWPA_SUPPLICANT_SUPPORT
-ifeq ($(HAS_RFKILL_HW_SUPPORT),y)
-WFLAGS += -DRFKILL_HW_SUPPORT
-endif
-ifeq ($(HAS_CFG80211_SCAN_SIGNAL_AVG_SUPPORT),y)
-WFLAGS += -DCFG80211_SCAN_SIGNAL_AVG
-endif
-endif
-
 ifeq ($(HAS_WIDI_SUPPORT),y)
 WFLAGS += -DWIDI_SUPPORT
 
-ifeq ($(HAS_INTEL_L2SD_TOGGLE_SCAN_SUPPORT),y)
-WFLAGS += -DINTEL_L2SD_TOGGLE_SCAN_SUPPORT
-endif
-
-endif
-
-ifeq ($(HAS_WOW_IFDOWN_SUPPORT),y)
-WFLAGS += -DWOW_IFDOWN_SUPPORT
 endif
 
 endif
@@ -176,7 +96,6 @@ endif
 # config for APSTA
 #
 ###########################################################
-
 
 ifeq ($(RT28xx_MODE),APSTA)
 WFLAGS += -DCONFIG_AP_SUPPORT -DCONFIG_STA_SUPPORT -DCONFIG_APSTA_MIXED_SUPPORT -DMBSS_SUPPORT -DDOT1X_SUPPORT -DAP_SCAN_SUPPORT -DSCAN_SUPPORT -DDBG
@@ -196,6 +115,10 @@ WFLAGS += -DNATIVE_WPA_SUPPLICANT_SUPPORT
 endif
 endif
 
+endif
+# endif of ifeq ($(RT28xx_MODE),APSTA)
+
+# Common options 
 
 ifeq ($(HAS_NEW_RATE_ADAPT_SUPPORT),y)
 WFLAGS += -DNEW_RATE_ADAPT_SUPPORT
@@ -215,9 +138,13 @@ WFLAGS += -DCFG80211_SCAN_SIGNAL_AVG
 endif
 endif
 
+ifeq ($(HAS_CFG80211_P2P_CONCURRENT_DEVICE),y)
+WFLAGS += -DRT_CFG80211_P2P_CONCURRENT_DEVICE
 endif
-# endif of ifeq ($(RT28xx_MODE),APSTA)
 
+ifeq ($(HAS_CFG80211_P2P_SINGLE_DEVICE),y)
+WFLAGS += -DRT_CFG80211_P2P_SINGLE_DEVICE
+endif
 
 ##########################################################
 #
@@ -231,15 +158,7 @@ endif
 #################################################
 
 WFLAGS += -DMT76x2 -DMT_RF -DRTMP_TIMER_TASK_SUPPORT -DRTMP_EFUSE_SUPPORT -DRTMP_RF_RW_SUPPORT
-HAS_NEW_RATE_ADAPT_SUPPORT=y
-ifeq ($(HAS_NEW_RATE_ADAPT_SUPPORT),y)
-WFLAGS += -DNEW_RATE_ADAPT_SUPPORT
-endif
 WFLAGS += -DFIFO_EXT_SUPPORT
-
-ifeq ($(HAS_CSO_SUPPORT), y)
-WFLAGS += -DCONFIG_CSO_SUPPORT -DCONFIG_TSO_SUPPORT
-endif
 
 #################################################
 # Platform Related definitions

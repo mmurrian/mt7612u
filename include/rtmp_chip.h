@@ -476,12 +476,6 @@ struct rtmp_chip_cap {
 	UINT8 DataBulkInAddr;
 	UINT8 WMM0ACBulkOutAddr[4];
 
-#ifdef CONFIG_SWITCH_CHANNEL_OFFLOAD
-	uint16_t ChannelParamsSize;
-	u8 *ChannelParam;
-	INT XtalType;
-#endif
-
 	u8 *fw_name;		/* ULLI : rename to catch compiler errors */
 	u8 *fw_patch_name;	/* ULLI : rename to catch compiler errors */
 
