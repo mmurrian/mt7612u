@@ -40,7 +40,7 @@ typedef struct _RTMP_TX_RATE {
 typedef struct _RTMP_RA_LEGACY_TB
 {
 	u8   ItemNo;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 Rsv2:1;
 	u8 Mode:3;
 	u8 BW:2;
@@ -65,7 +65,7 @@ typedef struct _RTMP_RA_LEGACY_TB
 typedef struct  _RTMP_RA_GRP_TB
 {
 	u8   ItemNo;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 Rsv2:1;
 	u8 Mode:3;
 	u8 BW:2;

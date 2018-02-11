@@ -1435,7 +1435,7 @@ enum WIFI_MODE{
 											/*18 : the length of Mac address acceptable format "01:02:03:04:05:06;") */
 											/*64 : MAX_NUM_OF_ACL_LIST */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 #define DIR_READ                    0
 #define DIR_WRITE                   1
 #define TYPE_TXD                    0

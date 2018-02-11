@@ -120,7 +120,7 @@
 /*
 	Rx descriptor format, Rx Ring
 */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	struct GNU_PACKED _RXD_STRUC{
 	uint32_t dma_len;
 }RXD_STRUC, *PRXD_STRUC;

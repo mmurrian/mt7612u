@@ -249,7 +249,7 @@ typedef struct  _TRIGGER_EVENT_TAB{
 
 */
 typedef struct GNU_PACKED _EXT_CAP_INFO_ELEMENT{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t interworking:1;
 	uint32_t TDLSChSwitchSupport:1; /* bit30: TDLS Channel Switching */
 	uint32_t TDLSPeerPSMSupport:1; /* bit29: TDLS Peer PSM Support */
@@ -315,9 +315,9 @@ typedef struct GNU_PACKED _EXT_CAP_INFO_ELEMENT{
 	uint32_t TDLSPeerPSMSupport:1; /* bit29: TDLS Peer PSM Support */
 	uint32_t TDLSChSwitchSupport:1; /* bit30: TDLS Channel Switching */
 	uint32_t interworking:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t rsv63:1;
 	uint32_t operating_mode_notification:1;
 	uint32_t tdls_wider_bw:1;
@@ -357,7 +357,7 @@ typedef struct GNU_PACKED _EXT_CAP_INFO_ELEMENT{
 	uint32_t tdls_wider_bw:1;
 	uint32_t operating_mode_notification:1;
 	uint32_t rsv63:1;
-#endif // RT_BIG_ENDIAN //
+#endif // __BIG_ENDIAN //
 }EXT_CAP_INFO_ELEMENT, *PEXT_CAP_INFO_ELEMENT;
 
 
@@ -425,7 +425,7 @@ typedef struct _RT_VHT_CAP{
 	Features not listed here but contained in 802.11n spec are not supported in rt2860
 */
 typedef struct {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	unsigned short rsv:5;
 	unsigned short AmsduSize:1;	/* Max receiving A-MSDU size */
 	unsigned short AmsduEnable:1;	/* Enable to transmit A-MSDU. Suggest disable. We should use A-MPDU to gain best benifit of 802.11n */
@@ -450,7 +450,7 @@ typedef struct {
 #endif
 
 	/*Substract from Addiont HT INFO IE */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 RecomWidth:1;
 	u8 ExtChanOffset:2;	/* Please not the difference with following 	u8 NewExtChannelOffset; from 802.11n */
 	u8 MpduDensity:3;
@@ -462,7 +462,7 @@ typedef struct {
 	u8 RecomWidth:1;
 #endif
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	unsigned short rsv2:11;
 	unsigned short OBSS_NonHTExist:1;
 	unsigned short rsv3:1;
@@ -509,7 +509,7 @@ typedef	struct GNU_PACKED _HEADER_802_3	{
 /* Block ACK related format */
 /* 2-byte BA Parameter  field  in 	DELBA frames to terminate an already set up bA */
 typedef struct GNU_PACKED _DELBA_PARM{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     unsigned short      TID:4;	/* value of TC os TS */
     unsigned short      Initiator:1;	/* 1: originator    0:recipient */
     unsigned short      Rsv:11;	/* always set to 0 */
@@ -517,12 +517,12 @@ typedef struct GNU_PACKED _DELBA_PARM{
     unsigned short      Rsv:11;	/* always set to 0 */
     unsigned short      Initiator:1;	/* 1: originator    0:recipient */
     unsigned short      TID:4;	/* value of TC os TS */
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } DELBA_PARM, *PDELBA_PARM;
 
 /* 2-byte BA Parameter Set field  in ADDBA frames to signal parm for setting up a BA */
 typedef struct GNU_PACKED _BA_PARM{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     unsigned short      BufSize:10;	/* number of buffe of size 2304 octetsr */
     unsigned short      TID:4;	/* value of TC os TS */
     unsigned short      BAPolicy:1;	/* 1: immediately BA    0:delayed BA */
@@ -532,19 +532,19 @@ typedef struct GNU_PACKED _BA_PARM{
     unsigned short      BAPolicy:1;	/* 1: immediately BA    0:delayed BA */
     unsigned short      TID:4;	/* value of TC os TS */
     unsigned short      BufSize:10;	/* number of buffe of size 2304 octetsr */
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } BA_PARM, *PBA_PARM;
 
 /* 2-byte BA Starting Seq CONTROL field */
 typedef union GNU_PACKED _BASEQ_CONTROL{
     struct GNU_PACKED {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     unsigned short      StartSeq:12;   /* sequence number of the 1st MSDU for which this BAR is sent */
 	unsigned short      FragNum:4;	/* always set to 0 */
 #else
     unsigned short      FragNum:4;	/* always set to 0 */
 	unsigned short      StartSeq:12;   /* sequence number of the 1st MSDU for which this BAR is sent */
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
     }   field;
     unsigned short           word;
 } BASEQ_CONTROL, *PBASEQ_CONTROL;
@@ -552,7 +552,7 @@ typedef union GNU_PACKED _BASEQ_CONTROL{
 /*BAControl and BARControl are the same */
 /* 2-byte BA CONTROL field in BA frame */
 typedef struct GNU_PACKED _BA_CONTROL{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     unsigned short      TID:4;
     unsigned short      Rsv:9;
     unsigned short      Compressed:1;
@@ -564,12 +564,12 @@ typedef struct GNU_PACKED _BA_CONTROL{
     unsigned short      Compressed:1;
     unsigned short      Rsv:9;
     unsigned short      TID:4;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } BA_CONTROL, *PBA_CONTROL;
 
 /* 2-byte BAR CONTROL field in BAR frame */
 typedef struct GNU_PACKED _BAR_CONTROL{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     unsigned short      TID:4;
     unsigned short      Rsv1:9;
     unsigned short      Compressed:1;
@@ -581,12 +581,12 @@ typedef struct GNU_PACKED _BAR_CONTROL{
     unsigned short      Compressed:1;
     unsigned short      Rsv1:9;
     unsigned short      TID:4;
-#endif /* !RT_BIG_ENDIAN */
+#endif /* !__BIG_ENDIAN */
 } BAR_CONTROL, *PBAR_CONTROL;
 
 /* BARControl in MTBAR frame */
 typedef struct GNU_PACKED _MTBAR_CONTROL{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     unsigned short      NumTID:4;
     unsigned short      Rsv1:9;
     unsigned short      Compressed:1;
@@ -598,17 +598,17 @@ typedef struct GNU_PACKED _MTBAR_CONTROL{
     unsigned short      Compressed:1;
     unsigned short      Rsv1:9;
     unsigned short      NumTID:4;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } MTBAR_CONTROL, *PMTBAR_CONTROL;
 
 typedef struct GNU_PACKED _PER_TID_INFO{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     unsigned short      TID:4;
     unsigned short      Rsv1:12;
 #else
     unsigned short      Rsv1:12;
     unsigned short      TID:4;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } PER_TID_INFO, *PPER_TID_INFO;
 
 typedef struct {
@@ -818,7 +818,7 @@ typedef struct {
 
 /* QBSS Info field in QSTA's assoc req */
 typedef struct GNU_PACKED _QBSS_STA_INFO_PARM{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 	Rsv2:1;
 	u8 	MaxSPLength:2;
 	u8 	Rsv1:1;
@@ -834,7 +834,7 @@ typedef struct GNU_PACKED _QBSS_STA_INFO_PARM{
 	u8 	Rsv1:1;
 	u8 	MaxSPLength:2;
 	u8 	Rsv2:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } QBSS_STA_INFO_PARM, *PQBSS_STA_INFO_PARM;
 
 typedef struct {
@@ -848,7 +848,7 @@ typedef struct {
 
 /* QBSS Info field in QAP's Beacon/ProbeRsp */
 typedef struct GNU_PACKED _QBSS_AP_INFO_PARM{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 	UAPSD:1;
 	u8 	Rsv:3;
     u8 	ParamSetCount:4;
@@ -856,7 +856,7 @@ typedef struct GNU_PACKED _QBSS_AP_INFO_PARM{
     u8 	ParamSetCount:4;
 	u8 	Rsv:3;
 	u8 	UAPSD:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } QBSS_AP_INFO_PARM, *PQBSS_AP_INFO_PARM;
 
 /* QOS Capability reported in QAP's BEACON/ProbeRsp */

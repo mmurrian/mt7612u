@@ -94,7 +94,7 @@ typedef enum{
     (uint64_t)(((uint64_t)(x) & (uint64_t) 0x00ff000000000000ULL) >> 40) | \
     (uint64_t)(((uint64_t)(x) & (uint64_t) 0xff00000000000000ULL) >> 56) ))
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 
 #define cpu2le64(x) SWAP64((x))
 #define le2cpu64(x) SWAP64((x))
@@ -124,7 +124,7 @@ typedef enum{
 #define cpu2be16(x) SWAP16((x))
 #define be2cpu16(x) SWAP16((x))
 
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 #define MAX_CUSTOM_LEN 128

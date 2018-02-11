@@ -770,7 +770,7 @@ VOID RT28xx_UpdateBeaconToAsic(struct rtmp_adapter *pAd,
 		memset(pBeaconSync->BeaconTxWI[bcn_idx], 0, TXWISize);
 	} else {
 		ptr = (u8 *)&pAd->BeaconTxWI;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPWIEndianChange(pAd, ptr, TYPE_TXWI);
 #endif
 		if (NdisEqualMemory(pBeaconSync->BeaconTxWI[bcn_idx], &pAd->BeaconTxWI, TXWISize) == false) {

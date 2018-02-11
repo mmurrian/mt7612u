@@ -379,9 +379,9 @@ unsigned short RtmpUSB_WriteFragTxResource(
 	}
 
 	memmove(pWirelessPacket, pTxBlk->HeaderBuf, MT_DMA_HDR_LEN + TXWISize + hwHdrLen);
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)(pWirelessPacket + MT_DMA_HDR_LEN + TXWISize), DIR_WRITE, false);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	pWirelessPacket += (MT_DMA_HDR_LEN + TXWISize + hwHdrLen);
 	pHTTXContext->CurWriteRealPos += (MT_DMA_HDR_LEN + TXWISize + hwHdrLen);
 
@@ -487,9 +487,9 @@ unsigned short RtmpUSB_WriteSingleTxResource(
 		}
 
 		memmove(pWirelessPacket, pTxBlk->HeaderBuf, hdr_copy_len);
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPFrameEndianChange(pAd, (u8 *)(pWirelessPacket + MT_DMA_HDR_LEN + TXWISize), DIR_WRITE, false);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 		pWirelessPacket += (hdr_copy_len);
 
 		/* We unlock it here to prevent the first 8 bytes maybe over-writed issue.*/
@@ -600,9 +600,9 @@ unsigned short RtmpUSB_WriteMultiTxResource(
 
 			/* Copy it.*/
 			memmove(pWirelessPacket, pTxBlk->HeaderBuf, pTxBlk->Priv);
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			RTMPFrameEndianChange(pAd, (u8 *)(pWirelessPacket+ MT_DMA_HDR_LEN + TXWISize), DIR_WRITE, false);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 			pHTTXContext->CurWriteRealPos += pTxBlk->Priv;
 			pWirelessPacket += pTxBlk->Priv;
 		}
@@ -876,13 +876,13 @@ VOID RtmpUSBNullFrameKickOut(
 		txwi = (struct mt7612u_txwi *)&pWirelessPkt[MT_DMA_HDR_LEN];
 		RTMPWriteTxWI(pAd, txwi, false, false, false, false, true, false, 0, BSSID_WCID, frameLen,
 						0, 0, (u8)pAd->CommonCfg.MlmeTransmit.field.MCS, IFS_HTTXOP, &pAd->CommonCfg.MlmeTransmit);
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPWIEndianChange(pAd, (u8 *)txwi, TYPE_TXWI);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 		memmove(&pWirelessPkt[TXWISize + MT_DMA_HDR_LEN], pNullFrame, frameLen);
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPFrameEndianChange(pAd, (u8 *)&pWirelessPkt[MT_DMA_HDR_LEN + TXWISize], DIR_WRITE, false);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 		pAd->NullContext.BulkOutSize =  MT_DMA_HDR_LEN + TXWISize + frameLen + 4;
 		pAd->NullContext.BulkOutSize = ( pAd->NullContext.BulkOutSize + 3) & (~3);
 
@@ -1003,18 +1003,18 @@ if (0) {
 		pRxBlk->ldpc_ex_sym = rxwi_n->ldpc_ex_sym;
 	}
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPWIEndianChange(pAd, pData, TYPE_RXWI);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	if (pRxBlk->MPDUtotalByteCnt > ThisFrameLen) {
 		DBGPRINT(RT_DEBUG_ERROR, ("%s():pRxWIMPDUtotalByteCount(%d) large than RxDMALen(%ld)\n",
 									__FUNCTION__, pRxBlk->MPDUtotalByteCnt, ThisFrameLen));
 		return NULL;
 
 	}
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPWIEndianChange(pAd, pData, TYPE_RXWI);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	/* allocate a rx packet*/
 	skb = dev_alloc_skb(ThisFrameLen);
@@ -1028,9 +1028,9 @@ if (0) {
 	memcpy(skb_put(skb, ThisFrameLen), pData, ThisFrameLen);
 	skb->dev = get_netdev_from_bssid(pAd, BSS0);
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPDescriptorEndianChange((u8 *)pRxInfo, TYPE_RXINFO);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	memmove((VOID *)&pRxBlk->hw_rx_info[0], (VOID *)pRxFceInfo, sizeof(struct mt7612u_rxfce_info_pkt));
 	pRxBlk->pRxFceInfo = (struct mt7612u_rxfce_info_pkt *)&pRxBlk->hw_rx_info[0];

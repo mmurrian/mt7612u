@@ -85,7 +85,7 @@
 
 /* 2-byte Frame control field */
 typedef struct GNU_PACKED {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t Order:1;		/* Strict order expected */
 	uint16_t Wep:1;		/* Wep data */
 	uint16_t MoreData:1;	/* More data bit */
@@ -109,7 +109,7 @@ typedef struct GNU_PACKED {
 	uint16_t MoreData:1;	/* More data bit */
 	uint16_t Wep:1;		/* Wep data */
 	uint16_t Order:1;		/* Strict order expected */
-#endif	/* !RT_BIG_ENDIAN */
+#endif	/* !__BIG_ENDIAN */
 } FRAME_CONTROL, *PFRAME_CONTROL;
 
 
@@ -119,13 +119,13 @@ typedef struct GNU_PACKED _HEADER_802_11 {
         u8           Addr1[6];
         u8           Addr2[6];
 	u8 	Addr3[6];
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t 	Sequence:12;
 	uint16_t 	Frag:4;
 #else
 	uint16_t 	Frag:4;
 	uint16_t 	Sequence:12;
-#endif /* !RT_BIG_ENDIAN */
+#endif /* !__BIG_ENDIAN */
 	u8 	Octet[0];
 }HEADER_802_11, *PHEADER_802_11;
 

@@ -34,7 +34,7 @@
 
 /*  HT Capability INFO field in HT Cap IE . */
 typedef struct GNU_PACKED _HT_CAP_INFO{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t LSIGTxopProSup:1;
 	uint16_t Forty_Mhz_Intolerant:1;
 	uint16_t PSMP:1;
@@ -64,13 +64,13 @@ typedef struct GNU_PACKED _HT_CAP_INFO{
 	uint16_t PSMP:1;
 	uint16_t Forty_Mhz_Intolerant:1;
 	uint16_t LSIGTxopProSup:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } HT_CAP_INFO;
 
 
 /*  HT Capability INFO field in HT Cap IE . */
 typedef struct GNU_PACKED _HT_CAP_PARM{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	UINT8	rsv:3;/*momi power safe */
 	UINT8	MpduDensity:3;
 	UINT8	MaxRAmpduFactor:2;
@@ -78,12 +78,12 @@ typedef struct GNU_PACKED _HT_CAP_PARM{
 	UINT8	MaxRAmpduFactor:2;
 	UINT8	MpduDensity:3;
 	UINT8	rsv:3;/*momi power safe */
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } HT_CAP_PARM, *PHT_CAP_PARM;
 
 
 typedef struct GNU_PACKED _HT_MCS_SET_TX_SUBFIELD{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	UINT8	TxMCSSetDefined:1;
 	UINT8	TxRxNotEqual:1;
 	UINT8	TxMaxStream:2;
@@ -95,7 +95,7 @@ typedef struct GNU_PACKED _HT_MCS_SET_TX_SUBFIELD{
 	UINT8	TxMaxStream:2;
 	UINT8	TxRxNotEqual:1;
 	UINT8	TxMCSSetDefined:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }HT_MCS_SET_TX_SUBFIELD, *PHT_MCS_SET_TX_SUBFIELD;
 
 
@@ -103,7 +103,7 @@ typedef struct GNU_PACKED _HT_MCS_SET_TX_SUBFIELD{
 typedef struct GNU_PACKED _HT_MCS_SET{
 	UINT8	MCSSet[10];
 	UINT8	SupRate[2];  /* unit : 1Mbps */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	UINT8	rsv:3;
 	UINT8	MpduDensity:1;
 	UINT8	TxStream:2;
@@ -115,13 +115,13 @@ typedef struct GNU_PACKED _HT_MCS_SET{
 	UINT8	TxStream:2;
 	UINT8	MpduDensity:1;
 	UINT8	rsv:3;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	UINT8	rsv3[3];
 } HT_MCS_SET, *PHT_MCS_SET;
 
 /*  HT Capability INFO field in HT Cap IE . */
 typedef struct GNU_PACKED _EXT_HT_CAP_INFO{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t rsv2:4;
 	uint16_t RDGSupport:1;	/*reverse Direction Grant  support */
 	uint16_t PlusHTC:1;	/*+HTC control field support */
@@ -137,7 +137,7 @@ typedef struct GNU_PACKED _EXT_HT_CAP_INFO{
 	uint16_t PlusHTC:1;	/*+HTC control field support */
 	uint16_t RDGSupport:1;	/*reverse Direction Grant  support */
 	uint16_t rsv2:4;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } EXT_HT_CAP_INFO, *PEXT_HT_CAP_INFO;
 
 
@@ -149,7 +149,7 @@ typedef struct GNU_PACKED _EXT_HT_CAP_INFO{
 
 /* HT Beamforming field in HT Cap IE */
 typedef struct GNU_PACKED _HT_BF_CAP{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t rsv:3;
 	uint32_t ChanEstimation:2;
 	uint32_t CSIRowBFSup:2;
@@ -191,12 +191,12 @@ typedef struct GNU_PACKED _HT_BF_CAP{
 	uint32_t CSIRowBFSup:2;
 	uint32_t ChanEstimation:2;
 	uint32_t rsv:3;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } HT_BF_CAP, *PHT_BF_CAP;
 
 /*  HT antenna selection field in HT Cap IE . */
 typedef struct GNU_PACKED _HT_AS_CAP{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	UINT8	rsv:1;
 	UINT8	TxSoundPPDU:1;
 	UINT8	RxASel:1;
@@ -214,7 +214,7 @@ typedef struct GNU_PACKED _HT_AS_CAP{
 	UINT8	RxASel:1;
 	UINT8	TxSoundPPDU:1;
 	UINT8	rsv:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } HT_AS_CAP, *PHT_AS_CAP;
 
 
@@ -234,7 +234,7 @@ typedef struct GNU_PACKED _HT_CAPABILITY_IE{
 
 /*   field in Addtional HT Information IE . */
 typedef struct GNU_PACKED _ADD_HTINFO{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 SerInterGranu:3;
 	u8 S_PSMPSup:1;
 	u8 RifsMode:1;
@@ -251,7 +251,7 @@ typedef struct GNU_PACKED _ADD_HTINFO{
 
 
 typedef struct GNU_PACKED _ADD_HTINFO2{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	unsigned short rsv2:11;
 	unsigned short OBSS_NonHTExist:1;
 	unsigned short rsv:1;
@@ -269,7 +269,7 @@ typedef struct GNU_PACKED _ADD_HTINFO2{
 
 /* TODO: Need sync with spec about the definition of StbcMcs. In Draft 3.03, it's reserved. */
 typedef struct GNU_PACKED _ADD_HTINFO3{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	unsigned short rsv:4;
 	unsigned short PcoPhase:1;
 	unsigned short PcoActive:1;
@@ -287,7 +287,7 @@ typedef struct GNU_PACKED _ADD_HTINFO3{
 	unsigned short PcoActive:1;
 	unsigned short PcoPhase:1;
 	unsigned short rsv:4;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 } ADD_HTINFO3, *PADD_HTINFO3;
 
 #define SIZE_ADD_HT_INFO_IE		22
@@ -327,7 +327,7 @@ typedef struct GNU_PACKED _OVERLAP_BSS_SCAN_IE{
 /*  7.3.2.56. 20/40 Coexistence element used in  Element ID = 72 = IE_2040_BSS_COEXIST */
 typedef union GNU_PACKED _BSS_2040_COEXIST_IE{
  struct GNU_PACKED {
- #ifdef RT_BIG_ENDIAN
+ #ifdef __BIG_ENDIAN
 	u8 rsv:3;
  	u8 ObssScanExempGrant:1;
 	u8 ObssScanExempReq:1;
@@ -341,7 +341,7 @@ typedef union GNU_PACKED _BSS_2040_COEXIST_IE{
 	u8 ObssScanExempReq:1;
 	u8 ObssScanExempGrant:1;
 	u8 rsv:3;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
     } field;
  u8   word;
 } BSS_2040_COEXIST_IE, *PBSS_2040_COEXIST_IE;

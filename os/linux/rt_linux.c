@@ -1352,9 +1352,9 @@ u8 VLAN_8023_Header_Copy(
 		/* make up TCI field */
 		TCI = (VLAN_VID & 0x0fff) | ((VLAN_Priority & 0x7) << 13);
 
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 		TCI = SWAP16(TCI);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 		/* copy dst + src MAC (12B) */
 		memcpy(pData, pHeader802_3, LENGTH_802_3_NO_TYPE);

@@ -925,7 +925,7 @@ typedef struct _NDIS_802_11_CAPABILITY {
 
 /* MIMO Tx parameter, ShortGI, MCS, STBC, etc.  these are fields in TXWI. Don't change this definition!!! */
 typedef union _HTTRANSMIT_SETTING {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	struct {
 		unsigned short MODE:3;	/* Use definition MODE_xxx. */
 		unsigned short iTxBF:1;

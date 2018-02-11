@@ -247,7 +247,7 @@ VOID APMakeBssBeacon(struct rtmp_adapter *pAd, INT apidx)
 		step 6. move BEACON TXD and frame content to on-chip memory
 	*/
 	ptr = (u8 *)&pAd->BeaconTxWI;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
     RTMPWIEndianChange(pAd, ptr, TYPE_TXWI);
 #endif
 
@@ -267,7 +267,7 @@ VOID APMakeBssBeacon(struct rtmp_adapter *pAd, INT apidx)
 
 	/* update BEACON frame content. start right after the TXWI field. */
 	ptr = (u8 *)pMbss->BeaconBuf;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, ptr, DIR_WRITE, false);
 #endif
 
@@ -528,7 +528,7 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 		u8 HtLen, HtLen1;
 		/*u8 i; */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		HT_CAPABILITY_IE HtCapabilityTmp;
 		ADD_HT_INFO_IE	addHTInfoTmp;
 /*		unsigned short b2lTmp, b2lTmp2; // no use */
@@ -537,7 +537,7 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 		/* add HT Capability IE */
 		HtLen = sizeof(pComCfg->HtCapability);
 		HtLen1 = sizeof(pComCfg->AddHTInfo);
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 		MakeOutgoingFrame(pBeaconFrame+FrameLen,         &TmpLen,
 								  1,                                &HtCapIe,
 								  1,                                &HtLen,
@@ -760,7 +760,7 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 	{
 		ULONG TmpLen;
 		u8 HtLen, HtLen1;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		HT_CAPABILITY_IE HtCapabilityTmp;
 		ADD_HT_INFO_IE	addHTInfoTmp;
 #endif
@@ -776,7 +776,7 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 
 
 			epigram_ie_len = HtLen + 4;
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 			MakeOutgoingFrame(pBeaconFrame + FrameLen,      &TmpLen,
 						  1,                                &WpaIe,
 						  1,                                &epigram_ie_len,
@@ -809,7 +809,7 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 			FrameLen += TmpLen;
 
 			epigram_ie_len = HtLen1 + 4;
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 			MakeOutgoingFrame(pBeaconFrame + FrameLen,        &TmpLen,
 						  1,                                &WpaIe,
 						  1,                                &epigram_ie_len,

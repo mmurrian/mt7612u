@@ -604,10 +604,10 @@ VOID ap_cmm_peer_assoc_req_action(
     bool bAssocSkip = false;
 	bool bAssocNoRsp = false;
 	CHAR rssi;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t tmp_1;
 	uint64_t tmp_2;
-#endif /*RT_BIG_ENDIAN*/
+#endif /*__BIG_ENDIAN*/
 
 	/* allocate memory */
 	ie_list = kmalloc(sizeof(IE_LISTS), GFP_ATOMIC);
@@ -704,7 +704,7 @@ VOID ap_cmm_peer_assoc_req_action(
 	*/
 	pEntry->RateLen = ie_list->SupportedRatesLen;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	memcpy(&tmp_1,&ie_list->vht_cap.vht_cap, 4);
 	tmp_1=SWAP32(tmp_1);
 	memcpy(&ie_list->vht_cap.vht_cap,&tmp_1, 4);
@@ -714,7 +714,7 @@ VOID ap_cmm_peer_assoc_req_action(
 	memcpy(&(ie_list->vht_cap.mcs_set),&tmp_2, 8);
 	//SWAP32((uint32_t)vht_cap_ie.vht_cap);
 	//SWAP32((uint32_t)vht_cap_ie.mcs_set);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	RTMPSetSupportMCS(pAd,
 					OPMODE_AP,
@@ -878,7 +878,7 @@ VOID ap_cmm_peer_assoc_req_action(
 		ULONG TmpLen;
 		u8 HtLen1 = sizeof(pAd->CommonCfg.AddHTInfo);
 		HT_CAPABILITY_IE HtCapabilityRsp;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		HT_CAPABILITY_IE HtCapabilityTmp;
 		ADD_HT_INFO_IE	addHTInfoTmp;
 #endif
@@ -886,7 +886,7 @@ VOID ap_cmm_peer_assoc_req_action(
 		memmove(&HtCapabilityRsp, &pAd->CommonCfg.HtCapability, ie_list->ht_cap_len);
 
 		/* add HT Capability IE */
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 		MakeOutgoingFrame(pOutBuffer+FrameLen,			&TmpLen,
 											1,			&HtCapIe,
 											1,			&ie_list->ht_cap_len,
@@ -933,7 +933,7 @@ VOID ap_cmm_peer_assoc_req_action(
 
 
 			epigram_ie_len = ie_list->ht_cap_len + 4;
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 			MakeOutgoingFrame(pOutBuffer + FrameLen,        &TmpLen,
 						  1,                                &WpaIe,
 						  1,                                &epigram_ie_len,
@@ -951,7 +951,7 @@ VOID ap_cmm_peer_assoc_req_action(
 
 			FrameLen += TmpLen;
 			epigram_ie_len = HtLen1 + 4;
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 			MakeOutgoingFrame(pOutBuffer + FrameLen,        &TmpLen,
 						  1,                                &WpaIe,
 						  1,                                &epigram_ie_len,

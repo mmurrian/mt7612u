@@ -53,7 +53,7 @@ enum D_PORT {
 
 #include "rtmp_type.h"
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 struct __attribute__ ((packed)) mt7612_txinfo_pkt {
 	uint32_t info_type:2;
 	uint32_t d_port:3;
@@ -83,9 +83,9 @@ struct __attribute__ ((packed)) mt7612_txinfo_pkt {
 	uint32_t d_port:3;
 	uint32_t info_type:2;
 };
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef struct GNU_PACKED _LED_NMAC_CMD{
 	uint32_t  rsv:8;
 	uint32_t CmdID:8;
@@ -99,9 +99,9 @@ typedef struct GNU_PACKED _LED_NMAC_CMD{
 	uint32_t CmdID:8;
 	uint32_t rsv:8;
 }LED_NMAC_CMD;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 struct  __attribute__ ((packed)) mt7612u_txwi {
 	/* Word 0 */
 	uint32_t 	PHYMODE:3;
@@ -214,7 +214,7 @@ struct  __attribute__ ((packed)) mt7612u_txwi {
 */
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 struct __attribute__ ((packed)) mt7612u_struct mt7612u_rxfce_info_pkt {
 	uint32_t info_type:2;
 	uint32_t s_port:3;
@@ -248,9 +248,9 @@ struct __attribute__ ((packed)) mt7612u_rxfce_info_pkt{
 	uint32_t s_port:3;
 	uint32_t info_type:2;
 };
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 struct __attribute__ ((packed)) mt7612u_rxfce_info_cmd {
 	uint32_t info_type:2;
 	uint32_t d_port:3;
@@ -281,7 +281,7 @@ struct __attribute__ ((packed)) mt7612u_rxfce_info_cmd {
 /*
 	RXWI wireless information format.
 */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 struct __attribute__ ((packed)) mt7612u_rxwi {
 	/* Word 0 */
 	uint32_t eof:1;
@@ -339,13 +339,13 @@ struct __attribute__ ((packed)) mt7612u_rxwi {
 	/* Word 3~6 */
 	UINT8 bbp_rxinfo[16];
 };
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 
 
 typedef struct GNU_PACKED _NMAC_HW_RATE_CTRL_STRUCT{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t PHYMODE:3;
 	uint16_t iTxBF:1;
 	uint16_t eTxBF:1;
@@ -363,7 +363,7 @@ typedef struct GNU_PACKED _NMAC_HW_RATE_CTRL_STRUCT{
 	uint16_t eTxBF:1;
 	uint16_t iTxBF:1;
 	uint16_t PHYMODE:3;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }NMAC_HW_RATE_CTRL_STRUCT;
 
 
@@ -442,7 +442,7 @@ typedef struct GNU_PACKED _NMAC_HW_RATE_CTRL_STRUCT{
 #define MT_WLAN_FUN_CTRL_GPIO_OUT_EN	GENMASK(31, 24) /* MT76x0 */
 
 #define WLAN_FUN_INFO		0x84
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _WLAN_FUN_INFO_STRUC{
 	struct{
 		uint32_t 	BT_EEP_BUSY:1; /* Read-only for WLAN Driver */
@@ -464,7 +464,7 @@ typedef union _WLAN_FUN_INFO_STRUC{
 
 
 #define BT_FUN_CTRL		0xC0
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BT_FUN_CTRL_STRUC{
 	struct{
 		uint32_t 	GPIO1_OUT_OE_N:8;
@@ -502,7 +502,7 @@ typedef union _BT_FUN_CTRL_STRUC	{
 
 
 #define BT_FUN_INFO		0xC4
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BT_FUN_INFO_STRUC{
 	struct{
 		uint32_t 	WLAN_EEP_BUSY:1;
@@ -551,7 +551,7 @@ typedef struct _WLAN_BT_COEX_SETTING
 
 
 #define TSO_CTRL	0x0250
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TSO_CTRL_STRUC {
 	struct {
 		uint32_t rsv:13;
@@ -579,7 +579,7 @@ typedef union _TSO_CTRL_STRUC {
 	} field;
 	uint32_t word;
 } TSO_CTRL_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 #define TX_PROT_CFG6    0x13E0    // VHT 20 Protection
@@ -605,7 +605,7 @@ typedef union _TSO_CTRL_STRUC {
 #define HT_MAC_BSSID_DW0		0x02AC
 #define HT_MAC_BSSID_DW1		0x02B0
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union GNU_PACKED _HDR_TRANS_CTRL_STRUC {
 	struct {
     	uint32_t Rsv:30;
@@ -623,12 +623,12 @@ typedef union GNU_PACKED _HDR_TRANS_CTRL_STRUC {
 	} field;
 	uint32_t word;
 } HDR_TRANS_CTRL_STRUC, *PHDR_TRANS_CTRL_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 /* RX header translation enable by WCID */
 #define HT_RX_WCID_EN_BASE	0x0264
 #define HT_RX_WCID_OFFSET	32
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union GNU_PACKED _HT_RX_WCID_EN_STRUC {
 	struct {
     	uint32_t RX_WCID31_TRAN_EN:1;
@@ -704,13 +704,13 @@ typedef union GNU_PACKED _HT_RX_WCID_EN_STRUC {
 	} field;
 	uint32_t word;
 } HT_RX_WCID_EN_STRUC, *PHT_RX_WCID_EN_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 /* RX header translation - black list */
 #define HT_RX_BL_BASE		0x0284
 #define HT_RX_BL_OFFSET		2
 #define HT_RX_BL_SIZE		8
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union GNU_PACKED _HT_RX_BLACK_LIST_STRUC {
 	struct {
     	uint32_t BLACK_ETHER_TYPE1:16;
@@ -726,13 +726,13 @@ typedef union GNU_PACKED _HT_RX_BLACK_LIST_STRUC {
 	} field;
 	uint32_t word;
 } HT_RX_BLACK_LIST_STRUC, *PHT_RX_BLACK_LIST_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 /* RX VLAN Mapping (TCI) */
 #define HT_BSS_VLAN_BASE	0x0294
 #define HT_BSS_VLAN_OFFSET	2
 #define HT_BSS_VLAN_SIZE	8
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union GNU_PACKED _HT_BSS_VLAN_STRUC {
 	struct {
     	uint32_t TCI1_VID:12;
@@ -756,7 +756,7 @@ typedef union GNU_PACKED _HT_BSS_VLAN_STRUC {
 	} field;
 	uint32_t word;
 } HT_BSS_VLAN_STRUC, *PHT_BSS_VLAN_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 // TODO: shiang-6590, following definitions are dummy and not used for RT6590, shall remove/correct these!
@@ -766,7 +766,7 @@ typedef union GNU_PACKED _HT_BSS_VLAN_STRUC {
 
 
 #define RF_MISC	0x0518
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _RF_MISC_STRUC{
 	struct{
 		uint32_t Rsv1:29;

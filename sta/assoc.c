@@ -287,7 +287,7 @@ VOID MlmeAssocReqAction(
 			ULONG TmpLen;
 			u8 HtLen, BROADCOM[4] = { 0x0, 0x90, 0x4c, 0x33 };
 			PHT_CAPABILITY_IE pHtCapability;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			HT_CAPABILITY_IE HtCapabilityTmp;
 			memset(&HtCapabilityTmp, 0, sizeof (HT_CAPABILITY_IE));
 			memmove(&HtCapabilityTmp, &pAd->MlmeAux.HtCapability, pAd->MlmeAux.HtCapabilityLen);
@@ -684,7 +684,7 @@ VOID MlmeReassocReqAction(
 			u8 BROADCOM[4] = {0x0, 0x90, 0x4c, 0x33};
 			PHT_CAPABILITY_IE pHtCapability;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			HT_CAPABILITY_IE HtCapabilityTmp;
 			memset(&HtCapabilityTmp, 0, sizeof (HT_CAPABILITY_IE));
 			memmove(&HtCapabilityTmp, &pAd->MlmeAux.HtCapability, pAd->MlmeAux.HtCapabilityLen);
