@@ -1211,7 +1211,7 @@ VOID AsicEnableIbssSync(struct rtmp_adapter *pAd)
 	for (i = 0; i < TXWISize; i += 4) {
 		u32 dword;
 
-		dword =  *ptr +
+		dword =  *ptr |
 			(*(ptr + 1) << 8) |
 			(*(ptr + 2) << 16) |
 			(*(ptr + 3) << 24);
@@ -1225,7 +1225,7 @@ VOID AsicEnableIbssSync(struct rtmp_adapter *pAd)
 	for (i = 0; i< beaconLen; i += 4) {
 		u32 dword;
 
-		dword =  *ptr +
+		dword =  *ptr |
 			(*(ptr + 1) << 8) |
 			(*(ptr + 2) << 16) |
 			(*(ptr + 3) << 24);
