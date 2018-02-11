@@ -32,24 +32,6 @@
 /* maximum of PCI, USB, or RBUS, int PCI, it is 0 but in USB, it is 11 */
 #define RTMP_PKT_TAIL_PADDING 	11 /* 3(max 4 byte padding) + 4 (last packet padding) + 4 (MaxBulkOutsize align padding) */
 
-#ifdef PCI_MSI_SUPPORT
-#define RTMP_MSI_ENABLE(_pAd) \
-	{     struct os_cookie *_pObj = (_pAd->OS_Cookie); \
-		(_pAd)->HaveMsi = pci_enable_msi(_pObj->pci_dev) == 0 ? true : false; \
-	}
-
-#define RTMP_MSI_DISABLE(_pci_dev, _pHaveMsi)	\
-	{											\
-		if (*(_pHaveMsi) == true)				\
-			pci_disable_msi(_pci_dev);			\
-		*(_pHaveMsi) = false;					\
-	}
-
-#else
-#define RTMP_MSI_ENABLE(_pAd)					do{}while(0)
-#define RTMP_MSI_DISABLE(_pci_dev, _pHaveMsi)	do{}while(0)
-#endif /* PCI_MSI_SUPPORT */
-
 #define RTMP_PCI_DMA_TODEVICE		0xFF00
 #define RTMP_PCI_DMA_FROMDEVICE		0xFF01
 
