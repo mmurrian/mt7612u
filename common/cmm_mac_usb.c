@@ -57,7 +57,6 @@ VOID RTMPResetTxRxRingMemory(struct rtmp_adapter *pAd)
 	PTX_CONTEXT pNullContext   = &pAd->NullContext;
 	PTX_CONTEXT pPsPollContext = &pAd->PsPollContext;
 	PCMD_RSP_CONTEXT pCmdRspEventContext = &pAd->CmdRspEventContext;
-	unsigned int IrqFlags;
 
 	/* Free TxSwQueue Packet*/
 	for (index = 0; index < NUM_OF_TX_RING; index++) {

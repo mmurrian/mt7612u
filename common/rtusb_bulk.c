@@ -136,7 +136,6 @@ VOID RTUSBBulkOutDataPacket(struct rtmp_adapter *pAd, u8 BulkOutPipeId, u8 Index
 	unsigned short txwi_pkt_len = 0;
 	u8 ampdu = 0, phy_mode = 0, pid;
 	ULONG TmpBulkEndPos, ThisBulkSize;
-	unsigned long	IrqFlags = 0, IrqFlags2 = 0;
 	u8 *pWirelessPkt, *pAppendant;
 	uint32_t aggregation_num = 0;
 	bool	 bTxQLastRound = false;
@@ -493,7 +492,6 @@ VOID	RTUSBBulkOutNullFrame(
 	PTX_CONTEXT		pNullContext = &(pAd->NullContext);
 	struct urb *		pUrb;
 	int				ret = 0;
-	unsigned long	IrqFlags;
 
 	spin_lock_bh(&pAd->BulkOutLock[0]);
 	if ((pAd->BulkOutPending[0] == true) || RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NEED_STOP_TX))
@@ -575,7 +573,6 @@ VOID	RTUSBBulkOutMLMEPacket(
 	PTX_CONTEXT		pMLMEContext;
 	struct urb *		pUrb;
 	int				ret = 0;
-	unsigned long	IrqFlags;
 
 	pMLMEContext = (PTX_CONTEXT)pAd->MgmtRing.Cell[pAd->MgmtRing.TxDmaIdx].AllocVa;
 	pUrb = pMLMEContext->pUrb;
@@ -676,7 +673,6 @@ VOID	RTUSBBulkOutPsPoll(
 	PTX_CONTEXT		pPsPollContext = &(pAd->PsPollContext);
 	struct urb *		pUrb;
 	int				ret = 0;
-	unsigned long	IrqFlags;
 
 	spin_lock_bh(&pAd->BulkOutLock[0]);
 	if ((pAd->BulkOutPending[0] == true) || RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NEED_STOP_TX))
@@ -740,7 +736,6 @@ VOID DoBulkIn(IN struct rtmp_adapter *pAd)
 	PRX_CONTEXT		pRxContext;
 	struct urb *		pUrb;
 	int				ret = 0;
-	unsigned long	IrqFlags;
 
 	spin_lock_bh(&pAd->BulkInLock);
 	pRxContext = &(pAd->RxContext[pAd->NextRxBulkInIndex]);
@@ -812,7 +807,6 @@ VOID DoBulkIn(IN struct rtmp_adapter *pAd)
 VOID RTUSBBulkReceive(struct rtmp_adapter *pAd)
 {
 	PRX_CONTEXT pRxContext;
-	unsigned long IrqFlags;
 
 	/* sanity check */
 	if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NEED_STOP_HANDLE_RX)

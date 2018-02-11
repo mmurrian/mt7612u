@@ -147,7 +147,6 @@ Note:
 int RtmpChipOpsHook(VOID *pCB)
 {
 	struct rtmp_adapter *pAd = (struct rtmp_adapter *)pCB;
-	uint32_t MacValue;
 	int ret = 0;
 
 	/* sanity check */

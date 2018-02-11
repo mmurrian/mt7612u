@@ -4612,7 +4612,6 @@ INT Set_RateAdaptInterval(
 	uint32_t ra_time, ra_qtime;
 	char *token;
 	char sep = ':';
-	ULONG irqFlags;
 
 /*
 	The ra_interval inupt string format should be d:d, in units of ms.

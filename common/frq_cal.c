@@ -191,7 +191,6 @@ CHAR GetFrequencyOffset(
 		FreqOffset = (pRxWI->bbp_rxinfo[1]);
 	}
 
-ret:
 	return FreqOffset;
 }
 #endif /* CONFIG_STA_SUPPORT */

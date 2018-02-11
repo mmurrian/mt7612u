@@ -635,7 +635,6 @@ static int ResetBulkInHdlr(IN struct rtmp_adapter *pAd, IN PCmdQElmt CMDQelmt)
 			PRX_CONTEXT		pRxContext;
 			struct urb *		pUrb;
 			int				ret = 0;
-			unsigned long	IrqFlags;
 
 			spin_lock_bh(&pAd->BulkInLock);
 			pRxContext = &(pAd->RxContext[pAd->NextRxBulkInIndex]);
@@ -1149,7 +1148,6 @@ VOID CMDHandler(struct rtmp_adapter *pAd)
 	PCmdQElmt		cmdqelmt;
 	int 	NdisStatus = NDIS_STATUS_SUCCESS;
 	int 	ntStatus;
-/*	unsigned long	IrqFlags;*/
 
 	while (pAd && pAd->CmdQ.size > 0) {
 		NdisStatus = NDIS_STATUS_SUCCESS;

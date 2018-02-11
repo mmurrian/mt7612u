@@ -144,7 +144,6 @@ INT APSendPacket(struct rtmp_adapter *pAd, struct sk_buff *pPacket)
 	u8 QueIdx;
 	u8 UserPriority, PsMode = PWR_ACTIVE;
 	u8 Wcid;
-	unsigned long IrqFlags;
 	MAC_TABLE_ENTRY *pMacEntry = NULL;
 	struct rtmp_wifi_dev *wdev;
 
@@ -3422,7 +3421,6 @@ int APInsertPsQueue(
 	IN MAC_TABLE_ENTRY *pMacEntry,
 	IN u8 QueIdx)
 {
-	ULONG IrqFlags;
 	{
 		if (pMacEntry->PsQueue.Number >= MAX_PACKETS_IN_PS_QUEUE)
 		{
