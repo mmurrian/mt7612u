@@ -33,7 +33,7 @@ void mt7612u_disable_txrx(struct rtmp_adapter *pAd);
 
 void mt7612u_radio_off(struct rtmp_adapter *pAd, u8 Stage)
 {
-	uint32_t Value, ret;
+	uint32_t ret;
 
 	DBGPRINT(RT_DEBUG_TRACE, ("--> %s\n", __FUNCTION__));
 
@@ -72,7 +72,6 @@ void mt7612u_radio_on(struct rtmp_adapter *pAd, u8 Stage)
 {
 	uint32_t MACValue = 0;
 	uint32_t rx_filter_flag;
-	WPDMA_GLO_CFG_STRUC GloCfg;
 	uint32_t ret;
 
 	RTMP_CLEAR_PSFLAG(pAd, fRTMP_PS_MCU_SLEEP);

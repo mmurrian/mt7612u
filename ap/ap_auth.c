@@ -97,7 +97,6 @@ static VOID APMlmeDeauthReqAction(
     MLME_DEAUTH_REQ_STRUCT	*pInfo;
     HEADER_802_11			Hdr;
     u8 *				pOutBuffer = NULL;
-    int 			NStatus;
     ULONG					FrameLen = 0;
     MAC_TABLE_ENTRY			*pEntry;
 	u8 				apidx;
@@ -210,7 +209,6 @@ static VOID APPeerAuthReqAtIdleAction(
 	PHEADER_802_11 pRcvHdr;
 	HEADER_802_11 AuthHdr;
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen = 0;
 	MAC_TABLE_ENTRY *pEntry;
 	u8 ChTxtIe = 16, ChTxtLen = CIPHER_TEXT_LEN;
@@ -524,7 +522,6 @@ VOID APCls2errAction(
 {
 	HEADER_802_11 Hdr;
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen = 0;
 	unsigned short Reason = REASON_CLS2ERR;
 	MAC_TABLE_ENTRY *pEntry = NULL;
@@ -587,7 +584,6 @@ VOID APPeerAuthSimpleRspGenAndSend(
     HEADER_802_11     AuthHdr;
     ULONG             FrameLen = 0;
     u8 *           pOutBuffer = NULL;
-    int       NStatus;
 
 
     pOutBuffer = kmalloc(MGMT_DMA_BUFFER_SIZE, GFP_ATOMIC);

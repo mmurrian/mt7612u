@@ -543,7 +543,6 @@ VOID BAOriSessionAdd(
 	u8 TID;
 	unsigned short Idx;
 	u8 *pOutBuffer2 = NULL;
-	int NStatus;
 	ULONG FrameLen;
 	FRAME_BAR FrameBar;
 	u8 MaxPeerBufSize;
@@ -1134,7 +1133,6 @@ VOID PeerAddBAReqAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 	u8 pAddr[6];
 	FRAME_ADDBA_RSP ADDframe;
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	PFRAME_ADDBA_REQ pAddreqFrame = NULL;
 	ULONG FrameLen, *ptemp;
 	MAC_TABLE_ENTRY *pMacEntry;
@@ -1398,7 +1396,6 @@ VOID SendSMPSAction(struct rtmp_adapter *pAd, u8 Wcid, u8 smps)
 	struct rtmp_wifi_dev *wdev;
 	MAC_TABLE_ENTRY *pEntry;
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	FRAME_SMPS_ACTION Frame;
 	ULONG FrameLen;
 
@@ -1479,7 +1476,6 @@ typedef struct GNU_PACKED _MEASUREMENT_REQ
 VOID SendBeaconRequest(struct rtmp_adapter *pAd, u8 Wcid)
 {
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	FRAME_RM_REQ_ACTION Frame;
 	ULONG FrameLen;
 	BEACON_REQUEST BeaconReq;

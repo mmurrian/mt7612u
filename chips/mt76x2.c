@@ -478,9 +478,8 @@ static void mt76x2_tx_pwr_gain(struct rtmp_adapter *ad, u8 channel, u8 bw)
 
 void mt76x2_switch_channel(struct rtmp_adapter *ad, u8 channel, bool scan)
 {
-	struct rtmp_chip_cap *cap = &ad->chipCap;
 	unsigned int latch_band, band, bw, tx_rx_setting;
-	uint32_t ret, i, value, value1, restore_value, loop = 0;
+	uint32_t ret, value, value1, restore_value, loop = 0;
 	uint16_t e2p_value;
 	u8 bbp_ch_idx;
 	bool band_change = false;
@@ -1043,7 +1042,6 @@ static void mt7612u_init_fce(struct rtmp_adapter *ad)
 
 void mt76x2_init_mac_cr(struct rtmp_adapter *ad)
 {
-	u32 i;
 	u32 value = 0;
 	u16 e2p_value;
 	char xtal_freq_offset = 0;
@@ -1175,8 +1173,6 @@ void mt76x2_init_mac_cr(struct rtmp_adapter *ad)
 
 void mt76x2_init_rf_cr(struct rtmp_adapter *ad)
 {
-	uint16_t value;
-
 	mt7612u_mcu_load_cr(ad, RF_BBP_CR, 0, 0);
 }
 
@@ -2385,7 +2381,6 @@ static u8 mt76x2_txpwr_chlist[] = {
 
 int mt76x2_read_chl_pwr(struct rtmp_adapter *ad)
 {
-	struct rtmp_chip_cap *cap = &ad->chipCap;
 	u32 i, choffset;
 
 	mt76x2_get_tx_pwr_info(ad);

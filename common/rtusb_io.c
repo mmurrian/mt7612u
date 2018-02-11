@@ -89,8 +89,6 @@ int RTUSBSingleWrite(
 	IN	unsigned short Offset,
 	IN	unsigned short Value)
 {
-	bool WriteHigh = false;
-
 	return mt76u_vendor_request(pAd, DEVICE_VENDOR_REQUEST_OUT,
 				   MT_VEND_SINGLE_WRITE, Value, Offset, NULL, 0);
 }
@@ -1186,12 +1184,6 @@ VOID CMDHandler(struct rtmp_adapter *pAd)
 
 VOID RTUSBWatchDog(struct rtmp_adapter *pAd)
 {
-	PHT_TX_CONTEXT pHTTXContext;
-	int idx;
-	ULONG irqFlags;
-	struct urb *pUrb;
-	bool needDumpSeq = false;
-	uint32_t MACValue;
 
 	if(RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NIC_NOT_EXIST))
 		return;

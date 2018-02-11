@@ -174,7 +174,6 @@ VOID MlmeAssocReqAction(
 	unsigned short CapabilityInfo;
 	bool TimerCancelled;
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen = 0;
 	ULONG tmp;
 	unsigned short VarIesOffset = 0;
@@ -601,7 +600,6 @@ VOID MlmeReassocReqAction(
 	ULONG Timeout;
 	ULONG FrameLen = 0;
 	bool TimerCancelled;
-	int NStatus;
 	ULONG tmp;
 	u8 *pOutBuffer = NULL;
 	unsigned short Status;
@@ -822,7 +820,6 @@ VOID MlmeDisassocReqAction(
 	PHEADER_802_11 pDisassocHdr;
 	u8 *pOutBuffer = NULL;
 	ULONG FrameLen = 0;
-	int NStatus;
 	bool TimerCancelled;
 	ULONG Timeout = 500;
 	unsigned short Status;
@@ -1494,7 +1491,6 @@ VOID Cls3errAction(struct rtmp_adapter *pAd, u8 *pAddr)
 	PHEADER_802_11 pDisassocHdr;
 	u8 *pOutBuffer = NULL;
 	ULONG FrameLen = 0;
-	int NStatus;
 	unsigned short Reason = REASON_CLS3ERR;
 
 	pOutBuffer = kmalloc(MGMT_DMA_BUFFER_SIZE, GFP_ATOMIC);	/*Get an unused nonpaged memory */

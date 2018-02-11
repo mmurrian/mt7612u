@@ -160,7 +160,6 @@ void dynamic_ed_cca_threshold_adjust(struct rtmp_adapter * pAd)
 void update_rssi_for_channel_model(struct rtmp_adapter * pAd)
 {
 	int32_t rx0_rssi = 0 , rx1_rssi = 0;
-	uint32_t bbp_valuse = 0;
 
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
@@ -425,7 +424,6 @@ void periodic_monitor_false_cca_adjust_vga(struct rtmp_adapter *pAd)
 		OPSTATUS_TEST_FLAG(pAd, fOP_AP_STATUS_MEDIA_STATE_CONNECTED)) {
 		u8 val1, val2;
 		uint32_t bbp_val1, bbp_val2;
-		bool no_dynamic_vga = false;
 
 		if (dynamic_channel_model_adjust(pAd) == true) {
 			DBGPRINT(RT_DEBUG_INFO, ("%s:: no need to do dynamic vga\n", __FUNCTION__));

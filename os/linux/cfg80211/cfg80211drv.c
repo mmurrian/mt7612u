@@ -440,7 +440,6 @@ bool CFG80211DRV_OpsSetChannel(struct rtmp_adapter *pAd, VOID *pData)
 {
 	CMD_RTPRIV_IOCTL_80211_CHAN *pChan;
 	UINT8 ChanId, IfType, ChannelType;
-	u8 lock_channel;
 	bool FlgIsChanged;
 
 /*

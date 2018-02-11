@@ -152,7 +152,6 @@ static VOID QBSS_LoadAlarm(
 
 				{
 					u8 *pOutBuffer = NULL;
-					int NStatus;
 					ULONG FrameLen = 0;
 					HEADER_802_11 DeAuthHdr;
 					unsigned short Reason;

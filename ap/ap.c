@@ -655,7 +655,6 @@ VOID MacTableMaintenance(struct rtmp_adapter *pAd)
 #if defined(PRE_ANT_SWITCH) || defined(CFO_TRACK)
 	int lastClient=0;
 #endif /* defined(PRE_ANT_SWITCH) || defined(CFO_TRACK) */
-	CHAR avgRssi;
 	MULTISSID_STRUCT *pMbss;
 #ifdef WFA_VHT_PF
 	RSSI_SAMPLE *worst_rssi = NULL;
@@ -892,7 +891,6 @@ VOID MacTableMaintenance(struct rtmp_adapter *pAd)
 			if (pEntry->Sst == SST_ASSOC)
 			{
 				u8 *pOutBuffer = NULL;
-				int NStatus;
 				ULONG FrameLen = 0;
 				HEADER_802_11 DeAuthHdr;
 				unsigned short Reason;
@@ -1439,7 +1437,6 @@ VOID ApUpdateAccessControlList(struct rtmp_adapter *pAd, u8 Apidx)
 	bool  Matched;
 
 	u8 *     pOutBuffer = NULL;
-	int NStatus;
 	ULONG       FrameLen = 0;
 	HEADER_802_11 DisassocHdr;
 	unsigned short      Reason;

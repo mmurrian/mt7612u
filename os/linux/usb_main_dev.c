@@ -270,6 +270,7 @@ static void rt2870_disconnect(struct usb_device *dev, struct rtmp_adapter *pAd)
 /**************************************************************************/
 /**************************************************************************/
 
+#if 0
 #ifdef CONFIG_PM
 
 static int rtusb_suspend(struct usb_interface *intf, pm_message_t state)
@@ -313,7 +314,7 @@ static int rtusb_resume(struct usb_interface *intf)
 	return 0;
 }
 #endif /* CONFIG_PM */
-
+#endif
 
 static int rtusb_probe(struct usb_interface *intf, const USB_DEVICE_ID *id)
 {

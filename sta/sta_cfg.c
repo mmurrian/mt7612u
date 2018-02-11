@@ -3269,7 +3269,6 @@ Note:
 INT
 RtmpIoctl_rt_ioctl_giwrate(struct rtmp_adapter *pAd, VOID *pData, ULONG Data)
 {
-    int rate_index = 0, rate_count = 0;
 	HTTRANSMIT_SETTING ht_setting;
 	struct rtmp_wifi_dev *wdev = &pAd->StaCfg.wdev;
 
@@ -3280,7 +3279,7 @@ RtmpIoctl_rt_ioctl_giwrate(struct rtmp_adapter *pAd, VOID *pData, ULONG Data)
         ht_setting.word = wdev->HTPhyMode.word;
     else
         ht_setting.word = pAd->MacTab.Content[BSSID_WCID].HTPhyMode.word;
-RtmpDrvRateGet(NULL,ht_setting.field.MODE,ht_setting.field.ShortGI,ht_setting.field.BW
+    RtmpDrvRateGet(NULL,ht_setting.field.MODE,ht_setting.field.ShortGI,ht_setting.field.BW
 	,ht_setting.field.MCS,newRateGetAntenna(ht_setting.field.MCS),(uint32_t *)pData);
 
 	return NDIS_STATUS_SUCCESS;

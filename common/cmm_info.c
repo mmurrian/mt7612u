@@ -1433,7 +1433,7 @@ char *GetEncryptType(CHAR enc)
 	if(enc == Ndis802_11TKIPAESMix)
 		return "TKIPAES";
 
-    	return "UNKNOW";
+	return "UNKNOW";
 }
 
 char *GetAuthMode(CHAR auth)
@@ -4047,7 +4047,7 @@ INT	Show_WepKey_Proc(
 	u8   Key[16] = {0}, KeyLength = 0;
 	INT		index = BSS0;
 #ifdef CONFIG_AP_SUPPORT
-    struct os_cookie *pObj = pAd->OS_Cookie;
+	struct os_cookie *pObj = pAd->OS_Cookie;
 
 	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
 		index = pObj->ioctl_if;
@@ -4129,7 +4129,7 @@ INT	Show_PMK_Proc(
 	for (idx = 0; idx < 32; idx++)
 		sprintf(pBuf+strlen(pBuf), "%02X", PMK[idx]);
 
-	return 0;
+    return 0;
 }
 
 
@@ -4459,9 +4459,6 @@ u8   psi21;
 u8   phill;
 
 
-
-static SC_TABLE_ENTRY impSCTable[3] = { {224, 255, 1, 31}, {198, 254, 2, 58}, {134, 254, 2, 122} };
-static SC_TABLE_ENTRY expSCTable[3] = { {224, 255, 1, 31}, {198, 254, 2, 58}, {134, 254, 2, 122} };
 
 void assoc_ht_info_debugshow(
 	IN struct rtmp_adapter *pAd,
@@ -5039,8 +5036,7 @@ INT RTMPShowCfgValue(
 INT Show_Diag_Proc(struct rtmp_adapter *pAd, char *arg)
 {
 	RtmpDiagStruct *pDiag = NULL;
-	u8 i, start, stop, McsIdx, SwQNumLevel, TxDescNumLevel;
-	unsigned long irqFlags;
+	u8 i, start, stop, McsIdx;
 	u8 McsMaxIdx = MAX_MCS_SET;
 	u8 vht_mcs_max_idx = MAX_VHT_MCS_SET;
 

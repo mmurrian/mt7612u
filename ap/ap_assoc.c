@@ -585,7 +585,6 @@ VOID ap_cmm_peer_assoc_req_action(
 	unsigned short StatusCode = MLME_SUCCESS;
 	unsigned short Aid;
 	u8 *pOutBuffer = NULL;
-	int NStatus;
 	ULONG FrameLen = 0;
 	u8 MaxSupportedRate = 0;
 	u8 SupRateLen, PhyMode, FlgIs11bSta;
@@ -1380,7 +1379,6 @@ VOID APMlmeKickOutSta(struct rtmp_adapter *pAd, u8 *pStaAddr, u8 Wcid, unsigned 
 	HEADER_802_11 DisassocHdr;
 	u8 *pOutBuffer = NULL;
 	ULONG FrameLen = 0;
-	int NStatus;
 	MAC_TABLE_ENTRY *pEntry;
 	u8 Aid;
 	u8 ApIdx;
@@ -1461,7 +1459,6 @@ VOID APCls3errAction(struct rtmp_adapter *pAd, ULONG Wcid, HEADER_802_11 *pHeade
     HEADER_802_11         DisassocHdr;
     u8 *               pOutBuffer = NULL;
     ULONG                 FrameLen = 0;
-    int           NStatus;
     unsigned short                Reason = REASON_CLS3ERR;
     MAC_TABLE_ENTRY       *pEntry = NULL;
 

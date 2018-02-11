@@ -1119,7 +1119,6 @@ VOID RTMPDeQueuePacket(
 
 #ifdef DBG_DIAGNOSE
 	bool firstRound;
-	RtmpDiagStruct *pDiagStruct = &pAd->DiagStruct;
 #endif
 
 
@@ -2631,7 +2630,6 @@ VOID RtmpEnqueueNullFrame(
 	IN bool bEOSP,
 	IN u8 OldUP)
 {
-	int NState;
 	HEADER_802_11 *pNullFr;
 	u8 *pFrame;
 	UINT frm_len;
@@ -2817,7 +2815,6 @@ VOID dev_rx_mgmt_frm(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 	struct sk_buff *pRxPacket = pRxBlk->pRxPacket;
 	INT op_mode = pRxBlk->OpMode;
 	bool 	bPassTheBcastPkt = false;
-	INT			i;
 
 #ifdef RT_CFG80211_SUPPORT
 	if (CFG80211_HandleP2pMgmtFrame(pAd, pRxBlk, op_mode))
