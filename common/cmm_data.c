@@ -261,8 +261,6 @@ Label_Legacy_PS:
 		}
 		else
 		{
-			ULONG IrqFlags=0;
-
 			DBGPRINT(RT_DEBUG_TRACE, ("ps> mgmt to legacy ps queue... (%d)\n", FlgIsDeltsFrame));
 
 			if (FlgIsLocked == false)
@@ -747,13 +745,13 @@ int MlmeHardTransmitMgmtRing(
 	New DeQueue Procedures.
 
  ********************************************************************************/
-#define DEQUEUE_LOCK(lock, bIntContext, IrqFlags) 				\
+#define DEQUEUE_LOCK(lock, bIntContext) 				\
 			do{													\
 				if (bIntContext == false)						\
 				spin_lock_bh((lock));		\
 			}while(0)
 
-#define DEQUEUE_UNLOCK(lock, bIntContext, IrqFlags)				\
+#define DEQUEUE_UNLOCK(lock, bIntContext)				\
 			do{													\
 				if (bIntContext == false)						\
 					spin_unlock_bh((lock));	\
@@ -1113,7 +1111,6 @@ VOID RTMPDeQueuePacket(
 	PQUEUE_HEADER   pQueue;
 	ULONG FreeNumber[NUM_OF_TX_RING];
 	CHAR QueIdx, sQIdx, eQIdx;
-	unsigned long	IrqFlags = 0;
 	bool hasTxDesc = false;
 	TX_BLK TxBlk, *pTxBlk;
 
@@ -1136,7 +1133,7 @@ VOID RTMPDeQueuePacket(
 	{
 		Count=0;
 
-		RTMP_START_DEQUEUE(pAd, QueIdx, IrqFlags);
+		RTMP_START_DEQUEUE(pAd, QueIdx);
 
 #ifdef DBG_DIAGNOSE
 		firstRound = ((QueIdx == sQIdx) ? true : false);
@@ -1153,14 +1150,14 @@ VOID RTMPDeQueuePacket(
 
 				)
 			{
-				RTMP_STOP_DEQUEUE(pAd, QueIdx, IrqFlags);
+				RTMP_STOP_DEQUEUE(pAd, QueIdx);
 				return;
 			}
 
 			if (Count >= Max_Tx_Packets)
 				break;
 
-			DEQUEUE_LOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+			DEQUEUE_LOCK(&pAd->irq_lock, bIntContext);
 			if (&pAd->TxSwQueue[QueIdx] == NULL)
 			{
 #ifdef DBG_DIAGNOSE
@@ -1169,7 +1166,7 @@ VOID RTMPDeQueuePacket(
 					pDiagStruct->TxSWQueCnt[pDiagStruct->ArrayCurIdx][0]++;
 #endif /* DBG_TXQ_DEPTH */
 #endif /* DBG_DIAGNOSE */
-				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 				break;
 			}
 
@@ -1178,7 +1175,7 @@ VOID RTMPDeQueuePacket(
 			pQueue = &pAd->TxSwQueue[QueIdx];
 			if ((pEntry = pQueue->Head) == NULL)
 			{
-				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 				break;
 			}
 
@@ -1207,7 +1204,7 @@ VOID RTMPDeQueuePacket(
 					dev_kfree_skb_any(pPacket);
 				}
 
-				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 				Count++;
 				continue;
 			}
@@ -1247,7 +1244,7 @@ VOID RTMPDeQueuePacket(
 					{
 						pEntry = RemoveHeadQueue(pQueue);
 						dev_kfree_skb_any(pPacket);
-						DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+						DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 						Count++;
 						continue;
 					}
@@ -1263,7 +1260,7 @@ VOID RTMPDeQueuePacket(
 			{
 				pAd->PrivateInfo.TxRingFullCnt++;
 
-				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+				DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 
 				break;
 			}
@@ -1283,7 +1280,7 @@ VOID RTMPDeQueuePacket(
 				if (NEED_QUEUE_BACK_FOR_AGG(pAd, QueIdx, FreeNumber[QueIdx], pTxBlk->TxFrameType))
 				{
 					InsertHeadQueue(pQueue, PACKET_TO_QUEUE_ENTRY(pPacket));
-					DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+					DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 					break;
 				}
 			}
@@ -1295,7 +1292,7 @@ VOID RTMPDeQueuePacket(
 				if (NEED_QUEUE_BACK_FOR_AGG(pAd, QueIdx, FreeNumber[QueIdx], pTxBlk->TxFrameType))
 				{
 					InsertHeadQueue(pQueue, PACKET_TO_QUEUE_ENTRY(pPacket));
-					DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+					DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 					break;
 				}
 
@@ -1326,7 +1323,7 @@ VOID RTMPDeQueuePacket(
 					pTxBlk->TxFrameType = TX_LEGACY_FRAME;
 			}
 
-			DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext, IrqFlags);
+			DEQUEUE_UNLOCK(&pAd->irq_lock, bIntContext);
 
 			Count += pTxBlk->TxPacketList.Number;
 
@@ -1345,7 +1342,7 @@ VOID RTMPDeQueuePacket(
 
 		}
 
-		RTMP_STOP_DEQUEUE(pAd, QueIdx, IrqFlags);
+		RTMP_STOP_DEQUEUE(pAd, QueIdx);
 
 		if (!hasTxDesc)
 			RTUSBKickBulkOut(pAd);

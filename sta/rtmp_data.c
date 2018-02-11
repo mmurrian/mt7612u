@@ -654,7 +654,6 @@ INT STASendPacket(struct rtmp_adapter *pAd, struct sk_buff *pPacket)
 	u8 QueIdx;
 	u8 UserPriority;
 	u8 Wcid;
-	unsigned long IrqFlags;
 	MAC_TABLE_ENTRY *pMacEntry = NULL;
 	struct rtmp_wifi_dev *wdev;
 
@@ -847,9 +846,7 @@ int RTMPFreeTXDRequest(
 	IN u8 NumberRequired,
 	IN u8 *FreeNumberIs)
 {
-	/*ULONG         FreeNumber = 0; */
 	int Status = NDIS_STATUS_FAILURE;
-	unsigned long IrqFlags;
 	HT_TX_CONTEXT *pHTTXContext;
 
 	switch (QueIdx) {

@@ -1219,7 +1219,6 @@ VOID CFG80211_RegRuleApply(
 	uint32_t IdBand, IdChan, IdPwr;
 	uint32_t ChanNum, ChanId, Power, RecId, DfsType;
 	bool FlgIsRadar;
-	ULONG IrqFlags;
 
 
 	CFG80211DBG(RT_DEBUG_TRACE, ("crda> CFG80211_RegRuleApply ==>\n"));

@@ -45,7 +45,6 @@ int RtmpInsertPsQueue(
 	MAC_TABLE_ENTRY *pMacEntry,
 	u8 QueIdx)
 {
-	ULONG IrqFlags;
 	{
 		if (pMacEntry->PsQueue.Number >= MAX_PACKETS_IN_PS_QUEUE)
 		{
@@ -114,7 +113,6 @@ VOID RtmpHandleRxPsPoll(struct rtmp_adapter *pAd, u8 *pAddr, unsigned short wcid
 {
 	QUEUE_ENTRY *pQEntry;
 	MAC_TABLE_ENTRY *pMacEntry;
-	unsigned long IrqFlags;
 
 	/*
 	DBGPRINT(RT_DEBUG_TRACE, ("rcv PS-POLL (AID=%d) from %02x:%02x:%02x:%02x:%02x:%02x\n",

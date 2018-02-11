@@ -153,7 +153,6 @@ static void rtusb_dataout_complete(unsigned long data)
 	PHT_TX_CONTEXT		pHTTXContext;
 	u8 			BulkOutPipeId;
 	int 		Status;
-	unsigned long		IrqFlags;
 
 
 	pUrb			= (struct urb *)data;
@@ -241,7 +240,6 @@ static void rtusb_null_frame_done_tasklet(unsigned long data)
 	PTX_CONTEXT		pNullContext;
 	struct urb *		pUrb;
 	int 	Status;
-	unsigned long	irqFlag;
 
 
 	pUrb			= (struct urb *)data;
@@ -357,7 +355,6 @@ static void rx_done_tasklet(unsigned long data)
 	PRX_CONTEXT			pRxContext;
 	struct rtmp_adapter *	pAd;
 	int 		Status;
-	unsigned int		IrqFlags;
 
 	pUrb		= (struct urb *)data;
 	pRxContext	= (PRX_CONTEXT) pUrb->context;
@@ -428,7 +425,6 @@ static void rtusb_mgmt_dma_done_tasklet(unsigned long data)
 	struct sk_buff *pPacket;
 	struct urb *		pUrb;
 	int 	Status;
-	unsigned long	IrqFlags;
 	HEADER_802_11  *pHeader;
 
 
@@ -891,7 +887,6 @@ INT RTUSBCmdThread(
 void InitUSBDevice(RT_CMD_USB_INIT *config, VOID *ad_src)
 {
 	struct rtmp_adapter *ad = (struct rtmp_adapter *)ad_src;
-	uint32_t value;
 
 	sema_init(&(ad->UsbVendorReq_semaphore), 1);
 	sema_init(&(ad->reg_atomic), 1);

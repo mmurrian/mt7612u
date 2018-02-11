@@ -283,7 +283,7 @@ typedef struct _CMD_RSP_CONTEXT
   	USB TX Related MACRO
 
 ******************************************************************************/
-#define RTMP_START_DEQUEUE(pAd, QueIdx, irqFlags)				\
+#define RTMP_START_DEQUEUE(pAd, QueIdx)				\
 			{													\
 				spin_lock_bh(&pAd->DeQueueLock[QueIdx]);		\
 				if (pAd->DeQueueRunning[QueIdx])						\
@@ -299,7 +299,7 @@ typedef struct _CMD_RSP_CONTEXT
 				}														\
 			}
 
-#define RTMP_STOP_DEQUEUE(pAd, QueIdx, irqFlags)						\
+#define RTMP_STOP_DEQUEUE(pAd, QueIdx)						\
 			do{															\
 				spin_lock_bh(&pAd->DeQueueLock[QueIdx]);		\
 				pAd->DeQueueRunning[QueIdx] = false;					\

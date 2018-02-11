@@ -40,7 +40,6 @@ int RTUSBFreeDescRequest(
 	IN uint32_t req_cnt)
 {
 	int  Status = NDIS_STATUS_FAILURE;
-	unsigned long IrqFlags;
 	HT_TX_CONTEXT *pHTTXContext;
 
 
@@ -75,7 +74,6 @@ bool	RTUSBNeedQueueBackForAgg(struct rtmp_adapter *pAd, u8 BulkOutPipeId)
 {
 	HT_TX_CONTEXT *pHTTXContext;
 	bool needQueBack = false;
-	unsigned long   IrqFlags;
 
 
 	pHTTXContext = &pAd->TxContext[BulkOutPipeId];
@@ -286,7 +284,6 @@ unsigned short RtmpUSB_WriteFragTxResource(
 	u8 *		pWirelessPacket = NULL;
 	u8 		QueIdx;
 	int 	Status;
-	unsigned long	IrqFlags;
 	uint32_t 		USBDMApktLen = 0, DMAHdrLen, padding;
 	bool			TxQLastRound = false;
 	UINT8 TXWISize = pAd->chipCap.TXWISize;
@@ -435,7 +432,6 @@ unsigned short RtmpUSB_WriteSingleTxResource(
 	struct mt7612u_txwi *txwi;
 	u8 *pWirelessPacket, *buf;
 	u8 QueIdx;
-	unsigned long	IrqFlags;
 	int Status;
 	uint32_t hdr_copy_len, hdr_len, dma_len = 0, padding;
 	bool bTxQLastRound = false;
@@ -551,7 +547,6 @@ unsigned short RtmpUSB_WriteMultiTxResource(
 	u8 *pWirelessPacket = NULL;
 	u8 QueIdx;
 	int Status;
-	unsigned long IrqFlags;
 	UINT8 TXWISize = pAd->chipCap.TXWISize;
 
 
@@ -680,7 +675,6 @@ VOID RtmpUSB_FinalWriteTxResource(
 	struct mt7612_txinfo_pkt	*txinfo;
 	struct mt7612u_txwi		*txwi;
 	uint32_t 		USBDMApktLen, padding;
-	unsigned long	IrqFlags;
 	u8 *		pWirelessPacket;
 
 	QueIdx = pTxBlk->QueIdx;
@@ -795,7 +789,6 @@ int RtmpUSBMgmtKickOut(
 	u8 *pDest;
 	ULONG SwIdx = pAd->MgmtRing.TxCpuIdx;
 	TX_CONTEXT *pMLMEContext = (PTX_CONTEXT)pAd->MgmtRing.Cell[SwIdx].AllocVa;
-	ULONG IrqFlags;
 
 
 	txinfo = (struct mt7612_txinfo_pkt *)(pSrcBufVA);

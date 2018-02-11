@@ -262,7 +262,6 @@ void tbtt_tasklet(unsigned long data)
 			QUEUE_ENTRY *pEntry;
 			bool bPS = false;
 			UINT count = 0;
-			unsigned long IrqFlags;
 
 			spin_lock_bh(&pAd->irq_lock);
 			while (pAd->MacTab.McastPsQueue.Head)

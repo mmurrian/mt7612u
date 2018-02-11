@@ -206,6 +206,7 @@ Note:
 	};
 ========================================================================
 */
+#if 0
 static int CFG80211_OpsChannelSet(
 	IN struct wiphy		*pWiphy,
 	IN struct net_device	*pDev,
@@ -255,7 +256,7 @@ static int CFG80211_OpsChannelSet(
 
 	return 0;
 }
-
+#endif
 
 /*
 ========================================================================
@@ -1693,6 +1694,7 @@ static int CFG80211_OpsRemainOnChannel(
 	return 0;
 }
 
+#if 0
 static void CFG80211_OpsMgmtFrameRegister(
 	struct wiphy 		*pWiphy,
 	struct wireless_dev	*wdev,
@@ -1718,6 +1720,7 @@ static void CFG80211_OpsMgmtFrameRegister(
 
 
 }
+#endif
 
 //Supplicant_NEW_TDLS
 
@@ -2031,16 +2034,6 @@ static int CFG80211_OpsVirtualInfDel(
 	return 0;
 }
 
-
-static int CFG80211_OpsBitrateSet(
-        IN struct wiphy                                 *pWiphy,
-	IN struct net_device *dev,
-	IN const u8 *peer,
-	IN const struct cfg80211_bitrate_mask *mask)
-{
-	return 0;
-}
-
 static int CFG80211_start_p2p_device(
 	struct wiphy *pWiphy,
 	struct wireless_dev *wdev)
@@ -2206,7 +2199,7 @@ struct cfg80211_ops CFG80211_Ops = {
 #endif /* RFKILL_HW_SUPPORT */
 
 	/* get site survey information */
-	//.dump_survey				= CFG80211_OpsSurveyGet,
+	.dump_survey				= CFG80211_OpsSurveyGet,
 	/* cache a PMKID for a BSSID */
 	.set_pmksa		= CFG80211_OpsPmksaSet,
 	/* delete a cached PMKID */
@@ -2243,7 +2236,6 @@ struct cfg80211_ops CFG80211_Ops = {
 	.del_station            = CFG80211_OpsStaDel,
 	.add_station            = CFG80211_OpsStaAdd,
 	.change_station         = CFG80211_OpsStaChg,
-//	.set_bitrate_mask                       = CFG80211_OpsBitrateSet,
 };
 
 /* =========================== Global Function ============================== */
@@ -2384,7 +2376,6 @@ bool CFG80211_Register(
 {
 	struct mt7612u_cfg80211_cb *pCfg80211_CB = NULL;
 	CFG80211_BAND BandInfo;
-	INT err;
 
 	/* allocate Main Device Info structure */
 	pCfg80211_CB = kmalloc(sizeof(*pCfg80211_CB), GFP_ATOMIC);
