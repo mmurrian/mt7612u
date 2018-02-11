@@ -424,8 +424,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
 				if (IS_ENTRY_CLIENT(pEntry)) {	/* Only Client entry need the retry timer.*/
 					RTMPInitTimer(pAd, &pEntry->RetryTimer, GET_TIMER_FUNCTION(WPARetryExec), pEntry, false);
-
-	/*				RTMP_OS_Init_Timer(pAd, &pEntry->RetryTimer, GET_TIMER_FUNCTION(WPARetryExec), pAd);*/
 				}
 			}
 #endif /* CONFIG_AP_SUPPORT */
