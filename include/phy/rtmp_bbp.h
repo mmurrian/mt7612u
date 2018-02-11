@@ -215,7 +215,7 @@
 #define BBPR94_DEFAULT	0x06 /* Add 1 value will gain 1db */
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R47_STRUC {
 	struct
 	{
@@ -247,7 +247,7 @@ typedef union _BBP_R47_STRUC {
 /* */
 /* BBP R105 (FEQ control, MLD control and SIG remodulation) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R105_STRUC {
 	struct
 	{
@@ -278,7 +278,7 @@ typedef union _BBP_R105_STRUC {
 /* */
 /* BBP R106 (GI remover) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R106_STRUC {
 	struct
 	{
@@ -305,7 +305,7 @@ typedef union _BBP_R106_STRUC {
 /* */
 /* BBP R109 (Tx power control in 0.1dB step) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R109_STRUC {
 	struct
 	{
@@ -330,7 +330,7 @@ typedef union _BBP_R109_STRUC {
 /* */
 /* BBP R110 (Tx power control in 0.1dB step) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R110_STRUC {
 	struct
 	{
@@ -355,7 +355,7 @@ typedef union _BBP_R110_STRUC {
 /* */
 /* BBP R179 (Test config #1) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R179_STRUC {
 	struct
 	{
@@ -373,12 +373,12 @@ typedef union _BBP_R179_STRUC {
 
 	u8 	byte;
 } BBP_R179_STRUC, *PBBP_R179_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 /* */
 /* BBP R180 (Test config #2) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R180_STRUC {
 	struct
 	{
@@ -396,12 +396,12 @@ typedef union _BBP_R180_STRUC {
 
 	u8 	byte;
 } BBP_R180_STRUC, *PBBP_R180_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 /* */
 /* BBP R182 (Test data port) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R182_STRUC {
 	struct
 	{
@@ -419,7 +419,7 @@ typedef union _BBP_R182_STRUC {
 
 	u8 	byte;
 } BBP_R182_STRUC, *PBBP_R182_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	#define MAX_BBP_ID	136
 

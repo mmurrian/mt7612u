@@ -557,9 +557,5 @@ endif
 
 obj-$(CONFIG_MT7612U) := $(MOD_NAME).o
 
-#EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
-# There is RT_BIG_ENDIAN define is sources that controls endianness
-# And it doesn't #defined anywhere (?)
-
 ccflags-y += -I$(srctree)/$(src)/include
 ccflags-y += $(EXTRA_CFLAGS)

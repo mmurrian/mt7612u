@@ -110,7 +110,7 @@
 #define EEPROM_1ST_FILE_DIR		"/etc_ro/Wireless/iNIC/"
 #define EEPROM_2ND_FILE_DIR		"/etc_ro/Wireless/iNIC/"
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _EEPROM_WORD_STRUC {
 	struct {
 		u8 Byte1;				// High Byte
@@ -142,7 +142,7 @@ typedef	union _EEPROM_WORD_STRUC {
 	EEPROM antenna select format
 */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_NIC_CINFIG2_STRUC {
 	struct {
 		unsigned short DACTestBit:1;	/* control if driver should patch the DAC issue */
@@ -186,10 +186,10 @@ typedef union _EEPROM_NIC_CINFIG2_STRUC {
 	} field;
 	unsigned short word;
 } EEPROM_NIC_CONFIG2_STRUC, *PEEPROM_NIC_CONFIG2_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_NIC_CINFIG3_STRUC {
 	struct {
 		unsigned short CoexMethod:3;
@@ -215,14 +215,14 @@ typedef union _EEPROM_NIC_CINFIG3_STRUC {
 	} field;
 	unsigned short word;
 } EEPROM_NIC_CONFIG3_STRUC, *PEEPROM_NIC_CONFIG3_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 
 /*
 	TX_PWR Value valid range 0xFA(-6) ~ 0x24(36)
 */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_TX_PWR_STRUC {
 	struct {
 		signed char Byte1;	/* High Byte */
@@ -240,7 +240,7 @@ typedef union _EEPROM_TX_PWR_STRUC {
 } EEPROM_TX_PWR_STRUC, *PEEPROM_TX_PWR_STRUC;
 #endif
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_VERSION_STRUC {
 	struct {
 		u8 Version;	/* High Byte */
@@ -258,7 +258,7 @@ typedef union _EEPROM_VERSION_STRUC {
 } EEPROM_VERSION_STRUC, *PEEPROM_VERSION_STRUC;
 #endif
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_LED_STRUC {
 	struct {
 		unsigned short Rsvd:3;	/* Reserved */
@@ -292,7 +292,7 @@ typedef union _EEPROM_LED_STRUC {
 } EEPROM_LED_STRUC, *PEEPROM_LED_STRUC;
 #endif
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_TXPOWER_DELTA_STRUC {
 	struct {
 		u8 TxPowerEnable:1;	/* Enable */
@@ -310,10 +310,10 @@ typedef union _EEPROM_TXPOWER_DELTA_STRUC {
 	} field;
 	u8 value;
 } EEPROM_TXPOWER_DELTA_STRUC, *PEEPROM_TXPOWER_DELTA_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_TX_PWR_OFFSET_STRUC
 {
 	struct
@@ -335,7 +335,7 @@ typedef union _EEPROM_TX_PWR_OFFSET_STRUC
 
 	unsigned short 	word;
 } EEPROM_TX_PWR_OFFSET_STRUC, *PEEPROM_TX_PWR_OFFSET_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 #define NIC_CONFIGURE_0 0x34
 #define EXTERNAL_PA_MASK (0x3 << 8)

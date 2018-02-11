@@ -463,7 +463,7 @@ bool RTMPSoftDecryptAES(
 	u8 		MIC[8];
 	u8 		TrailMIC[8];
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)pData, DIR_READ, false);
 #endif
 
@@ -636,7 +636,7 @@ bool RTMPSoftDecryptAES(
 		return false;
 	}
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)pData, DIR_READ, false);
 #endif
 
@@ -840,7 +840,7 @@ bool RTMPSoftEncryptCCMP(
 	uint32_t nonce_hdr_len = 0;
 	uint32_t out_len = DataLen + 8;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)pHdr, DIR_READ, false);
 #endif
 
@@ -894,7 +894,7 @@ bool RTMPSoftEncryptCCMP(
 					pData, &out_len))
 		return false;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)pHdr, DIR_READ, false);
 #endif
 
@@ -934,7 +934,7 @@ bool RTMPSoftDecryptCCMP(
 	uint32_t nonce_hdr_len = 0;
 	uint32_t out_len = *DataLen;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)pHdr, DIR_READ, false);
 #endif
 
@@ -1013,7 +1013,7 @@ bool RTMPSoftDecryptCCMP(
 
 	*DataLen = out_len;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)pHdr, DIR_READ, false);
 #endif
 

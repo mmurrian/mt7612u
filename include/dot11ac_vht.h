@@ -76,7 +76,7 @@
 				Beamforming frames.
 */
 typedef struct GNU_PACKED _OPERATING_MODE{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 rx_nss_type:1;
 	u8 rx_nss:3;
 	u8 rsv2:2;
@@ -86,7 +86,7 @@ typedef struct GNU_PACKED _OPERATING_MODE{
 	u8 rsv2:2;
 	u8 rx_nss:3;
 	u8 rx_nss_type:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }OPERATING_MODE;
 
 
@@ -209,7 +209,7 @@ typedef struct GNU_PACKED _OPERATING_MODE_NOTIFICATION{
 				1: if Tx antenna pattern does not change during association
 */
 typedef struct GNU_PACKED _VHT_CAP_INFO{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t rsv:2;
 	uint32_t tx_ant_consistency:1;
 	uint32_t rx_ant_consistency:1;
@@ -255,7 +255,7 @@ typedef struct GNU_PACKED _VHT_CAP_INFO{
 	uint32_t rx_ant_consistency:1;
 	uint32_t tx_ant_consistency:1;
 	uint32_t rsv:2;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }VHT_CAP_INFO;
 
 
@@ -287,7 +287,7 @@ typedef struct GNU_PACKED _VHT_CAP_INFO{
 #define VHT_MCS_CAP_NA	3
 
 typedef struct GNU_PACKED _VHT_MCS_MAP{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t mcs_ss8:2;
 	uint16_t mcs_ss7:2;
 	uint16_t mcs_ss6:2;
@@ -305,7 +305,7 @@ typedef struct GNU_PACKED _VHT_MCS_MAP{
 	uint16_t mcs_ss6:2;
 	uint16_t mcs_ss7:2;
 	uint16_t mcs_ss8:2;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }VHT_MCS_MAP;
 
 
@@ -334,7 +334,7 @@ typedef struct GNU_PACKED _VHT_MCS_MAP{
 
 // TODO: shiang-6590, check the layout of this data structure!!!!
 typedef struct GNU_PACKED _VHT_MCS_SET{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t rsv2:3;
 	uint16_t tx_high_rate:13;
 	struct _VHT_MCS_MAP tx_mcs_map;
@@ -348,7 +348,7 @@ typedef struct GNU_PACKED _VHT_MCS_SET{
 	struct _VHT_MCS_MAP tx_mcs_map;
 	uint16_t tx_high_rate:13;
 	uint16_t rsv2:3;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }VHT_MCS_SET;
 
 
@@ -475,7 +475,7 @@ typedef struct GNU_PACKED _CH_SEG_PAIR{
 */
 #define TX_PWR_INTERPRET_EIRP		0
 typedef struct GNU_PACKED _VHT_TX_PWR_INFO_{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	UINT8 rsv6:2;
 	UINT8 max_tx_pwr_interpretation:3;
 	UINT8 max_tx_pwr_cnt: 3;
@@ -508,7 +508,7 @@ typedef struct GNU_PACKED _VHT_TXPWR_ENV_IE{
 
 
 typedef struct  GNU_PACKED _VHT_CONTROL{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t RDG:1;
 	uint32_t ACConstraint:1;
 	uint32_t unso_mfb:1;
@@ -554,13 +554,13 @@ typedef struct  GNU_PACKED _VHT_CONTROL{
 			Announcment frame.
 */
 typedef struct GNU_PACKED _SNDING_DIALOG_TOKEN {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	UINT8 token_num:6;
 	UINT8 rsv:2;
 #else
 	UINT8 rsv:2;
 	UINT8 token_num:6;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }SNDING_DIALOG_TOKEN;
 
 
@@ -591,7 +591,7 @@ typedef enum _SNDING_FB_TYPE{
 }SNDING_FB_TYPE;
 
 typedef struct GNU_PACKED _SNDING_STA_INFO {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t nc_idx:3;
 	uint16_t fb_type:1;
 	uint16_t aid12:12;
@@ -599,7 +599,7 @@ typedef struct GNU_PACKED _SNDING_STA_INFO {
 	uint16_t aid12:12;
 	uint16_t fb_type:1;
 	uint16_t nc_idx:3;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }SNDING_STA_INFO;
 
 
@@ -645,7 +645,7 @@ typedef struct GNU_PACKED _NDPA_PKT{
 }DNPA_PKT;
 
 typedef struct GNU_PACKED _PLCP_SERVICE_FIELD{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	UINT8 rsv7:1;
 	UINT8 cbw_in_non_ht:2;
 	UINT8 dyn_bw:1;
@@ -655,7 +655,7 @@ typedef struct GNU_PACKED _PLCP_SERVICE_FIELD{
 	UINT8 dyn_bw:1;
 	UINT8 cbw_in_non_ht:2;
 	UINT8 rsv7:1;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 }PLCP_SERVICE_FIELD;
 
 #endif /* __DOT11AC_VHT_H */

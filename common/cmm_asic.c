@@ -1183,7 +1183,7 @@ VOID AsicEnableIbssSync(struct rtmp_adapter *pAd)
 
 	beaconLen = pAd->BeaconTxWI.MPDUtotalByteCnt;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	{
 		struct mt7612u_txwi localTxWI;
 
@@ -1193,7 +1193,7 @@ VOID AsicEnableIbssSync(struct rtmp_adapter *pAd)
 		beaconLen = localTxWI.TXWI_N.MPDUtotalByteCnt;
 
 	}
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	DBGPRINT(RT_DEBUG_TRACE, ("--->AsicEnableIbssSync(ADHOC mode, beaconLen=%d)\n",
 				beaconLen));

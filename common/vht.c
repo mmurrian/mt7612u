@@ -329,9 +329,9 @@ INT build_vht_op_ie(struct rtmp_adapter *pAd, u8 *buf)
 {
 	VHT_OP_IE vht_op;
 	u8 cent_ch;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint16_t tmp;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	memset((u8 *)&vht_op, 0, sizeof(VHT_OP_IE));
 	vht_op.vht_op_info.ch_width = (pAd->CommonCfg.vht_bw == VHT_BW_80 ? 1: 0);
@@ -385,12 +385,12 @@ INT build_vht_op_ie(struct rtmp_adapter *pAd, u8 *buf)
 		break;
 	}
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	//SWAP16((uint16_t)vht_op.basic_mcs_set);
 	memcpy(&tmp,&vht_op.basic_mcs_set, 2);
 	tmp=SWAP16(tmp);
 	memcpy(&vht_op.basic_mcs_set,&tmp, 2);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	memmove((u8 *)buf, (u8 *)&vht_op, sizeof(VHT_OP_IE));
 
 	return sizeof(VHT_OP_IE);
@@ -406,10 +406,10 @@ INT build_vht_cap_ie(struct rtmp_adapter *pAd, u8 *buf)
 {
 	VHT_CAP_IE vht_cap_ie;
 	INT rx_nss, tx_nss, mcs_cap;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t tmp_1;
 	uint64_t tmp_2;
-#endif /*RT_BIG_ENDIAN*/
+#endif /*__BIG_ENDIAN*/
 
 	memset((u8 *)&vht_cap_ie,  0, sizeof(VHT_CAP_IE));
 	vht_cap_ie.vht_cap.max_mpdu_len = 0; // TODO: Ask Jerry about hardware limitation.
@@ -514,7 +514,7 @@ INT build_vht_cap_ie(struct rtmp_adapter *pAd, u8 *buf)
 		break;
 	}
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	memcpy(&tmp_1,&vht_cap_ie.vht_cap, 4);
 	tmp_1 = SWAP32(tmp_1);
 	memcpy(&vht_cap_ie.vht_cap,&tmp_1, 4);
@@ -526,7 +526,7 @@ INT build_vht_cap_ie(struct rtmp_adapter *pAd, u8 *buf)
 	//hex_dump("&vht_cap_ie", &vht_cap_ie,  sizeof(VHT_CAP_IE));
 	//SWAP32((uint32_t)vht_cap_ie.vht_cap);
 	//SWAP32((uint32_t)vht_cap_ie.mcs_set);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 	if ((pAd->chipCap.FlgHwTxBfCap) &&

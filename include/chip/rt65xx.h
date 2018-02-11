@@ -43,7 +43,7 @@ VOID mt7612u_radio_off(struct rtmp_adapter *pAd, u8 Stage);
 	EEPROM format
 */
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_NIC_CINFIG0_STRUC {
 	struct {
 		unsigned short Rsv:5;

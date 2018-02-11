@@ -1100,7 +1100,7 @@ typedef struct _QUERYBA_TABLE {
 } QUERYBA_TABLE, *PQUERYBA_TABLE;
 
 typedef union _BACAP_STRUC {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	struct {
 		uint32_t:4;
 		uint32_t b2040CoexistScanSup:1;	/*As Sta, support do 2040 coexistence scan for AP. As Ap, support monitor trigger event to check if can use BW 40MHz. */
@@ -1182,7 +1182,7 @@ typedef struct _IOT_STRUC {
 
 /* This is the registry setting for 802.11n transmit setting.  Used in advanced page. */
 typedef union _REG_TRANSMIT_SETTING {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	struct {
 		uint32_t rsv:13;
 		uint32_t EXTCHA:2;
@@ -1218,7 +1218,7 @@ typedef union _REG_TRANSMIT_SETTING {
 
 
 typedef union _DESIRED_TRANSMIT_SETTING {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	struct {
 		unsigned short rsv:2;
 		unsigned short FixedTxMode:3;	/* If MCS isn't AUTO, fix rate in CCK, OFDM, HT or VHT mode. */
@@ -3882,7 +3882,7 @@ typedef struct dequeue_info{
 }DEQUE_INFO;
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 /***************************************************************************
   *	Endian conversion related functions
   **************************************************************************/
@@ -4116,7 +4116,7 @@ static inline VOID	RTMPFrameEndianChange(
 		*(unsigned short *)pData = SWAP16(*(unsigned short *)pData);
 	}
 }
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 /***************************************************************************

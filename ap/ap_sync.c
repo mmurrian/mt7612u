@@ -169,7 +169,7 @@ VOID APPeerProbeReqAction(
 		{
 			ULONG TmpLen;
 			u8 HtLen, AddHtLen, NewExtLen;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			HT_CAPABILITY_IE HtCapabilityTmp;
 			ADD_HT_INFO_IE	addHTInfoTmp;
 #endif
@@ -180,7 +180,7 @@ VOID APPeerProbeReqAction(
 			AddHtLen = sizeof(pAd->CommonCfg.AddHTInfo);
 			NewExtLen = 1;
 			/*New extension channel offset IE is included in Beacon, Probe Rsp or channel Switch Announcement Frame */
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 			MakeOutgoingFrame(pOutBuffer + FrameLen,            &TmpLen,
 							  1,                                &HtCapIe,
 							  1,                                &HtLen,
@@ -494,7 +494,7 @@ VOID APPeerProbeReqAction(
 		{
 			ULONG TmpLen;
 			u8 HtLen, AddHtLen;/*, NewExtLen; */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			HT_CAPABILITY_IE HtCapabilityTmp;
 			ADD_HT_INFO_IE	addHTInfoTmp;
 #endif
@@ -509,7 +509,7 @@ VOID APPeerProbeReqAction(
 
 
 			epigram_ie_len = HtLen + 4;
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 			MakeOutgoingFrame(pOutBuffer + FrameLen,        &TmpLen,
 						  1,                                &WpaIe,
 							  1,                                &epigram_ie_len,
@@ -542,7 +542,7 @@ VOID APPeerProbeReqAction(
 				FrameLen += TmpLen;
 
 				epigram_ie_len = AddHtLen + 4;
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 				MakeOutgoingFrame(pOutBuffer + FrameLen,          &TmpLen,
 								  1,                              &WpaIe,
 								  1,                              &epigram_ie_len,

@@ -118,7 +118,7 @@ typedef struct GNU_PACKED _CH_SW_ANN_INFO
 
 typedef union GNU_PACKED _MEASURE_REQ_MODE
 {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	struct GNU_PACKED
 	{
 
@@ -139,7 +139,7 @@ typedef union GNU_PACKED _MEASURE_REQ_MODE
 		UINT8 DurationMandatory:1;
 		UINT8 :3;
 	} field;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	UINT8 word;
 } MEASURE_REQ_MODE, *PMEASURE_REQ_MODE;
 
@@ -160,7 +160,7 @@ typedef struct GNU_PACKED _MEASURE_REQ_INFO
 
 typedef union GNU_PACKED _MEASURE_BASIC_REPORT_MAP
 {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	struct GNU_PACKED
 	{
 		UINT8 Rev:3;
@@ -182,7 +182,7 @@ typedef union GNU_PACKED _MEASURE_BASIC_REPORT_MAP
 		UINT8 Unmeasure:1;
 		UINT8 Rev:3;
 	} field;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	UINT8 word;
 } MEASURE_BASIC_REPORT_MAP, *PMEASURE_BASIC_REPORT_MAP;
 
@@ -214,7 +214,7 @@ typedef union GNU_PACKED _MEASURE_REPORT_MODE
 {
 	struct GNU_PACKED
 	{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		UINT8 Rev:5;
 		UINT8 Refused:1;
 		UINT8 Incapable:1;
@@ -224,7 +224,7 @@ typedef union GNU_PACKED _MEASURE_REPORT_MODE
 		UINT8 Incapable:1;
 		UINT8 Refused:1;
 		UINT8 Rev:5;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	} field;
 	UINT8 word;
 } MEASURE_REPORT_MODE, *PMEASURE_REPORT_MODE;

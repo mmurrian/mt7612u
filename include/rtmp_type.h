@@ -70,7 +70,7 @@ typedef unsigned int NDIS_MEDIA_STATE;
 
 typedef union _LARGE_INTEGER {
 	struct {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		int32_t HighPart;
 		UINT LowPart;
 #else

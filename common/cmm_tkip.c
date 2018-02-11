@@ -122,7 +122,7 @@ typedef	struct GNU_PACKED _IV_CONTROL_
 			{
 				struct GNU_PACKED
 				{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 					u8 KeyID:2;
 					u8 ExtIV:1;
 					u8 Rsvd:5;
@@ -719,7 +719,7 @@ bool RTMPSoftDecryptTKIP(
 	u8 		MIC[8];
 	u8 		TrailMIC[8];
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, pHdr, DIR_READ, false);
 #endif
 
@@ -842,7 +842,7 @@ bool RTMPSoftDecryptTKIP(
 	/* Update the total data length */
 	*DataByteCnt = plaintext_len;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, pHdr, DIR_READ, false);
 #endif
 	return true;

@@ -326,17 +326,17 @@ VOID RTUSBBulkOutDataPacket(struct rtmp_adapter *pAd, u8 BulkOutPipeId, u8 Index
 			bTxQLastRound = true;
 			pHTTXContext->ENextBulkOutPosition = 8;
 
-	#ifdef RT_BIG_ENDIAN
+	#ifdef __BIG_ENDIAN
 			RTMPDescriptorEndianChange((u8 *)txinfo, TYPE_TXINFO);
 			RTMPWIEndianChange(pAd, (u8 *)txwi, TYPE_TXWI);
-	#endif /* RT_BIG_ENDIAN */
+	#endif /* __BIG_ENDIAN */
 
 			break;
 		}
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPDescriptorEndianChange((u8 *)txinfo, TYPE_TXINFO);
 		RTMPWIEndianChange(pAd, (u8 *)txwi, TYPE_TXWI);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 		aggregation_num++;
 
@@ -349,13 +349,13 @@ VOID RTUSBBulkOutDataPacket(struct rtmp_adapter *pAd, u8 BulkOutPipeId, u8 Index
 	/* adjust the txinfo->mt7612_txinfo_pkt.next_vld value of last txinfo.*/
 	if (pLastTxInfo)
 	{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPDescriptorEndianChange((u8 *)pLastTxInfo, TYPE_TXINFO);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 		pLastTxInfo->next_vld = 0;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPDescriptorEndianChange((u8 *)pLastTxInfo, TYPE_TXINFO);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	}
 
 	/*
@@ -511,9 +511,9 @@ VOID	RTUSBBulkOutNullFrame(
 	/* Clear Null frame bulk flag*/
 	RTUSB_CLEAR_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_NULL);
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPDescriptorEndianChange((u8 *)pNullContext->TransferBuffer, TYPE_TXINFO);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	/* Init Tx context descriptor*/
 	RTUSBInitTxDesc(pAd, pNullContext, 0, (usb_complete_t)RtmpUsbBulkOutNullFrameComplete);
@@ -609,9 +609,9 @@ VOID	RTUSBBulkOutMLMEPacket(
 	/* Clear MLME bulk flag*/
 	RTUSB_CLEAR_BULK_FLAG(pAd, fRTUSB_BULK_OUT_MLME);
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPDescriptorEndianChange((u8 *)pMLMEContext->TransferBuffer, TYPE_TXINFO);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	/* Init Tx context descriptor*/
 	RTUSBInitTxDesc(pAd, pMLMEContext, MGMTPIPEIDX, (usb_complete_t)RtmpUsbBulkOutMLMEPacketComplete);
@@ -689,9 +689,9 @@ VOID	RTUSBBulkOutPsPoll(
 	/* Clear PS-Poll bulk flag*/
 	RTUSB_CLEAR_BULK_FLAG(pAd, fRTUSB_BULK_OUT_PSPOLL);
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPDescriptorEndianChange((u8 *)pPsPollContext->TransferBuffer, TYPE_TXINFO);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 	/* Init Tx context descriptor*/
 	RTUSBInitTxDesc(pAd, pPsPollContext, MGMTPIPEIDX, (usb_complete_t)RtmpUsbBulkOutPsPollComplete);
