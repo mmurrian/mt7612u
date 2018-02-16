@@ -165,11 +165,6 @@ INT Set_CountryCode_Proc(
     IN  struct rtmp_adapter *  pAdapter,
     IN  char *         arg);
 
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-INT Set_AP_PKT_PWR(
-    IN  struct rtmp_adapter *  pAdapter,
-    IN  char *         arg);
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
 
 INT Set_AP_PROBE_RSP_TIMES(
     IN  struct rtmp_adapter *  pAdapter,
@@ -1395,35 +1390,6 @@ INT Set_AP_PROBE_RSP_TIMES(
 
 }
 
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-INT Set_AP_PKT_PWR(
-    IN  struct rtmp_adapter *   pAd,
-    IN  char *         arg)
-{
-        struct os_cookie *pObj = pAd->OS_Cookie;
-        u8           apidx = pObj->ioctl_if;
-        INT input;
-        input = simple_strtol(arg, 0, 10);
-
-	/*
-	  Tx_PWR_ADJ[3:0] From 0 to 7 is Positive & add with Tx Power (dB),
-          From 8 to 15 is minus with Tx Power mapping to -16 to -2 (step by 2),
-          Default value: 0.
-
-	  [0x13BC]TX_ALC_MONITOR, 13:8
-		  TX_ALC_REQ_ADJ TX ALC Req Saturated[5:0], unit (0.5dB)
-	*/
-
-	if ((input >= 0) && (input <= 15))
-        	pAd->ApCfg.MBSSID[apidx].TxPwrAdj = input;
-	else
-		DBGPRINT(RT_DEBUG_ERROR, ("AP[%d]->PktPwr: Out of Range\n"));
-
-	DBGPRINT(RT_DEBUG_TRACE, ("AP[%d]->PktPwr: %d\n", apidx, pAd->ApCfg.MBSSID[apidx].TxPwrAdj));
-
-	return true;
-}
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
 /*
     ==========================================================================
     Description:

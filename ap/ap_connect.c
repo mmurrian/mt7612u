@@ -93,9 +93,6 @@ VOID APMakeBssBeacon(struct rtmp_adapter *pAd, INT apidx)
 	u8 PhyMode, SupRateLen;
 	UINT8 TXWISize = pAd->chipCap.TXWISize;
 	MULTISSID_STRUCT *pMbss = &pAd->ApCfg.MBSSID[apidx];
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-	u8 TxPwrAdj = 0;
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
 
 	if(!BeaconTransmitRequired(pAd, apidx, pMbss))
 		return;
@@ -226,22 +223,8 @@ VOID APMakeBssBeacon(struct rtmp_adapter *pAd, INT apidx)
 
 	BeaconTransmit.word = 0;
 
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-        /* Specific Power for Long-Range Beacon */
-	if ((pAd->ApCfg.MBSSID[apidx].TxPwrAdj != -1) /* &&
-	    (BeaconTransmit.field.MODE == MODE_CCK)*/)
-	{
-		TxPwrAdj = pAd->ApCfg.MBSSID[apidx].TxPwrAdj;
-	}
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
-
 	RTMPWriteTxWI(pAd, &pAd->BeaconTxWI, false, false, true, false, false, true, 0, BSS0Mcast_WCID,
 					FrameLen, PID_MGMT, 0, 0,IFS_HTTXOP, &BeaconTransmit);
-
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-		if  ((IS_RT6352(pAd) || IS_MT76x2U(pAd)) && (pAd->chipCap.hif_type == HIF_RLT))
-			pAd->BeaconTxWI.TXWI_N.TxPwrAdj = TxPwrAdj;
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
 
 	/*
 		step 6. move BEACON TXD and frame content to on-chip memory
@@ -315,9 +298,6 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 	UINT  i;
 	HTTRANSMIT_SETTING	BeaconTransmit = {.word = 0};   /* MGMT frame PHY rate setting when operatin at Ht rate. */
 	struct rtmp_wifi_dev *wdev;
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-	u8 TxPwrAdj = 0;
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
 
 	pComCfg = &pAd->CommonCfg;
 	pMbss = &pAd->ApCfg.MBSSID[apidx];
@@ -856,22 +836,8 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 		BeaconTransmit.field.MCS = MCS_RATE_6;
 	}
 
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-	/* Specific Power for Long-Range Beacon */
-        if ((pAd->ApCfg.MBSSID[apidx].TxPwrAdj != -1) /* &&
-            (BeaconTransmit.field.MODE == MODE_CCK)*/)
-        {
-                TxPwrAdj = pAd->ApCfg.MBSSID[apidx].TxPwrAdj;
-        }
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
-
 	RTMPWriteTxWI(pAd, &pAd->BeaconTxWI, false, false, true, false, false, true, 0, RESERVED_WCID,
 					FrameLen, PID_MGMT, 0 /*QID_MGMT*/, 0, IFS_HTTXOP, &BeaconTransmit);
-
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-		if ((IS_RT6352(pAd) || IS_MT76x2U(pAd)) && (pAd->chipCap.hif_type == HIF_RLT))
-			pAd->BeaconTxWI.TXWI_N.TxPwrAdj = TxPwrAdj;
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
 
 	/* step 7. move BEACON TXWI and frame content to on-chip memory */
 	RT28xx_UpdateBeaconToAsic(pAd, apidx, FrameLen, UpdatePos);
