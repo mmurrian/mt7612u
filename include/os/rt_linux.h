@@ -637,13 +637,6 @@ void linux_pci_unmap_single(void *handle, ra_dma_addr_t dma_addr, size_t size, i
  *	Other function prototypes definitions
  ***********************************************************************************/
 
-#ifdef CONFIG_RAETH
-#if !defined(CONFIG_RA_NAT_NONE)
-extern int (*ra_sw_nat_hook_tx)(VOID *skb);
-extern int (*ra_sw_nat_hook_rx)(VOID *skb);
-#endif
-#endif /* CONFIG_RAETH */
-
 #if defined (CONFIG_WIFI_PKT_FWD)
 extern int (*wf_fwd_rx_hook) (struct sk_buff *skb);
 extern unsigned char (*wf_fwd_entry_insert_hook) (struct net_device *src, struct net_device *dest);
