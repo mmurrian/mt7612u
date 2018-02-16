@@ -41,9 +41,6 @@ extern INT ApCliAllowToSendPacket(
 
 bool CFG80211DRV_OpsChgVirtualInf(struct rtmp_adapter *pAd, VOID *pData)
 {
-#ifdef RT_CFG80211_P2P_SINGLE_DEVICE
-	PCFG80211_CTRL pCfg80211_ctrl = &pAd->cfg80211_ctrl;
-#endif
 	UINT newType, oldType;
 	CMD_RTPRIV_IOCTL_80211_VIF_PARM *pVifParm;
 	pVifParm = (CMD_RTPRIV_IOCTL_80211_VIF_PARM *)pData;
@@ -51,41 +48,13 @@ bool CFG80211DRV_OpsChgVirtualInf(struct rtmp_adapter *pAd, VOID *pData)
 	newType = pVifParm->newIfType;
 	oldType = pVifParm->oldIfType;
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	/* After P2P NEGO phase, the device type may be change from GC to GO
-	   or no change. We remove the GC in VIF list if nego as GO case.
-	 */
-	if ((newType == RT_CMD_80211_IFTYPE_P2P_GO) &&
-	   (oldType == RT_CMD_80211_IFTYPE_P2P_CLIENT))
-	{
-		RTMP_CFG80211_VirtualIF_CancelP2pClient(pAd);
-	}
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
-#ifdef RT_CFG80211_P2P_SINGLE_DEVICE
-
-	CFG80211DBG(RT_DEBUG_TRACE, ("80211> @@@ Change from %u  to %u Mode\n",oldType,newType));
-
-	pCfg80211_ctrl->P2POpStatusFlags = CFG_P2P_DISABLE;
-	if (newType == RT_CMD_80211_IFTYPE_P2P_CLIENT)
-	{
-		pCfg80211_ctrl->P2POpStatusFlags = CFG_P2P_CLI_UP;
-
-	}
-	else if (newType == RT_CMD_80211_IFTYPE_P2P_GO)
-	{
-		pCfg80211_ctrl->P2POpStatusFlags = CFG_P2P_GO_UP;
-	}
-#endif /* RT_CFG80211_P2P_SINGLE_DEVICE */
-
 #ifdef CONFIG_STA_SUPPORT
 	/* Change Device Type */
 	if (newType == RT_CMD_80211_IFTYPE_ADHOC)
 	{
 		Set_NetworkType_Proc(pAd, "Adhoc");
 	}
-	else if ((newType == RT_CMD_80211_IFTYPE_STATION) ||
-		     (newType == RT_CMD_80211_IFTYPE_P2P_CLIENT))
+	else if (newType == RT_CMD_80211_IFTYPE_STATION)
 	{
 		CFG80211DBG(RT_DEBUG_TRACE, ("80211> Change the Interface to STA Mode\n"));
 
@@ -98,12 +67,11 @@ bool CFG80211DRV_OpsChgVirtualInf(struct rtmp_adapter *pAd, VOID *pData)
 	}
 	else
 #endif /*CONFIG_STA_SUPPORT*/
-		if ((newType == RT_CMD_80211_IFTYPE_AP) ||
-		     (newType == RT_CMD_80211_IFTYPE_P2P_GO))
-	{
-		CFG80211DBG(RT_DEBUG_TRACE, ("80211> Change the Interface to AP Mode\n"));
-		pAd->cfg80211_ctrl.isCfgInApMode = RT_CMD_80211_IFTYPE_AP;
-	}
+		if (newType == RT_CMD_80211_IFTYPE_AP)
+		{
+			CFG80211DBG(RT_DEBUG_TRACE, ("80211> Change the Interface to AP Mode\n"));
+			pAd->cfg80211_ctrl.isCfgInApMode = RT_CMD_80211_IFTYPE_AP;
+		}
 #ifdef CONFIG_STA_SUPPORT
 	else if (newType == RT_CMD_80211_IFTYPE_MONITOR)
 	{
@@ -158,38 +126,7 @@ bool CFG80211DRV_OpsChgVirtualInf(struct rtmp_adapter *pAd, VOID *pData)
 	}
 #endif /*CONFIG_STA_SUPPORT*/
 
-	if ((newType == RT_CMD_80211_IFTYPE_P2P_CLIENT) ||
-	   (newType == RT_CMD_80211_IFTYPE_P2P_GO))
-	{
-		COPY_MAC_ADDR(pAd->cfg80211_ctrl.P2PCurrentAddress, pVifParm->net_dev->dev_addr);
-	}
-	else
-	{
-	}
-
 	return true;
-}
-
-bool RTMP_CFG80211_VIF_P2P_GO_ON(struct rtmp_adapter *pAd)
-{
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	struct net_device *pNetDev = NULL;
-
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
-		((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
-    	return true;
-	else
-		return false;
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
-#ifdef RT_CFG80211_P2P_SINGLE_DEVICE
-	if(CFG80211_P2P_TEST_BIT(pAd->cfg80211_ctrl.P2POpStatusFlags, CFG_P2P_GO_UP))
-		return true;
-	else
-		return false;
-#endif /* RT_CFG80211_P2P_SINGLE_DEVICE */
-
-	return false;
 }
 
 bool CFG80211DRV_OpsVifAdd(struct rtmp_adapter *pAd, VOID *pData)
@@ -390,22 +327,6 @@ static INT CFG80211_PacketSend(struct sk_buff *pPktSrc, struct net_device *pDev,
 			RTMP_SET_PACKET_OPMODE(pPktSrc, OPMODE_AP);
 			break;
 
-		case RT_CMD_80211_IFTYPE_P2P_GO:;
-			//minIdx = MIN_NET_DEVICE_FOR_CFG80211_VIF_P2P_GO;
-			if(!OPSTATUS_TEST_FLAG(pAd, fOP_AP_STATUS_MEDIA_STATE_CONNECTED))
-			{
-			        DBGPRINT(RT_DEBUG_TRACE, ("Drop the Packet due P2P GO not in ready state\n"));
-			        dev_kfree_skb_any(pPktSrc);
-				return 0;
-			}
-			RTMP_SET_PACKET_OPMODE(pPktSrc, OPMODE_AP);
-			break;
-
-		case RT_CMD_80211_IFTYPE_P2P_CLIENT:
-			//minIdx = MIN_NET_DEVICE_FOR_CFG80211_VIF_P2P_CLI;
-			RTMP_SET_PACKET_OPMODE(pPktSrc, OPMODE_AP);
-			break;
-
 		case RT_CMD_80211_IFTYPE_STATION:
 		default:
 			DBGPRINT(RT_DEBUG_TRACE, ("Unknown CFG80211 I/F Type(%d)\n", pDev->ieee80211_ptr->iftype));
@@ -490,10 +411,6 @@ VOID RTMP_CFG80211_VirtualIF_Init(
 	netDevHook.xmit = CFG80211_VirtualIF_PacketSend; /* hard transmit hook point */
 	netDevHook.ioctl = CFG80211_VirtualIF_Ioctl;	 /* ioctl hook point */
 
-#if WIRELESS_EXT >= 12
-	//netDevHook.iw_handler = (void *)&rt28xx_ap_iw_handler_def;
-#endif /* WIRELESS_EXT >= 12 */
-
 	new_dev_p = RtmpOSNetDevCreate(MC_RowID, &IoctlIF, Inf, preIfIndex, sizeof(struct rtmp_adapter *), preIfName);
 
 	if (new_dev_p == NULL)
@@ -506,6 +423,15 @@ VOID RTMP_CFG80211_VirtualIF_Init(
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("Register CFG80211 I/F (%s)\n", RTMP_OS_NETDEV_GET_DEVNAME(new_dev_p)));
 	}
+
+#if 1
+/* XXX */
+	if (!pAd->net_dev){
+		printk("%s: %s: SET net_dev! pAd=%p, new_dev_p=%p\n", __FILE__, __func__, pAd, new_dev_p);
+		pAd->net_dev=new_dev_p;
+	}
+
+#endif
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,9))
 	new_dev_p->needs_free_netdev = true;
@@ -527,11 +453,6 @@ VOID RTMP_CFG80211_VirtualIF_Init(
 		pNetDevOps->devAddr[0] += 2; /* NEW BSSID */
 	else
 	{
-#ifdef P2P_ODD_MAC_ADJUST
-		if (pNetDevOps->devAddr[5] & 0x01 == 0x01)
-			pNetDevOps->devAddr[5] -= 1;
-		else
-#endif /* P2P_ODD_MAC_ADJUST */
 		pNetDevOps->devAddr[5] += FIRST_MBSSID;
 	}
 
@@ -544,13 +465,6 @@ VOID RTMP_CFG80211_VirtualIF_Init(
 			break;
 		default:
 			DBGPRINT(RT_DEBUG_ERROR, ("Unknown CFG80211 I/F Type (%d)\n", DevType));
-	}
-
-	//CFG_TODO : should be move to VIF_CHG
-	if ((DevType == RT_CMD_80211_IFTYPE_P2P_CLIENT) ||
-	   (DevType == RT_CMD_80211_IFTYPE_P2P_GO))
-	{
-		COPY_MAC_ADDR(pAd->cfg80211_ctrl.P2PCurrentAddress, pNetDevOps->devAddr);
 	}
 
 	pWdev = kzalloc(sizeof(*pWdev), GFP_KERNEL);
@@ -612,150 +526,4 @@ VOID RTMP_CFG80211_AllVirtualIF_Remove(
 		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	}
 }
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-static INT CFG80211_DummyP2pIf_Open(
-	IN struct net_device *	dev_p)
-{
-	struct wireless_dev *wdev = dev_p->ieee80211_ptr;
-
-	if (!wdev)
-		return -EINVAL;
-
-	wdev->wiphy->interface_modes |= (BIT(NL80211_IFTYPE_P2P_CLIENT)
-				     | BIT(NL80211_IFTYPE_P2P_GO));
-	return 0;
-}
-
-static INT CFG80211_DummyP2pIf_Close(
-	IN struct net_device *	dev_p)
-{
-	struct wireless_dev *wdev = dev_p->ieee80211_ptr;
-
-	if (!wdev)
-			return -EINVAL;
-
-	wdev->wiphy->interface_modes = (wdev->wiphy->interface_modes)
-									& (~(BIT(NL80211_IFTYPE_P2P_CLIENT)|
-									BIT(NL80211_IFTYPE_P2P_GO)));
-	return 0;
-}
-
-static INT CFG80211_DummyP2pIf_Ioctl(
-	IN struct net_device *			dev_p,
-	IN OUT VOID 			*rq_p,
-	IN INT 					cmd)
-{
-	struct rtmp_adapter *pAd;
-
-	pAd = RTMP_OS_NETDEV_GET_PRIV(dev_p);
-	ASSERT(pAd);
-
-	if (!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_IN_USE))
-		return -ENETDOWN;
-
-	DBGPRINT(RT_DEBUG_TRACE, ("%s --->\n", __FUNCTION__));
-
-	return rt28xx_ioctl(dev_p, rq_p, cmd);
-
-}
-
-static INT CFG80211_DummyP2pIf_PacketSend(
-	IN struct sk_buff *	skb_p,
-	IN struct net_device *		dev_p)
-{
-	return 0;
-}
-
-VOID RTMP_CFG80211_DummyP2pIf_Remove(
-	IN struct rtmp_adapter *pAd)
-{
-	PCFG80211_CTRL cfg80211_ctrl = &pAd->cfg80211_ctrl;
-	struct net_device *dummy_p2p_net_dev = (PNET_DEV)cfg80211_ctrl->dummy_p2p_net_dev;
-
-	DBGPRINT(RT_DEBUG_TRACE, (" %s =====> \n", __FUNCTION__));
-	RtmpOSNetDevProtect(1);
-	if (dummy_p2p_net_dev)
-	{
-		RTMP_OS_NETDEV_STOP_QUEUE(dummy_p2p_net_dev);
-		RtmpOSNetDevDetach(dummy_p2p_net_dev);
-		if (dummy_p2p_net_dev->ieee80211_ptr)
-	        {
-        		kfree(dummy_p2p_net_dev->ieee80211_ptr);
-            		dummy_p2p_net_dev->ieee80211_ptr = NULL;
-        	}
-
-		RtmpOSNetDevProtect(0);
-		RtmpOSNetDevFree(dummy_p2p_net_dev);
-		RtmpOSNetDevProtect(1);
-
-		cfg80211_ctrl->flg_cfg_dummy_p2p_init = false;
-	}
-	RtmpOSNetDevProtect(0);
-	DBGPRINT(RT_DEBUG_TRACE, (" %s <=====\n", __FUNCTION__));
-}
-
-VOID RTMP_CFG80211_DummyP2pIf_Init(
-	IN struct rtmp_adapter	*pAd)
-{
-#define INF_CFG80211_DUMMY_P2P_NAME "p2p"
-	struct mt7612u_cfg80211_cb *p80211CB = pAd->pCfg80211_CB;
-	PCFG80211_CTRL cfg80211_ctrl = &pAd->cfg80211_ctrl;
-	struct RTMP_OS_NETDEV_OP_HOOK netDevHook, *pNetDevOps;
-	struct net_device *new_dev_p;
-	uint32_t MC_RowID = 0, IoctlIF = 0, Inf = INT_P2P;
-	UINT preIfIndex = 0;
-	struct wireless_dev *pWdev;
-
-	DBGPRINT(RT_DEBUG_TRACE, (" %s =====> \n", __FUNCTION__));
-	if (cfg80211_ctrl->flg_cfg_dummy_p2p_init != false)
-		return;
-
-
-	pNetDevOps=&netDevHook;
-
-	/* init operation functions and flags */
-	memset(&netDevHook, 0, sizeof(netDevHook));
-	netDevHook.open = CFG80211_DummyP2pIf_Open;	     /* device opem hook point */
-	netDevHook.stop = CFG80211_DummyP2pIf_Close;	     /* device close hook point */
-	netDevHook.xmit = CFG80211_DummyP2pIf_PacketSend;    /* hard transmit hook point */
-	netDevHook.ioctl = CFG80211_DummyP2pIf_Ioctl;	     /* ioctl hook point */
-
-	new_dev_p = RtmpOSNetDevCreate(MC_RowID, &IoctlIF, Inf, preIfIndex, sizeof(struct rtmp_adapter *), INF_CFG80211_DUMMY_P2P_NAME);
-
-	if (new_dev_p == NULL)
-	{
-		/* allocation fail, exit */
-		DBGPRINT(RT_DEBUG_ERROR, ("Allocate network device fail (CFG80211: Dummy P2P IF)...\n"));
-		return;
-	}
-	else
-	{
-		DBGPRINT(RT_DEBUG_TRACE, ("Register CFG80211 I/F (%s)\n", RTMP_OS_NETDEV_GET_DEVNAME(new_dev_p)));
-	}
-
-	RTMP_OS_NETDEV_SET_PRIV(new_dev_p, pAd);
-	memmove(&pNetDevOps->devAddr[0], &pAd->CurrentAddress[0], MAC_ADDR_LEN);
-	pNetDevOps->needProtcted = true;
-
-	pWdev = kzalloc(sizeof(*pWdev), GFP_KERNEL);
-	if (unlikely(!pWdev))
-	{
-		DBGPRINT(RT_DEBUG_ERROR, ("Could not allocate wireless device\n"));
-		return;
-	}
-
-	new_dev_p->ieee80211_ptr = pWdev;
-	pWdev->wiphy = p80211CB->pCfg80211_Wdev->wiphy;
-	SET_NETDEV_DEV(new_dev_p, wiphy_dev(pWdev->wiphy));
-	pWdev->netdev = new_dev_p;
-	pWdev->iftype = RT_CMD_80211_IFTYPE_STATION;
-
-	RtmpOSNetDevAttach(pAd->OpMode, new_dev_p, pNetDevOps);
-	cfg80211_ctrl->dummy_p2p_net_dev = new_dev_p;
-	cfg80211_ctrl->flg_cfg_dummy_p2p_init = true;
-
-	DBGPRINT(RT_DEBUG_TRACE, (" %s <=====\n", __FUNCTION__));
-}
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 #endif /* RT_CFG80211_SUPPORT */
-

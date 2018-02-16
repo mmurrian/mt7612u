@@ -1111,44 +1111,32 @@ VOID ap_cmm_peer_assoc_req_action(
 
 #ifdef RT_CFG80211_SUPPORT
 		if (true) /*CFG_TODO*/
-        {
+		{
 			hex_dump("ASSOC_REQ", Elem->Msg, Elem->MsgLen);
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-			struct net_device *pNetDev = NULL;
-			if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
-			    ((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
+			DBGPRINT(RT_DEBUG_TRACE, ("SINGLE_DEVICE CFG : GO NOITFY THE CLIENT ASSOCIATED\n"));
+			CFG80211OS_NewSta(pAd->net_dev, ie_list->Addr2, (u8 *)Elem->Msg, Elem->MsgLen);
+			if (pEntry->WepStatus == Ndis802_11WEPEnabled)
 			{
-				DBGPRINT(RT_DEBUG_TRACE, ("CONCURRENT_DEVICE CFG : GO NOITFY THE CLIENT ASSOCIATED\n"));
-				CFG80211OS_NewSta(pNetDev, ie_list->Addr2, (u8 *)Elem->Msg, Elem->MsgLen);
-			}
-			else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-			{
-				DBGPRINT(RT_DEBUG_TRACE, ("SINGLE_DEVICE CFG : GO NOITFY THE CLIENT ASSOCIATED\n"));
-				CFG80211OS_NewSta(pAd->net_dev, ie_list->Addr2, (u8 *)Elem->Msg, Elem->MsgLen);
-				if (pEntry->WepStatus == Ndis802_11WEPEnabled)
-				{
-					/* Set WEP key to ASIC */
-					u8 KeyIdx = 0;
-					u8 CipherAlg = 0;
+				/* Set WEP key to ASIC */
+				u8 KeyIdx = 0;
+				u8 CipherAlg = 0;
 
-					KeyIdx = wdev->DefaultKeyId;
-					CipherAlg = pAd->SharedKey[pEntry->func_tb_idx][KeyIdx].CipherAlg;
+				KeyIdx = wdev->DefaultKeyId;
+				CipherAlg = pAd->SharedKey[pEntry->func_tb_idx][KeyIdx].CipherAlg;
 
-					/*
-						If WEP is used, set pair-wise cipherAlg into WCID
-						attribute table for this entry.
-					*/
-					RTMP_SET_WCID_SEC_INFO(pAd,
-											pEntry->func_tb_idx,
-											KeyIdx,
-											CipherAlg,
-											pEntry->wcid,
-											SHAREDKEYTABLE);
-				}
+				/*
+					If WEP is used, set pair-wise cipherAlg into WCID
+					attribute table for this entry.
+				*/
+				RTMP_SET_WCID_SEC_INFO(pAd,
+										pEntry->func_tb_idx,
+										KeyIdx,
+										CipherAlg,
+										pEntry->wcid,
+										SHAREDKEYTABLE);
 			}
-        }
+		}
 		else
 #endif	/* RT_CFG80211_SUPPORT */
 		/* enqueue a EAPOL_START message to trigger EAP state machine doing the authentication */

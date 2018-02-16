@@ -177,10 +177,6 @@ static int rt2870_probe(
 
 	*ppAd = pAd;
 
-#ifdef INF_PPA_SUPPORT
-	RTMP_DRIVER_INF_PPA_INIT(pAd);
-#endif /* INF_PPA_SUPPORT */
-
 	DBGPRINT(RT_DEBUG_TRACE, ("<===rt2870_probe()!\n"));
 
 	return 0;
@@ -328,6 +324,8 @@ static int rtusb_probe(struct usb_interface *intf, const USB_DEVICE_ID *id)
 	rv = rt2870_probe(intf, dev, id, &pAd);
 	if (rv != 0)
 		usb_put_dev(dev);
+	else
+		usb_set_intfdata(intf, pAd);
 	return rv;
 }
 

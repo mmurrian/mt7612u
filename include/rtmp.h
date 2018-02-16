@@ -3056,10 +3056,6 @@ typedef struct _CFG80211_CONTROL
 	bool TxStatusInUsed;
 	LIST_HEADER cfg80211TxPacketList;
 
-	/* P2P Releated*/
-	u8 P2PCurrentAddress[MAC_ADDR_LEN];	  /* User changed MAC address */
-	bool isCfgDeviceInP2p; 				  /* For BaseRate 6 */
-
 	/* MainDevice Info. */
 	CFG80211_VIF_DEV cfg80211MainDev;
 
@@ -3492,7 +3488,7 @@ struct rtmp_adapter {
 	DOT11_H Dot11_H;
 
 	/* encryption/decryption KEY tables */
-	CIPHER_KEY SharedKey[HW_BEACON_MAX_NUM + MAX_P2P_NUM][4];	/* STA always use SharedKey[BSS0][0..3] */
+	CIPHER_KEY SharedKey[HW_BEACON_MAX_NUM][4];	/* STA always use SharedKey[BSS0][0..3] */
 
 	/* various Counters */
 	COUNTER_802_3 Counters8023;	/* 802.3 counters */
@@ -3532,11 +3528,6 @@ struct rtmp_adapter {
 #ifdef HOSTAPD_SUPPORT
 	uint32_t IoctlIF;
 #endif /* HOSTAPD_SUPPORT */
-#ifdef INF_PPA_SUPPORT
-	uint32_t g_if_id;
-	bool PPAEnable;
-	PPA_DIRECTPATH_CB *pDirectpathCb;
-#endif /* INF_PPA_SUPPORT */
 
 	/**********************************************************/
 	/*      Statistic related parameters                                                    */
@@ -3763,8 +3754,6 @@ typedef struct _RX_BLK
 #define fRX_APCLI		0x0400
 #define fRX_DLS			0x0800
 #define fRX_WPI			0x1000
-#define fRX_P2PGO		0x2000
-#define fRX_P2PCLI		0x4000
 
 #define AMSDU_SUBHEAD_LEN	14
 #define ARALINK_SUBHEAD_LEN	14
@@ -5270,7 +5259,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
 #ifdef CONFIG_STA_SUPPORT
 	OUT u8 	 *pPreNHtCapabilityLen,
 #ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
-    OUT u8 	*pSelReg,
+	OUT u8 	*pSelReg,
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
 #endif /* CONFIG_STA_SUPPORT */
 	OUT HT_CAPABILITY_IE *pHtCapability,
@@ -5996,16 +5985,6 @@ INT Set_TxBurst_Proc(struct rtmp_adapter *pAd, char *arg);
 #ifdef AGGREGATION_SUPPORT
 INT	Set_PktAggregate_Proc(struct rtmp_adapter *pAd, char *arg);
 #endif /* AGGREGATION_SUPPORT */
-
-#ifdef INF_PPA_SUPPORT
-INT	Set_INF_AMAZON_SE_PPA_Proc(struct rtmp_adapter *pAd, char *arg);
-
-INT ifx_ra_start_xmit (
-	IN	struct net_device *rx_dev,
-	IN	struct net_device *tx_dev,
-	IN	struct sk_buff *skb,
-	IN	int len);
-#endif /* INF_PPA_SUPPORT */
 
 INT	Set_IEEE80211H_Proc(struct rtmp_adapter *pAd, char *arg);
 

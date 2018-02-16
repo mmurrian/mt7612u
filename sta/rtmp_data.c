@@ -1099,13 +1099,6 @@ VOID STABuildCommon802_11Header(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 	else
 		wifi_hdr->FC.PwrMgmt = (RtmpPktPmBitCheck(pAd) == true);
 
-#ifdef RT_CFG80211_P2P_SINGLE_DEVICE
-		if (INFRA_ON(pAd))
-		{
-			if (CFG_P2PCLI_ON(pAd) && pAd->cfg80211_ctrl.bP2pCliPmEnable)
-				wifi_hdr->FC.PwrMgmt = PWR_SAVE;
-		}
-#endif /* RT_CFG80211_P2P_SINGLE_DEVICE */
 }
 
 

@@ -417,7 +417,6 @@ void CFG80211_SendMgmtFrame(struct rtmp_adapter *pAd, VOID *pData, ULONG Data)
 				DBGPRINT(RT_DEBUG_ERROR, ("CFG_TX_STATUS: MEM ALLOC ERROR\n"));
 				return;
 			}
-			CFG80211_CheckActionFrameType(pAd, "TX", pData, Data);
 
 #ifdef CONFIG_AP_SUPPORT
         		mgmt = (struct ieee80211_mgmt *)pData;

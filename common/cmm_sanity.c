@@ -735,12 +735,12 @@ bool PeerBeaconAndProbeRspSanity_Old(
 			if (SubType == SUBTYPE_BEACON)
 			{
 				u8 *	pData;
-				INT			Len = 0;
+				unsigned short	Len = 0;
 				unsigned short 	DataLen = 0;
 				PWSC_IE		pWscIE;
 
 				pData = (u8 *) pEid->Octet + 4;
-				Len = (SHORT)(pEid->Len - 4);
+				Len = (unsigned short)(pEid->Len - 4);
 
 				while (Len > 0)
 				{
@@ -752,7 +752,11 @@ bool PeerBeaconAndProbeRspSanity_Old(
 					if (be2cpu16(pWscIE->Type) == 0x1041 /*WSC_ID_SEL_REGISTRAR*/ )
 					{
 						DataLen = be2cpu16(pWscIE->Length);
+						*pSelReg=pData[4];
+						/*
+						What is DataLen != 1 ?
 						memmove(pSelReg, pData + 4, DataLen);
+						*/
 						break;
 					}
 
@@ -1348,12 +1352,12 @@ bool PeerBeaconAndProbeRspSanity(
 			if ( SubType == SUBTYPE_BEACON )
 			{
 				u8 *	pData;
-				INT			Len = 0;
+				unsigned short	Len = 0;
 				unsigned short 	DataLen = 0;
 				PWSC_IE		pWscIE;
 
 				pData = (u8 *) pEid->Octet + 4;
-				Len = (SHORT)(pEid->Len - 4);
+				Len = (unsigned short)(pEid->Len - 4);
 
 				while (Len > 0)
 				{

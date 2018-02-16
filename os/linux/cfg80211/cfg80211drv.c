@@ -88,12 +88,6 @@ INT CFG80211DRV_IoctlHandle(
 			CFG80211DRV_StaKeyAdd(pAd, pData);
 			break;
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		case CMD_RTPRIV_IOCTL_80211_P2P_CLIENT_KEY_ADD:
-			CFG80211DRV_P2pClientKeyAdd(pAd, pData);
-			break;
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 #ifdef CONFIG_STA_SUPPORT
 		case CMD_RTPRIV_IOCTL_80211_STA_KEY_DEFAULT_SET:
 			CFG80211_setStaDefaultKey(pAd, Data);
@@ -102,12 +96,7 @@ INT CFG80211DRV_IoctlHandle(
 
 #endif /*CONFIG_STA_SUPPORT*/
 		case CMD_RTPRIV_IOCTL_80211_CONNECT_TO:
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-			if (Data == RT_CMD_80211_IFTYPE_P2P_CLIENT)
-				CFG80211DRV_P2pClientConnect(pAd, pData);
-			else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-				CFG80211DRV_Connect(pAd, pData);
+			CFG80211DRV_Connect(pAd, pData);
 			break;
 
 		case CMD_RTPRIV_IOCTL_80211_UNREGISTER:
@@ -127,14 +116,6 @@ INT CFG80211DRV_IoctlHandle(
 
 		case CMD_RTPRIV_IOCTL_80211_EXTRA_IES_SET:
 			CFG80211DRV_OpsScanExtraIesSet(pAd);
-			break;
-
-		case CMD_RTPRIV_IOCTL_80211_REMAIN_ON_CHAN_SET:
-			CFG80211DRV_OpsRemainOnChannel(pAd, pData, Data);
-			break;
-
-		case CMD_RTPRIV_IOCTL_80211_CANCEL_REMAIN_ON_CHAN_SET:
-			CFG80211DRV_OpsCancelRemainOnChannel(pAd, Data);
 			break;
 
 		/* CFG_TODO */
@@ -227,12 +208,6 @@ INT CFG80211DRV_IoctlHandle(
             		CFG80211_reSetToDefault(pAd);
             		break;
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-                case CMD_RTPRIV_IOCTL_80211_P2PCLI_ASSSOC_IE_SET:
-                        CFG80211DRV_SetP2pCliAssocIe(pAd, pData, Data);
-                        break;
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 		case CMD_RTPRIV_IOCTL_80211_VIF_ADD:
 			if (CFG80211DRV_OpsVifAdd(pAd, pData) != true)
 				return NDIS_STATUS_FAILURE;
@@ -241,12 +216,6 @@ INT CFG80211DRV_IoctlHandle(
 	        case CMD_RTPRIV_IOCTL_80211_VIF_DEL:
 			RTMP_CFG80211_VirtualIF_Remove(pAd, pData, Data);
             		break;
-
-#ifdef RT_P2P_SPECIFIC_WIRELESS_EVENT
-		case CMD_RTPRIV_IOCTL_80211_SEND_WIRELESS_EVENT:
-			CFG80211_SendWirelessEvent(pAd, pData);
-			break;
-#endif /* RT_P2P_SPECIFIC_WIRELESS_EVENT */
 
 #ifdef RFKILL_HW_SUPPORT
 				case CMD_RTPRIV_IOCTL_80211_RFKILL:
@@ -283,42 +252,6 @@ VOID CFG80211DRV_OpsMgmtFrameProbeRegister(
 {
 	PCFG80211_CTRL pCfg80211_ctrl = &pAd->cfg80211_ctrl;
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	struct net_device *pNewNetDev = (PNET_DEV) pData;
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV       pDevEntry = NULL;
-	PLIST_ENTRY		        pListEntry = NULL;
-
-	/* Search the CFG80211 VIF List First */
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	while (pDevEntry != NULL)
-	{
-		if (RTMPEqualMemory(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
-			break;
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	}
-
-	/* Check The Registration is for VIF Device */
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
-		(pDevEntry != NULL))
-	{
-		if (isReg)
-			pDevEntry->Cfg80211ProbeReqCount++;
-		else
-			pDevEntry->Cfg80211ProbeReqCount--;
-
-		if (pDevEntry->Cfg80211ProbeReqCount > 0)
-			pDevEntry->Cfg80211RegisterProbeReqFrame = true;
-		else
-			pDevEntry->Cfg80211RegisterProbeReqFrame = false;
-
-		return;
-	}
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 	/* IF Not Exist on VIF List, the device must be MAIN_DEV */
 	if (isReg)
 		pCfg80211_ctrl->cfg80211MainDev.Cfg80211ProbeReqCount++;
@@ -344,45 +277,6 @@ VOID CFG80211DRV_OpsMgmtFrameActionRegister(
 		bool                                          isReg)
 {
 	PCFG80211_CTRL pCfg80211_ctrl = &pAd->cfg80211_ctrl;
-
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	struct net_device *pNewNetDev = (PNET_DEV) pData;
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV       pDevEntry = NULL;
-	PLIST_ENTRY		        pListEntry = NULL;
-
-	/* Search the CFG80211 VIF List First */
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	while (pDevEntry != NULL)
-	{
-		if (RTMPEqualMemory(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
-			break;
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	}
-
-	/* Check The Registration is for VIF Device */
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
-		(pDevEntry != NULL))
-	{
-		if (isReg)
-			pDevEntry->Cfg80211ActionCount++;
-		else
-			pDevEntry->Cfg80211ActionCount--;
-
-		if (pDevEntry->Cfg80211ActionCount > 0)
-			pDevEntry->Cfg80211RegisterActionFrame = true;
-		else
-			pDevEntry->Cfg80211RegisterActionFrame = false;
-
-		DBGPRINT(RT_DEBUG_INFO, ("[%d] TYPE pDevEntry->Cfg80211RegisterActionFrame=%d[%d]\n",
-				isReg, pDevEntry->Cfg80211RegisterActionFrame, pDevEntry->Cfg80211ActionCount));
-
-		return;
-	}
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 
 	/* IF Not Exist on VIF List, the device must be MAIN_DEV */
 	if (isReg)
@@ -531,8 +425,7 @@ bool CFG80211DRV_OpsSetChannel(struct rtmp_adapter *pAd, VOID *pData)
 		pAd->CommonCfg.CentralChannel, pAd->CommonCfg.RegTransmitSetting.field.BW,
 		pAd->CommonCfg.RegTransmitSetting.field.EXTCHA));
 
-	if(IfType == RT_CMD_80211_IFTYPE_AP ||
-	   IfType == RT_CMD_80211_IFTYPE_P2P_GO)
+	if(IfType == RT_CMD_80211_IFTYPE_AP)
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("80211> Set the channel in AP Mode\n"));
 		return true;
@@ -592,38 +485,27 @@ bool CFG80211DRV_OpsLeave(
 	UINT8						IfType)
 {
 #ifdef CONFIG_STA_SUPPORT
-
-    MLME_DEAUTH_REQ_STRUCT   DeAuthReq;
-    MLME_QUEUE_ELEM *pMsgElem = NULL;
+	MLME_DEAUTH_REQ_STRUCT   DeAuthReq;
+	MLME_QUEUE_ELEM *pMsgElem = NULL;
 
 	pAd->StaCfg.bAutoReconnect = false;
 	pAd->cfg80211_ctrl.FlgCfg80211Connecting = false;
 
-    pAd->MlmeAux.AutoReconnectSsidLen= 32;
-    memset(pAd->MlmeAux.AutoReconnectSsid, 0, pAd->MlmeAux.AutoReconnectSsidLen);
+	pAd->MlmeAux.AutoReconnectSsidLen= 32;
+	memset(pAd->MlmeAux.AutoReconnectSsid, 0, pAd->MlmeAux.AutoReconnectSsidLen);
 
-    pMsgElem = kmalloc(sizeof(MLME_QUEUE_ELEM), GFP_ATOMIC);
+	pMsgElem = kmalloc(sizeof(MLME_QUEUE_ELEM), GFP_ATOMIC);
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	if (IfType == RT_CMD_80211_IFTYPE_P2P_CLIENT)
-		COPY_MAC_ADDR(DeAuthReq.Addr, pAd->ApCfg.ApCliTab[MAIN_MBSSID].MlmeAux.Bssid);
-	else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-		COPY_MAC_ADDR(DeAuthReq.Addr, pAd->CommonCfg.Bssid);
+	COPY_MAC_ADDR(DeAuthReq.Addr, pAd->CommonCfg.Bssid);
 
-    DeAuthReq.Reason = REASON_DEAUTH_STA_LEAVING;
-    pMsgElem->MsgLen = sizeof(MLME_DEAUTH_REQ_STRUCT);
-    memmove(pMsgElem->Msg, &DeAuthReq, sizeof(MLME_DEAUTH_REQ_STRUCT));
-    MlmeDeauthReqAction(pAd, pMsgElem);
-    kfree(pMsgElem);
+	DeAuthReq.Reason = REASON_DEAUTH_STA_LEAVING;
+	pMsgElem->MsgLen = sizeof(MLME_DEAUTH_REQ_STRUCT);
+	memmove(pMsgElem->Msg, &DeAuthReq, sizeof(MLME_DEAUTH_REQ_STRUCT));
+	MlmeDeauthReqAction(pAd, pMsgElem);
+	kfree(pMsgElem);
 	pMsgElem = NULL;
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	if (IfType == RT_CMD_80211_IFTYPE_P2P_CLIENT)
-		ApCliLinkDown(pAd, MAIN_MBSSID /*ifIndex*/);
-	else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-		LinkDown(pAd, false);
+	LinkDown(pAd, false);
 
 #endif /* CONFIG_STA_SUPPORT */
 	return true;
@@ -1453,142 +1335,6 @@ INT CFG80211_reSetToDefault(
 
 	return true;
 }
-
-/*
-initList(&pAd->Cfg80211VifDevSet.vifDevList);
-initList(&pAd->cfg80211_ctrl.cfg80211TxPacketList);
-*/
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-bool CFG80211_checkScanResInKernelCache(
-    IN struct rtmp_adapter                                       *pAd,
-    IN u8                                        *pBSSID,
-	IN u8 				*pSsid,
-	IN INT       					ssidLen)
-{
-        struct mt7612u_cfg80211_cb *pCfg80211_CB  = (struct mt7612u_cfg80211_cb *)pAd->pCfg80211_CB;
-        struct wiphy *pWiphy = pCfg80211_CB->pCfg80211_Wdev->wiphy;
-        struct cfg80211_bss *bss;
-
-	bss = cfg80211_get_bss(pWiphy, NULL, pBSSID,
-                               pSsid, ssidLen,
-                               WLAN_CAPABILITY_ESS, WLAN_CAPABILITY_ESS);
-	if (bss)
-        {
-                cfg80211_put_bss(bss);
-                return true;
-        }
-
-	return false;
-}
-
-bool CFG80211_checkScanTable(
-        IN struct rtmp_adapter                               *pAd)
-{
-	struct mt7612u_cfg80211_cb *pCfg80211_CB  = ( struct mt7612u_cfg80211_cb *)pAd->pCfg80211_CB;
-	struct wiphy *pWiphy = pCfg80211_CB->pCfg80211_Wdev->wiphy;
-	ULONG bss_idx = BSS_NOT_FOUND;
-	struct cfg80211_bss *bss;
-	struct ieee80211_channel *chan;
-	uint32_t CenFreq;
-	uint64_t timestamp;
-	struct timeval tv;
-	u8 *ie, ieLen = 0;
-	bool isOk = false;
-	BSS_ENTRY *pBssEntry;
-
-	unsigned short ifIndex = 0;
-	PAPCLI_STRUCT pApCliEntry = NULL;
-	pApCliEntry = &pAd->ApCfg.ApCliTab[ifIndex];
-
-
-        if (MAC_ADDR_EQUAL(pApCliEntry->MlmeAux.Bssid, ZERO_MAC_ADDR))
-        {
-		CFG80211DBG(RT_DEBUG_ERROR, ("pAd->ApCliMlmeAux.Bssid ==> ZERO_MAC_ADDR\n"));
-		//ToDo: pAd->ApCfg.ApCliTab[0].CfgApCliBssid
-                return false;
-        }
-
-	/* Fake TSF */
-	do_gettimeofday(&tv);
-	timestamp = ((uint64_t)tv.tv_sec * 1000000) + tv.tv_usec;
-
-	bss = cfg80211_get_bss(pWiphy, NULL, pApCliEntry->MlmeAux.Bssid,
-			       pApCliEntry->MlmeAux.Ssid, pApCliEntry->MlmeAux.SsidLen,
-			       WLAN_CAPABILITY_ESS, WLAN_CAPABILITY_ESS);
-	if (bss)
-	{
-		DBGPRINT(RT_DEBUG_TRACE, ("Found %s in Kernel_ScanTable with CH[%d]\n", pApCliEntry->MlmeAux.Ssid, bss->channel->center_freq));
-		bss->tsf = timestamp;
-		cfg80211_put_bss(bss);
-		return true;
-	}
-	else
-	{
-		DBGPRINT(RT_DEBUG_ERROR, ("Can't Found %s in Kernel_ScanTable & Try Fake it\n", pApCliEntry->MlmeAux.Ssid));
-	}
-
-	bss_idx = BssSsidTableSearchBySSID(&pAd->ScanTab, pApCliEntry->MlmeAux.Ssid, pApCliEntry->MlmeAux.SsidLen);
-
-	if (bss_idx != BSS_NOT_FOUND)
-	{
-		/* Since the cfg80211 kernel scanTable not exist this Entry,
-		 * Build an Entry for this connect inform event.
-         	 */
-
-		pBssEntry = &pAd->ScanTab.BssEntry[bss_idx];
-
-		if (pAd->ScanTab.BssEntry[bss_idx].Channel > 14)
-			CenFreq = ieee80211_channel_to_frequency(pBssEntry->Channel , IEEE80211_BAND_5GHZ);
-		else
-			CenFreq = ieee80211_channel_to_frequency(pBssEntry->Channel , IEEE80211_BAND_2GHZ);
-        	chan = ieee80211_get_channel(pWiphy, CenFreq);
-
-		ieLen = 2 + pApCliEntry->MlmeAux.SsidLen + pBssEntry->VarIeFromProbeRspLen;
-
-		ie = kmalloc(ieLen, GFP_ATOMIC);
-		if (!ie) {
-			CFG80211DBG(RT_DEBUG_ERROR, ("Memory Allocate Fail in CFG80211_checkScanTable\n"));
-			return false;
-		}
-
-		ie[0] = WLAN_EID_SSID;
-		ie[1] = pApCliEntry->MlmeAux.SsidLen;
-		memcpy(ie + 2, pApCliEntry->MlmeAux.Ssid, pApCliEntry->MlmeAux.SsidLen);
-		memcpy(ie + 2 + pApCliEntry->MlmeAux.SsidLen, pBssEntry->pVarIeFromProbRsp,
-				pBssEntry->VarIeFromProbeRspLen);
-
-		bss = cfg80211_inform_bss(pWiphy, chan,
-					  pApCliEntry->MlmeAux.Bssid, timestamp, WLAN_CAPABILITY_ESS, pApCliEntry->MlmeAux.BeaconPeriod,
-					  ie, ieLen,
-#ifdef CFG80211_SCAN_SIGNAL_AVG
-					  (pBssEntry->AvgRssi * 100),
-#else
-					  (pBssEntry->Rssi * 100),
-#endif
-					  GFP_KERNEL);
-		if (bss)
-		{
-			printk("Fake New %s(%02x:%02x:%02x:%02x:%02x:%02x) in Kernel_ScanTable with CH[%d][%d] BI:%d len:%d\n",
-					pApCliEntry->MlmeAux.Ssid,
-					PRINT_MAC(pApCliEntry->MlmeAux.Bssid),bss->channel->center_freq, pBssEntry->Channel,
-					pApCliEntry->MlmeAux.BeaconPeriod, pBssEntry->VarIeFromProbeRspLen);
-
-			cfg80211_put_bss(bss);
-			isOk = true;
-		}
-
-		if (ie != NULL)
-			kfree(ie);
-
-		if (isOk)
-			return true;
-	}
-	else
-		printk("%s Not In Driver Scan Table\n", pApCliEntry->MlmeAux.Ssid);
-
-	return false;
-}
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 
 //CFG_TODO
 u8 CFG80211_getCenCh(struct rtmp_adapter *pAd, u8 prim_ch)

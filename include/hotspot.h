@@ -56,7 +56,6 @@ typedef struct GNU_PACKED _HSCTRL_EVENT_DATA {
 
 typedef struct _HOTSPOT_CTRL {
 	uint32_t HSIndicationIELen;
-	uint32_t P2PIELen;
 	uint32_t InterWorkingIELen;
 	uint32_t AdvertisementProtoIELen;
 	uint32_t QosMapSetIELen;
@@ -66,7 +65,6 @@ typedef struct _HOTSPOT_CTRL {
 	u8 *QosMapSetIE;
 	u8 *RoamingConsortiumIE;
 	u8 *HSIndicationIE;
-	u8 *P2PIE;
 	bool  HSDaemonReady;
 	bool HotSpotEnable;
 	enum HSCTRL_STATE HSCtrlState;

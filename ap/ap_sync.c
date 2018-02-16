@@ -705,9 +705,6 @@ VOID APPeerBeaconAction(
 		/* ignore BEACON not in this channel */
 		if (ie_list->Channel != pAd->CommonCfg.Channel
 			&& (pAd->CommonCfg.bOverlapScanning == false)
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-			&& (!RTMP_CFG80211_VIF_P2P_CLI_ON(pAd))
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 			)
 		{
 			goto __End_Of_APPeerBeaconAction;
@@ -1099,15 +1096,6 @@ VOID APPeerBeaconAtScanAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 			memmove(&pAd->ScanTab.BssEntry[Idx].TTSF[0], &Elem->TimeStamp.u.LowPart, 4);
 			memmove(&pAd->ScanTab.BssEntry[Idx].TTSF[4], &Elem->TimeStamp.u.LowPart, 4);
 		}
-
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		if (RTMPEqualMemory(ie_list->Ssid, "DIRECT-", 7))
-			DBGPRINT(RT_DEBUG_OFF, ("%s P2P_SCANNING: %s [%d], channel =%u\n", __FUNCTION__, ie_list->Ssid, Idx,Elem->Channel));
-
-        DBGPRINT(RT_DEBUG_TRACE, ("APPeerBeaconAtScanAction : Update the SSID %s in Kernel Table, Elem->Channel=%u\n", ie_list->Ssid,Elem->Channel));
-        RT_CFG80211_SCANNING_INFORM(pAd, Idx, /*ie_list->Channel*/Elem->Channel, (u8 *)Elem->Msg, Elem->MsgLen, RealRssi);
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 	}
 
 	/* sanity check fail, ignored */

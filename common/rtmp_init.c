@@ -1652,7 +1652,7 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 
 	for(key_index=0; key_index<SHARE_KEY_NUM; key_index++)
 	{
-		for(bss_index = 0; bss_index < MAX_MBSSID_NUM(pAd) + MAX_P2P_NUM; bss_index++)
+		for(bss_index = 0; bss_index < MAX_MBSSID_NUM(pAd); bss_index++)
 		{
 			pAd->SharedKey[bss_index][key_index].KeyLen = 0;
 			pAd->SharedKey[bss_index][key_index].CipherAlg = CIPHER_NONE;
@@ -2636,15 +2636,19 @@ INT RtmpRaDevCtrlInit(struct rtmp_adapter *pAd)
 {
 	UINT8 i;
 
-#ifdef CONFIG_STA_SUPPORT
-	pAd->OpMode = OPMODE_STA;
-	DBGPRINT(RT_DEBUG_TRACE, ("STA Driver version-%s\n", STA_DRIVER_VERSION));
-#endif /* CONFIG_STA_SUPPORT */
+/*
+ * If CONFIG_AP_SUPPORT and CONFIG_STA_SUPPORT is set both then set default to STA (was AP)
+ */
 
 #ifdef CONFIG_AP_SUPPORT
 	pAd->OpMode = OPMODE_AP;
 	DBGPRINT(RT_DEBUG_TRACE, ("AP Driver version-%s\n", AP_DRIVER_VERSION));
 #endif /* CONFIG_AP_SUPPORT */
+
+#ifdef CONFIG_STA_SUPPORT
+	pAd->OpMode = OPMODE_STA;
+	DBGPRINT(RT_DEBUG_TRACE, ("STA Driver version-%s\n", STA_DRIVER_VERSION));
+#endif /* CONFIG_STA_SUPPORT */
 
 	sema_init(&(pAd->UsbVendorReq_semaphore), 1);
 	sema_init(&(pAd->reg_atomic), 1);
