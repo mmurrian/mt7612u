@@ -637,12 +637,6 @@ void linux_pci_unmap_single(void *handle, ra_dma_addr_t dma_addr, size_t size, i
  *	Other function prototypes definitions
  ***********************************************************************************/
 
-#if defined (CONFIG_WIFI_PKT_FWD)
-extern int (*wf_fwd_rx_hook) (struct sk_buff *skb);
-extern unsigned char (*wf_fwd_entry_insert_hook) (struct net_device *src, struct net_device *dest);
-extern unsigned char (*wf_fwd_entry_delete_hook) (struct net_device *src, struct net_device *dest);
-#endif /* CONFIG_WIFI_PKT_FWD */
-
 void RTMP_GetCurrentSystemTime(LARGE_INTEGER *time);
 int rt28xx_packet_xmit(struct sk_buff *skb);
 

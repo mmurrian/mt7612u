@@ -333,22 +333,6 @@ void announce_802_3_packet(
 
 		RtmpOsPktProtocolAssign(pRxPkt);
 
-#if defined (CONFIG_WIFI_PKT_FWD)
-		if (wf_fwd_rx_hook!= NULL)
-		{
-			unsigned int flags;
-			spin_lock_bh(&pAd->page_lock);
-
-			if(wf_fwd_rx_hook(pRxPkt) == 0)
-			{
-				spin_unlock_bh(&pAd->page_lock);
-				return;
-			}
-
-			spin_unlock_bh(&pAd->page_lock);
-		}
-#endif /* CONFIG_WIFI_PKT_FWD */
-
 		RtmpOsPktRcvHandle(pRxPkt);
 }
 
