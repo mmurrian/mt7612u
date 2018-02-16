@@ -230,12 +230,6 @@ int rt28xx_init(struct rtmp_adapter *pAd)
            pAd->CommonCfg.HtCapability.MCSSet[1], pAd->CommonCfg.HtCapability.MCSSet[2],
            pAd->CommonCfg.HtCapability.MCSSet[3], pAd->CommonCfg.HtCapability.MCSSet[4]));
 
-#ifdef WIN_NDIS
-	/* Patch cardbus controller if EEPROM said so. */
-	if (pAd->bTest1 == false)
-		RTMPPatchCardBus(pAd);
-#endif /* WIN_NDIS */
-
 	/* APInitialize(pAd);*/
 
 	/*
