@@ -110,9 +110,6 @@
 
 
 #include "vht.h"
-#ifdef CONFIG_STA_SUPPORT
-#include "sta_cfg.h"
-#endif /* CONFIG_STA_SUPPORT */
 
 
 
