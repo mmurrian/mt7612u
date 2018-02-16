@@ -97,10 +97,6 @@ ifeq ($(HAS_IGMP_SNOOP_SUPPORT),y)
 WFLAGS += -DIGMP_SNOOP_SUPPORT
 endif
 
-ifeq ($(HAS_QOS_DLS_SUPPORT),y)
-WFLAGS += -DQOS_DLS_SUPPORT
-endif
-
 ifeq ($(HAS_WPA_SUPPLICANT),y)
 WFLAGS += -DWPA_SUPPLICANT_SUPPORT
 ifeq ($(HAS_NATIVE_WPA_SUPPLICANT_SUPPORT),y)
@@ -253,10 +249,6 @@ obj_ap += \
 	ap/ap_autoChSel.o\
 	ap/ap_cfg.o
 
-ifeq ($(HAS_QOS_DLS_SUPPORT),y)
-obj_ap += ap/ap_dls.o
-endif
-
 ifeq ($(HAS_IDS_SUPPORT),y)
 obj_ap += ap/ap_ids.o
 endif
@@ -358,10 +350,6 @@ endif
 
 
 
-ifeq ($(HAS_QOS_DLS_SUPPORT),y)
-$(MOD_NAME)-objs += sta/dls.o
-endif
-
 endif
 #endif // CONFIG_STA_SUPPORT //
 
@@ -407,10 +395,6 @@ endif
 
 
 
-
-ifeq ($(HAS_QOS_DLS_SUPPORT),y)
-$(MOD_NAME)-objs += sta/dls.o
-endif
 
 #ifdef CRDA_SUPPORT
 ifeq ($(HAS_CFG80211_SUPPORT),y)
