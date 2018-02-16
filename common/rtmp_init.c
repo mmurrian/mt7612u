@@ -1953,11 +1953,6 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 			mbss->RekeyCountDown = 0;	/* it's used for WPA rekey */
 
 			mbss->ProbeRspTimes = 3;
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-			if (IS_RT6352(pAd) || IS_MT76x2U(pAd))
-				mbss->TxPwrAdj = -1;
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
-
 #ifdef DOT1X_SUPPORT
 			mbss->wdev.IEEE8021X = false;
 			mbss->PreAuth = false;

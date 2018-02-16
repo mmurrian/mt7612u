@@ -433,11 +433,6 @@ int MlmeHardTransmitMgmtRing(
 	u8 PID, wcid, tx_rate;
 	HTTRANSMIT_SETTING *transmit;
 	UINT8 TXWISize = pAd->chipCap.TXWISize;
-#ifdef CONFIG_AP_SUPPORT
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-	u8 TxPwrAdj = 0;
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
 
 	RTMP_QueryPacketInfo(pPacket, &PacketInfo, &pSrcBufVA, &SrcBufLen);
 
@@ -596,20 +591,6 @@ int MlmeHardTransmitMgmtRing(
 				{
 					bInsertTimestamp = true;
 					bAckRequired = false; /* Disable ACK to prevent retry 0x1f for Probe Response*/
-#ifdef CONFIG_AP_SUPPORT
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-					/* Find which MBSSID to be send this probeRsp */
-					uint32_t apidx = get_apidx_by_addr(pAd, pHeader_802_11->Addr2);
-
-					if ( !(apidx >= pAd->ApCfg.BssidNum) &&
-					     (pAd->ApCfg.MBSSID[apidx].TxPwrAdj != -1) /* &&
-					     (pAd->CommonCfg.MlmeTransmit.field.MODE == MODE_CCK) &&
-					     (pAd->CommonCfg.MlmeTransmit.field.MCS == RATE_1)*/)
-					{
-						TxPwrAdj = pAd->ApCfg.MBSSID[apidx].TxPwrAdj;
-					}
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
 				}
 				else if ((pHeader_802_11->FC.SubType == SUBTYPE_PROBE_REQ) && (pHeader_802_11->FC.Type == FC_TYPE_MGMT))
 				{
@@ -715,11 +696,6 @@ int MlmeHardTransmitMgmtRing(
 				0, wcid, (SrcBufLen - MT_DMA_HDR_LEN - TXWISize), PID, 0,
 				tx_rate, IFS_BACKOFF, transmit);
 
-#ifdef SPECIFIC_TX_POWER_SUPPORT
-		if ((IS_RT6352(pAd) || IS_MT76x2U(pAd)) &&
-			(pAd->chipCap.hif_type == HIF_RLT) && (pMacEntry == NULL))
-			pFirstTxWI->TXWI_N.TxPwrAdj = TxPwrAdj;
-#endif /* SPECIFIC_TX_POWER_SUPPORT */
 	}
 
 //+++Add by shiang for debug
