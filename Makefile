@@ -242,10 +242,6 @@ obj_ap += \
 	ap/ap_autoChSel.o\
 	ap/ap_cfg.o
 
-ifeq ($(HAS_IDS_SUPPORT),y)
-obj_ap += ap/ap_ids.o
-endif
-
 obj_ap += \
 	ap/ap_mbss_inf.o\
 	os/linux/ap_ioctl.o
