@@ -158,9 +158,6 @@ VOID UpdateChannelInfo(
 		*/
 
 		BusyTime = mt76u_reg_read(pAd, CH_BUSY_STA);
-#ifdef AP_QLOAD_SUPPORT
-		pAd->pChannelInfo->chanbusytime[ch_index] = (BusyTime * 100) / AUTO_CHANNEL_SEL_TIMEOUT;
-#endif /* AP_QLOAD_SUPPORT */
 	}
 	else
 		DBGPRINT(RT_DEBUG_ERROR, ("pAd->pChannelInfo equal NULL.\n"));
@@ -423,11 +420,7 @@ static inline u8 SelectClearChannelCCA(
 					pAd->ChannelList[channel_idx].Channel,
 					pChannelInfo->dirtyness[channel_idx],
 					pChannelInfo->FalseCCA[channel_idx],
-#ifdef AP_QLOAD_SUPPORT
-					pChannelInfo->chanbusytime[channel_idx],
-#else
 					0,
-#endif /* AP_QLOAD_SUPPORT */
 					(pChannelInfo->SkipList[channel_idx] == true) ? "true" : "false"));
 	}
 	DBGPRINT(RT_DEBUG_TRACE, ("=====================================================\n"));
@@ -449,18 +442,6 @@ static inline u8 SelectClearChannelCCA(
 		{
 			uint32_t dirtyness = pChannelInfo->dirtyness[channel_idx];
 			ch = pAd->ChannelList[channel_idx].Channel;
-
-#ifdef AP_QLOAD_SUPPORT
-			/* QLOAD ALARM */
-			/* when busy time of a channel > threshold, skip it */
-			/* TODO: Use weight for different references to do channel selection */
-			if (QBSS_LoadIsBusyTimeAccepted(pAd,
-				pChannelInfo->chanbusytime[channel_idx]) == false)
-			{
-				/* check next one */
-				continue;
-			}
-#endif /* AP_QLOAD_SUPPORT */
 
 			/*
 				User require 40MHz Bandwidth.
@@ -615,18 +596,6 @@ static inline u8 SelectClearChannelCCA(
 					(pChannelInfo->dirtyness[vht_ch_idx+(channel_idx+3)] +
 					pChannelInfo->FalseCCA[vht_ch_idx+(channel_idx+3)]);
 			}
-
-#ifdef AP_QLOAD_SUPPORT
-			/* QLOAD ALARM */
-			/* when busy time of a channel > threshold, skip it */
-			/* TODO: Use weight for different references to do channel selection */
-			if (QBSS_LoadIsBusyTimeAccepted(pAd,
-				pChannelInfo->chanbusytime[channel_idx]) == false)
-			{
-				/* check next one */
-				continue;
-			}
-#endif /* AP_QLOAD_SUPPORT */
 
 			if ((min_falsecca > falsecca))
 			{
@@ -805,11 +774,7 @@ static inline u8 SelectClearChannelApCnt(
 				pAd->ChannelList[channel_index].Channel,
 				pChannelInfo->dirtyness[channel_index],
 				pChannelInfo->ApCnt[channel_index],
-#ifdef AP_QLOAD_SUPPORT
-				pChannelInfo->chanbusytime[channel_index],
-#else
 				0,
-#endif /* AP_QLOAD_SUPPORT */
 				(pChannelInfo->SkipList[channel_index] == true) ? "true" : "false"));
    DBGPRINT(RT_DEBUG_TRACE, ("=====================================================\n"));
 
@@ -826,13 +791,6 @@ static inline u8 SelectClearChannelApCnt(
 				&&(pChannelInfo->IsABand == true)
 				&& RadarChannelCheck(pAd, pAd->ChannelList[channel_index].Channel))
 			continue;
-
-#ifdef AP_QLOAD_SUPPORT
-		/* QLOAD ALARM */
-		if (QBSS_LoadIsBusyTimeAccepted(pAd,
-			pChannelInfo->chanbusytime[channel_index]) == false)
-			continue;
-#endif /* AP_QLOAD_SUPPORT */
 
 		/* Check BW40/80 channel group */
 		if (pAd->CommonCfg.RegTransmitSetting.field.BW == BW_40) {
@@ -886,18 +844,6 @@ static inline u8 SelectClearChannelApCnt(
 		{
 			for (channel_index=0 ; channel_index < pAd->ChannelListNum ; channel_index++)
 			{
-
-#ifdef AP_QLOAD_SUPPORT
-				/* QLOAD ALARM */
-				/* when busy time of a channel > threshold, skip it */
-				/* TODO: Use weight for different references to do channel selection */
-				if (QBSS_LoadIsBusyTimeAccepted(pAd,
-					pChannelInfo->chanbusytime[channel_index]) == false)
-				{
-					/* check next one */
-					continue;
-				}
-#endif /* AP_QLOAD_SUPPORT */
 
 				if (candidate[channel_index] && (pChannelInfo->ApCnt[channel_index] < min_ApCnt))
 				{
@@ -1173,11 +1119,6 @@ u8 APAutoSelectChannel(struct rtmp_adapter *pAd, ChannelSel_Alg Alg)
 
 			pAd->ApCfg.AutoChannel_Channel = pAd->ChannelList[i].Channel;
 
-#ifdef AP_QLOAD_SUPPORT
-			/* QLOAD ALARM, ever alarm from QLOAD module */
-			if (QLOAD_DOES_ALARM_OCCUR(pAd))
-				wait_time = 400;
-#endif /* AP_QLOAD_SUPPORT */
 			msleep_interruptible(wait_time);
 
 			UpdateChannelInfo(pAd, i,Alg);

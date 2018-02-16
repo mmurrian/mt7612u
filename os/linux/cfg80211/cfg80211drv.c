@@ -861,10 +861,6 @@ VOID CFG80211DRV_SurveyGet(
 
 	pSurveyInfo->pCfg80211 = pAd->pCfg80211_CB;
 
-#ifdef AP_QLOAD_SUPPORT
-	pSurveyInfo->ChannelTimeBusy = pAd->phy_ctrl.QloadLatestChannelBusyTimePri;
-	pSurveyInfo->ChannelTimeExtBusy = pAd->phy_ctrl.QloadLatestChannelBusyTimeSec;
-#endif /* AP_QLOAD_SUPPORT */
 }
 
 

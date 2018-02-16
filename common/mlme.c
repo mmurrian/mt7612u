@@ -1465,9 +1465,6 @@ VOID MlmePeriodicExec(
 
 				DBGPRINT(RT_DEBUG_WARN, ("MAC specific condition \n"));
 
-#ifdef AP_QLOAD_SUPPORT
-				Show_QoSLoad_Proc(pAd, NULL);
-#endif /* AP_QLOAD_SUPPORT */
 			}
 		}
 #endif /* CONFIG_AP_SUPPORT */

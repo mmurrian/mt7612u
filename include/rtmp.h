@@ -3079,64 +3079,6 @@ typedef struct _CFG80211_CONTROL
 typedef struct rtmp_phy_ctrl{
 	UINT8 rf_band_cap;
 
-#ifdef CONFIG_AP_SUPPORT
-#ifdef AP_QLOAD_SUPPORT
-	UINT8 FlgQloadEnable;	/* 1: any BSS WMM is enabled */
-	ULONG QloadUpTimeLast;	/* last up time */
-	UINT8 QloadChanUtil;	/* last QBSS Load, unit: us */
-	uint32_t QloadChanUtilTotal;	/* current QBSS Load Total */
-	UINT8 QloadChanUtilBeaconCnt;	/* 1~100, default: 50 */
-	UINT8 QloadChanUtilBeaconInt;	/* 1~100, default: 50 */
-	uint32_t QloadLatestChannelBusyTimePri;
-	uint32_t QloadLatestChannelBusyTimeSec;
-
-	/*
-	   ex: For 100ms beacon interval,
-	   if the busy time in last TBTT is smaller than 5ms, QloadBusyCount[0] ++;
-	   if the busy time in last TBTT is between 5 and 10ms, QloadBusyCount[1] ++;
-	   ......
-	   if the busy time in last TBTT is larger than 95ms, QloadBusyCount[19] ++;
-
-	   Command: "iwpriv ra0 qload show".
-	 */
-
-/* provide busy time statistics for every TBTT */
-#define QLOAD_FUNC_BUSY_TIME_STATS
-
-/* provide busy time alarm mechanism */
-/* use the function to avoid to locate in some noise environments */
-#define QLOAD_FUNC_BUSY_TIME_ALARM
-
-#ifdef QLOAD_FUNC_BUSY_TIME_STATS
-#define QLOAD_BUSY_INTERVALS	20	/* partition TBTT to QLOAD_BUSY_INTERVALS */
-	/* for primary channel & secondary channel */
-	uint32_t QloadBusyCountPri[QLOAD_BUSY_INTERVALS];
-	uint32_t QloadBusyCountSec[QLOAD_BUSY_INTERVALS];
-#endif /* QLOAD_FUNC_BUSY_TIME_STATS */
-
-#ifdef QLOAD_FUNC_BUSY_TIME_ALARM
-#define QLOAD_DOES_ALARM_OCCUR(pAd)	(pAd->phy_ctrl.FlgQloadAlarmIsSuspended == true)
-#define QLOAD_ALARM_EVER_OCCUR(pAd) (pAd->phy_ctrl.QloadAlarmNumber > 0)
-	bool FlgQloadAlarmIsSuspended;	/* 1: suspend */
-
-	UINT8 QloadAlarmBusyTimeThreshold;	/* unit: 1/100 */
-	UINT8 QloadAlarmBusyNumThreshold;	/* unit: 1 */
-	UINT8 QloadAlarmBusyNum;
-	UINT8 QloadAlarmDuration;	/* unit: TBTT */
-
-	uint32_t QloadAlarmNumber;	/* total alarm times */
-	bool FlgQloadAlarm;	/* 1: alarm occurs */
-
-	/* speed up use */
-	uint32_t QloadTimePeriodLast;
-	uint32_t QloadBusyTimeThreshold;
-#else
-
-#define QLOAD_DOES_ALARM_OCCUR(pAd)	0
-#endif /* QLOAD_FUNC_BUSY_TIME_ALARM */
-
-#endif /* AP_QLOAD_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
 }RTMP_PHY_CTRL;
 
 struct mt7612u_cfg80211_cb;
@@ -6423,29 +6365,6 @@ bool RtmpTimerQRemove(
 void RtmpTimerQExit(struct rtmp_adapter *pAd);
 void RtmpTimerQInit(struct rtmp_adapter *pAd);
 #endif /* RTMP_TIMER_TASK_SUPPORT */
-
-/*////////////////////////////////////*/
-
-#ifdef AP_QLOAD_SUPPORT
-VOID QBSS_LoadInit(struct rtmp_adapter *pAd);
-VOID QBSS_LoadAlarmReset(struct rtmp_adapter *pAd);
-VOID QBSS_LoadAlarmResume(struct rtmp_adapter *pAd);
-uint32_t QBSS_LoadBusyTimeGet(struct rtmp_adapter *pAd);
-bool QBSS_LoadIsAlarmIssued(struct rtmp_adapter *pAd);
-bool QBSS_LoadIsBusyTimeAccepted(struct rtmp_adapter *pAd, uint32_t BusyTime);
-uint32_t QBSS_LoadElementAppend(struct rtmp_adapter *pAd, UINT8 *buf_p);
-uint32_t QBSS_LoadElementParse(
- 	IN		struct rtmp_adapter *pAd,
-	IN		UINT8			*pElement,
-	OUT		uint16_t 		*pStationCount,
-	OUT		UINT8			*pChanUtil,
-	OUT		uint16_t 		*pAvalAdmCap);
-
-VOID QBSS_LoadUpdate(struct rtmp_adapter *pAd, ULONG UpTime);
-VOID QBSS_LoadStatusClear(struct rtmp_adapter *pAd);
-
-INT	Show_QoSLoad_Proc(struct rtmp_adapter *pAd, char *arg);
-#endif /* AP_QLOAD_SUPPORT */
 
 /*///////////////////////////////////*/
 INT RTMPShowCfgValue(struct rtmp_adapter *pAd, char *name, char *buf, uint32_t MaxLen);

@@ -236,15 +236,6 @@ int rt28xx_init(struct rtmp_adapter *pAd)
 		RTMPPatchCardBus(pAd);
 #endif /* WIN_NDIS */
 
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-#ifdef AP_QLOAD_SUPPORT
-		QBSS_LoadInit(pAd);
-#endif /* AP_QLOAD_SUPPORT */
-	}
-#endif /* CONFIG_AP_SUPPORT */
-
 	/* APInitialize(pAd);*/
 
 	/*

@@ -712,11 +712,6 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 		FrameLen += TmpLen;
 	}
 
-#ifdef AP_QLOAD_SUPPORT
-	if (pAd->phy_ctrl.FlgQloadEnable != 0)
-		FrameLen += QBSS_LoadElementAppend(pAd, pBeaconFrame+FrameLen);
-#endif /* AP_QLOAD_SUPPORT */
-
 	/*
 		Only 802.11a APs that comply with 802.11h are required to include a
 		Power Constrint Element(IE=32) in beacons and probe response frames
@@ -1035,10 +1030,6 @@ VOID APUpdateAllBeaconFrame(struct rtmp_adapter *pAd)
 		pAd->ApCfg.DtimCount = pAd->ApCfg.DtimPeriod - 1;
 	else
 		pAd->ApCfg.DtimCount -= 1;
-	/* QLOAD ALARM */
-#ifdef AP_QLOAD_SUPPORT
-	FlgQloadIsAlarmIssued = QBSS_LoadIsAlarmIssued(pAd);
-#endif /* AP_QLOAD_SUPPORT */
 
 	if ((pAd->ApCfg.DtimCount == 0) &&
 		(((pAd->CommonCfg.Bss2040CoexistFlag & BSS_2040_COEXIST_INFO_SYNC) &&

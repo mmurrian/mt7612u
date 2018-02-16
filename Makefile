@@ -251,7 +251,6 @@ obj_ap += \
 	ap/ap_wpa.o\
 	ap/ap_data.o\
 	ap/ap_autoChSel.o\
-	ap/ap_qload.o\
 	ap/ap_cfg.o
 
 ifeq ($(HAS_QOS_DLS_SUPPORT),y)

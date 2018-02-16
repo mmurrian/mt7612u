@@ -460,20 +460,6 @@ INT Set_EntryLifeCheck_Proc(
 	IN char *		arg);
 
 
-#ifdef AP_QLOAD_SUPPORT
-INT	Set_QloadClr_Proc(
-	IN	struct rtmp_adapter *pAd,
-	IN	char *		arg);
-
-/* QLOAD ALARM */
-INT	Set_QloadAlarmTimeThreshold_Proc(
-	IN	struct rtmp_adapter *pAd,
-	IN	char *		Arg);
-
-INT	Set_QloadAlarmNumThreshold_Proc(
-	IN	struct rtmp_adapter *pAd,
-	IN	char *		Arg);
-#endif /* AP_QLOAD_SUPPORT */
 #endif /* CONFIG_AP_SUPPORT */
 
 
@@ -881,10 +867,6 @@ INT	Set_BeaconPeriod_Proc(
 		pAd->CommonCfg.BeaconPeriod = BeaconPeriod;
 		success = true;
 
-#ifdef AP_QLOAD_SUPPORT
-		/* re-calculate QloadBusyTimeThreshold */
-		QBSS_LoadAlarmReset(pAd);
-#endif /* AP_QLOAD_SUPPORT */
 	}
 	else
 		success = false;

@@ -275,13 +275,6 @@ VOID APPeerProbeReqAction(
 			FrameLen += TmpLen;
 		}
 
-#ifdef AP_QLOAD_SUPPORT
-		if (pAd->phy_ctrl.FlgQloadEnable != 0)
-		{
-			FrameLen += QBSS_LoadElementAppend(pAd, pOutBuffer+FrameLen);
-		}
-#endif /* AP_QLOAD_SUPPORT */
-
 		/* add WMM IE here */
 		if (mbss->wdev.bWmmCapable)
 		{

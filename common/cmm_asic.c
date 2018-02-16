@@ -663,20 +663,9 @@ VOID AsicSwitchChannel(struct rtmp_adapter *pAd, u8 Channel, bool bScan)
 {
 	u8 bw;
 	uint32_t value32;
-#ifdef CONFIG_STA_SUPPORT
-#ifdef CONFIG_PM
-#endif /* CONFIG_PM */
-#endif /* CONFIG_STA_SUPPORT */
 
 	if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_RADIO_OFF))
 		return;
-
-#ifdef CONFIG_AP_SUPPORT
-#ifdef AP_QLOAD_SUPPORT
-	/* clear all statistics count for QBSS Load */
-	QBSS_LoadStatusClear(pAd);
-#endif /* AP_QLOAD_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
 
 	mt76x2_switch_channel(pAd, Channel, bScan);
 
