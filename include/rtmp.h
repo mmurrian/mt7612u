@@ -3429,11 +3429,6 @@ struct rtmp_adapter {
 
 	NDIS_MEDIA_STATE IndicateMediaState;	/* Base on Indication state, default is NdisMediaStateDisConnected */
 
-#ifdef PROFILE_STORE
-	RTMP_OS_TASK 	WriteDatTask;
-	bool			bWriteDat;
-#endif /* PROFILE_STORE */
-
 #ifdef CREDENTIAL_STORE
 	STA_CONNECT_INFO StaCtIf;
 #endif /* CREDENTIAL_STORE */
