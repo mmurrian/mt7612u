@@ -1101,11 +1101,6 @@ void RtmpOSNetDevFree(struct net_device *pNetDev)
 	ASSERT(pNetDev);
 
 	free_netdev(pNetDev);
-
-#ifdef VENDOR_FEATURE4_SUPPORT
-	printk("OS_NumOfMemAlloc = %ld, OS_NumOfMemFree = %ld\n",
-			OS_NumOfMemAlloc, OS_NumOfMemFree);
-#endif /* VENDOR_FEATURE4_SUPPORT */
 }
 
 INT RtmpOSNetDevAlloc(

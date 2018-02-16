@@ -1039,11 +1039,6 @@ VOID BeaconUpdateExec(PVOID SystemSpecific1, PVOID FunctionContext,
 			/* update channel utilization */
 			NdisGetSystemUpTime(&UpTime);
 
-#ifdef AP_QLOAD_SUPPORT
-			QBSS_LoadUpdate(pAd, UpTime);
-#endif /* AP_QLOAD_SUPPORT */
-
-
 			if (pAd->ApCfg.DtimCount == 0 && pBeaconSync->DtimBitOn) {
 				struct os_cookie *pObj;
 

@@ -982,10 +982,6 @@ static int ChannelRescanHdlr(IN struct rtmp_adapter *pAd, IN PCmdQElmt CMDQelmt)
 	APStop(pAd);
 	APStartUp(pAd);
 
-#ifdef AP_QLOAD_SUPPORT
-	QBSS_LoadAlarmResume(pAd);
-#endif /* AP_QLOAD_SUPPORT */
-
 	return NDIS_STATUS_SUCCESS;
 }
 #endif /* CONFIG_AP_SUPPORT*/
