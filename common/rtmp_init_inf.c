@@ -157,10 +157,6 @@ int rt28xx_init(struct rtmp_adapter *pAd)
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd) {
 		STAInitialize(pAd);
-
-#ifdef CREDENTIAL_STORE
-		RecoverConnectInfo(pAd);
-#endif /* CREDENTIAL_STORE */
 	}
 #endif /* CONFIG_STA_SUPPORT */
 
@@ -486,19 +482,6 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
     		MlmeRadioOn(pAd);
 	 }
 #endif /* BB_SOC */
-
-#ifdef CONFIG_STA_SUPPORT
-#ifdef CREDENTIAL_STORE
-		if (pAd->IndicateMediaState == NdisMediaStateConnected)
-			StoreConnectInfo(pAd);
-		else
-		{
-			spin_lock_bh(&pAd->StaCtIf.Lock);
-			pAd->StaCtIf.Changeable = false;
-			spin_unlock_bh(&pAd->StaCtIf.Lock);
-		}
-#endif /* CREDENTIAL_STORE */
-#endif /* CONFIG_STA_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
