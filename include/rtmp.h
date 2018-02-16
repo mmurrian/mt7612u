@@ -1855,30 +1855,6 @@ typedef struct _WPA_SUPPLICANT_INFO{
 
 
 #ifdef CONFIG_STA_SUPPORT
-
-#ifdef CREDENTIAL_STORE
-typedef struct _STA_CONNECT_INFO {
-	bool Changeable;
-	bool IEEE8021X;
-	CHAR Ssid[MAX_LEN_OF_SSID]; // NOT NULL-terminated
-	u8 SsidLen; // the actual ssid length in used
-	NDIS_802_11_AUTHENTICATION_MODE AuthMode; // This should match to whatever microsoft defined
-	NDIS_802_11_WEP_STATUS WepStatus;
-	u8 DefaultKeyId;
-	u8 PMK[LEN_PMK]; // WPA PSK mode PMK
-	u8 WpaPassPhrase[64]; // WPA PSK pass phrase
-	UINT WpaPassPhraseLen; // the length of WPA PSK pass phrase
-	UINT8 WpaState;
-	CIPHER_KEY SharedKey[1][4]; // STA always use SharedKey[BSS0][0..3]
-	spinlock_t Lock;
-} STA_CONNECT_INFO, *P_STA_CONNECT_INFO;
-#endif /* CREDENTIAL_STORE */
-
-
-
-
-
-
 /* Modified by Wu Xi-Kun 4/21/2006 */
 /* STA configuration and status */
 typedef struct _STA_ADMIN_CONFIG {
@@ -3360,12 +3336,6 @@ struct rtmp_adapter {
 	enum RATE_ADAPT_ALG rateAlg;		/* Rate adaptation algorithm */
 
 	NDIS_MEDIA_STATE IndicateMediaState;	/* Base on Indication state, default is NdisMediaStateDisConnected */
-
-#ifdef CREDENTIAL_STORE
-	STA_CONNECT_INFO StaCtIf;
-#endif /* CREDENTIAL_STORE */
-
-
 
 	/* MAT related parameters */
 
@@ -6326,13 +6296,6 @@ VOID RtmpMgmtTaskExit(struct rtmp_adapter *pAd);
 void tbtt_tasklet(unsigned long data);
 
 
-
-#ifdef CONFIG_STA_SUPPORT
-#ifdef CREDENTIAL_STORE
-int RecoverConnectInfo(struct rtmp_adapter *pAd);
-int StoreConnectInfo(struct rtmp_adapter *pAd);
-#endif /* CREDENTIAL_STORE */
-#endif /* CONFIG_STA_SUPPORT */
 
 #ifdef RTMP_TIMER_TASK_SUPPORT
 INT RtmpTimerQThread(ULONG Context);
