@@ -1990,11 +1990,6 @@ NDIS_802_11_NETWORK_TYPE NetworkTypeInUseSanity(BSS_ENTRY *pBss)
 	return NetWorkType;
 }
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
-
-
 /*
     ==========================================================================
     Description:
@@ -2009,85 +2004,20 @@ bool PeerProbeReqSanity(
 	IN ULONG MsgLen,
 	OUT PEER_PROBE_REQ_PARAM *ProbeReqParam)
 {
-    PFRAME_802_11 Fr = (PFRAME_802_11)Msg;
-    u8 	*Ptr;
-    u8 	eid =0, eid_len = 0, *eid_data;
-#ifdef CONFIG_AP_SUPPORT
-    u8       apidx = MAIN_MBSSID;
-	u8       Addr1[MAC_ADDR_LEN];
-#endif /* CONFIG_AP_SUPPORT */
-	UINT		total_ie_len = 0;
+	PFRAME_802_11 Fr = (PFRAME_802_11)Msg;
 
 	memset(ProbeReqParam, 0, sizeof(*ProbeReqParam));
 
-    /* to prevent caller from using garbage output value*/
-#ifdef CONFIG_AP_SUPPORT
-	apidx = apidx; /* avoid compile warning */
-#endif /* CONFIG_AP_SUPPORT */
+	COPY_MAC_ADDR(ProbeReqParam->Addr2, &Fr->Hdr.Addr2);
 
-    COPY_MAC_ADDR(ProbeReqParam->Addr2, &Fr->Hdr.Addr2);
-
-    if (Fr->Octet[0] != IE_SSID || Fr->Octet[1] > MAX_LEN_OF_SSID)
-    {
-        DBGPRINT(RT_DEBUG_TRACE, ("%s(): sanity fail - wrong SSID IE\n", __FUNCTION__));
-        return false;
-    }
-
-    ProbeReqParam->SsidLen = Fr->Octet[1];
-    memmove(ProbeReqParam->Ssid, &Fr->Octet[2], ProbeReqParam->SsidLen);
-
-#ifdef CONFIG_AP_SUPPORT
-	COPY_MAC_ADDR(Addr1, &Fr->Hdr.Addr1);
-#endif /* CONFIG_AP_SUPPORT */
-
-    Ptr = Fr->Octet;
-    eid = Ptr[0];
-    eid_len = Ptr[1];
-	total_ie_len = eid_len + 2;
-	eid_data = Ptr+2;
-
-    /* get variable fields from payload and advance the pointer*/
-	while((eid_data + eid_len) <= ((u8 *)Fr + MsgLen))
-    {
-        switch(eid)
-        {
-	        case IE_VENDOR_SPECIFIC:
-				if (eid_len <= 4)
-					break;
-#ifdef RSSI_FEEDBACK
-                if (ProbeReqParam->bRssiRequested &&
-					 NdisEqualMemory(eid_data, RALINK_OUI, 3) && (eid_len == 7))
-                {
-					if (*(eid_data + 3/* skip RALINK_OUI */) & 0x8)
-                    	ProbeReqParam->bRssiRequested = true;
-                    break;
-                }
-#endif /* RSSI_FEEDBACK */
-
-                if (NdisEqualMemory(eid_data, WPS_OUI, 4)
- 					)
-                {
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-                }
-                    break;
-			case IE_EXT_CAPABILITY:
-				break;
-            default:
-                break;
-        }
-		eid = Ptr[total_ie_len];
-    	eid_len = Ptr[total_ie_len + 1];
-		eid_data = Ptr + total_ie_len + 2;
-		total_ie_len += (eid_len + 2);
+	if (Fr->Octet[0] != IE_SSID || Fr->Octet[1] > MAX_LEN_OF_SSID)
+	{
+		DBGPRINT(RT_DEBUG_TRACE, ("%s(): sanity fail - wrong SSID IE\n", __FUNCTION__));
+		return false;
 	}
 
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
+	ProbeReqParam->SsidLen = Fr->Octet[1];
+	memmove(ProbeReqParam->Ssid, &Fr->Octet[2], ProbeReqParam->SsidLen);
 
-    return true;
+	return true;
 }
-
-
-
