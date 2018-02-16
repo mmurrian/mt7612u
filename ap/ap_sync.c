@@ -588,25 +588,6 @@ VOID APPeerProbeReqAction(
 	if (pAd->CommonCfg.b256QAM_2G && WMODE_2G_ONLY(pAd->CommonCfg.PhyMode))
 		RalinkSpecificIe[5] |= 0x8;
 
-#ifdef RSSI_FEEDBACK
-		if (ProbeReqParam.bRequestRssi == true)
-		{
-		    MAC_TABLE_ENTRY *pEntry=NULL;
-
-			DBGPRINT(RT_DEBUG_ERROR, ("SYNC - Send PROBE_RSP to %02x:%02x:%02x:%02x:%02x:%02x...\n",
-										PRINT_MAC(Addr2)));
-
-			RalinkSpecificIe[5] |= 0x8;
-			pEntry = MacTableLookup(pAd, Addr2);
-
-			if (pEntry != NULL)
-			{
-				RalinkSpecificIe[6] = (u8)pEntry->RssiSample.AvgRssi0;
-				RalinkSpecificIe[7] = (u8)pEntry->RssiSample.AvgRssi1;
-				RalinkSpecificIe[8] = (u8)pEntry->RssiSample.AvgRssi2;
-			}
-		}
-#endif /* RSSI_FEEDBACK */
 		MakeOutgoingFrame(pOutBuffer+FrameLen, &TmpLen,
 							9, RalinkSpecificIe,
 							END_OF_ARGS);
