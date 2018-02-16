@@ -61,9 +61,6 @@ BUILD_TIMER_FUNCTION(WPARetryExec);
 BUILD_TIMER_FUNCTION(APScanTimeout);
 #endif /* AP_SCAN_SUPPORT */
 BUILD_TIMER_FUNCTION(APQuickResponeForRateUpExec);
-#ifdef DROP_MASK_SUPPORT
-BUILD_TIMER_FUNCTION(drop_mask_timer_action);
-#endif /* DROP_MASK_SUPPORT */
 
 #endif /* CONFIG_AP_SUPPORT */
 

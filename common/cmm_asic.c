@@ -2296,45 +2296,6 @@ VOID AsicSetApCliBssid(
 }
 #endif /* MAC_APCLI_SUPPORT */
 
-#ifdef DROP_MASK_SUPPORT
-VOID asic_set_drop_mask(
-	struct rtmp_adapter *ad,
-	unsigned short wcid,
-	bool enable)
-{
-	uint32_t mac_reg = 0, reg_id, group_index;
-	uint32_t drop_mask = (1 << (wcid % 32));
-
-	/* each group has 32 entries */
-	group_index = (wcid - (wcid % 32)) >> 5 /* divided by 32 */;
-	reg_id = (TX_WCID_DROP_MASK0 + 4*group_index);
-
-	mac_reg = mt76u_reg_read(ad, reg_id);
-
-	mac_reg = (enable ? \
-				(mac_reg | drop_mask):(mac_reg & ~drop_mask));
-	mt76u_reg_write(ad, reg_id, mac_reg);
-	DBGPRINT(RT_DEBUG_TRACE,
-			("%s(%u):, wcid = %u, reg_id = 0x%08x, mac_reg = 0x%08x, group_index = %u, drop_mask = 0x%08x\n",
-			__FUNCTION__, enable, wcid, reg_id, mac_reg, group_index, drop_mask));
-}
-
-
-VOID asic_drop_mask_reset(
-	struct rtmp_adapter *ad)
-{
-	uint32_t i, reg_id;
-
-	for ( i = 0; i < 8 /* num of drop mask group */; i++)
-	{
-		reg_id = (TX_WCID_DROP_MASK0 + i*4);
-		mt76u_reg_write(ad, reg_id, 0);
-	}
-
-	DBGPRINT(RT_DEBUG_TRACE, ("%s()\n", __FUNCTION__));
-}
-#endif /* DROP_MASK_SUPPORT */
-
 #ifdef MULTI_CLIENT_SUPPORT
 VOID asic_change_tx_retry(
 	IN struct rtmp_adapter *pAd,

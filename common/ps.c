@@ -122,11 +122,6 @@ VOID RtmpHandleRxPsPoll(struct rtmp_adapter *pAd, u8 *pAddr, unsigned short wcid
 	pMacEntry = &pAd->MacTab.Content[wcid];
 	if (RTMPEqualMemory(pMacEntry->Addr, pAddr, MAC_ADDR_LEN))
 	{
-#ifdef DROP_MASK_SUPPORT
-		/* Disable Drop Mask */
-		set_drop_mask_per_client(pAd, pMacEntry, 2, 0);
-#endif /* DROP_MASK_SUPPORT */
-
 		/* Sta is change to Power Active stat. Reset ContinueTxFailCnt */
 		pMacEntry->ContinueTxFailCnt = 0;
 
@@ -246,21 +241,10 @@ bool RtmpPsIndicate(struct rtmp_adapter *pAd, u8 *pAddr, u8 wcid, u8 Psm)
 
 		if ((old_psmode == PWR_SAVE) && (Psm == PWR_ACTIVE))
 		{
-#ifdef DROP_MASK_SUPPORT
-			/* Disable Drop Mask */
-			set_drop_mask_per_client(pAd, pEntry, 2, 0);
-#endif /* DROP_MASK_SUPPORT */
-
 
 			/* sleep station awakes, move all pending frames from PSQ to TXQ if any */
 			RtmpHandleRxPsPoll(pAd, pAddr, pEntry->wcid, true);
 		}
-#ifdef DROP_MASK_SUPPORT
-		else if ((old_psmode == PWR_ACTIVE) && (Psm == PWR_SAVE)) {
-			/* Enable Drop Mask */
-			set_drop_mask_per_client(pAd, pEntry, 2, 1);
-		}
-#endif /* DROP_MASK_SUPPORT */
 
 	return old_psmode;
 }
