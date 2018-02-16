@@ -33,9 +33,6 @@
 #define CFG80211DBG(__Flg, __pMsg)
 #endif /* RT_CFG80211_DEBUG */
 
-//CFG_TODO
-#include "wfa_p2p.h"
-
 #define RT_CFG80211_REGISTER(__pDev, __pNetDev)								\
 	CFG80211_Register(__pDev, __pNetDev);
 
@@ -70,24 +67,8 @@
 #define RT_CFG80211_LOST_AP_INFORM(__pAd) 									\
 	CFG80211_LostApInform((VOID *)__pAd);
 #endif /*CONFIG_STA_SUPPORT*/
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-#define RT_CFG80211_LOST_GO_INFORM(__pAd) 									\
-	CFG80211_LostP2pGoInform((VOID *)__pAd);
-#endif /*RT_CFG80211_P2P_CONCURRENT_DEVICE*/
 #define RT_CFG80211_REINIT(__pAd)											\
 	CFG80211_SupBandReInit((VOID *)__pAd);
-
-#define RT_CFG80211_RFKILL_STATUS_UPDATE(_pAd, _active) 					\
-	CFG80211_RFKillStatusUpdate(_pAd, _active);
-
-#define RT_CFG80211_P2P_CLI_CONN_RESULT_INFORM(__pAd, __pBSSID, __pReqIe,   \
-			__ReqIeLen,	__pRspIe, __RspIeLen, __FlgIsSuccess)				\
-	CFG80211_P2pClientConnectResultInform(__pAd, __pBSSID,				    \
-			__pReqIe, __ReqIeLen, __pRspIe, __RspIeLen, __FlgIsSuccess);
-
-#define RT_CFG80211_P2P_CLI_SEND_NULL_FRAME(_pAd, _PwrMgmt)					\
-	CFG80211_P2pClientSendNullFrame(_pAd, _PwrMgmt);
-
 
 #define CFG80211_BANDINFO_FILL(__pAd, __pBandInfo)							\
 {																			\
@@ -149,9 +130,6 @@ VOID CFG80211_ConnectResultInform(
 	u8 *pRspIe, uint32_t RspIeLen,	u8 FlgIsSuccess);
 VOID CFG80211DRV_PmkidConfig(VOID *pAdOrg, VOID *pData);
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-VOID CFG80211_LostP2pGoInform(struct rtmp_adapter *pAdCB);
-#endif /*RT_CFG80211_P2P_CONCURRENT_DEVICE*/
 VOID CFG80211_LostApInform(struct rtmp_adapter *pAdCB);
 
 INT CFG80211_StaPortSecured(
@@ -234,43 +212,6 @@ VOID CFG80211_RFKillStatusUpdate(
 	bool						active);
 #endif /* RFKILL_HW_SUPPORT */
 
-/* P2P Related */
-VOID CFG80211DRV_SetP2pCliAssocIe(
-	struct rtmp_adapter				*pAdOrg,
-	VOID						*pData,
-	UINT                         ie_len);
-
-VOID CFG80211DRV_P2pClientKeyAdd(
-	struct rtmp_adapter				*pAdOrg,
-	VOID						*pData);
-
-bool CFG80211DRV_P2pClientConnect(
-	struct rtmp_adapter				*pAdOrg,
-	VOID						*pData);
-
-bool CFG80211_checkScanTable(
-        IN struct rtmp_adapter                          *pAdCB);
-
-VOID CFG80211_P2pClientSendNullFrame(
-	struct rtmp_adapter 				*pAdCB,
-	INT							 PwrMgmt);
-
-VOID CFG80211RemainOnChannelTimeout(
-	PVOID 						SystemSpecific1,
-	PVOID 						FunctionContext,
-	PVOID 						SystemSpecific2,
-	PVOID 						SystemSpecific3);
-
-bool CFG80211DRV_OpsRemainOnChannel(
-	struct rtmp_adapter				*pAdOrg,
-	VOID						*pData,
-	uint32_t 						duration);
-
-void CFG80211DRV_OpsCancelRemainOnChannel(
-        struct rtmp_adapter                             *pAdOrg,
-        uint32_t                                          cookie);
-
-
 VOID CFG80211DRV_OpsMgmtFrameProbeRegister(
         struct rtmp_adapter                             *pAdOrg,
         VOID                                            *pData,
@@ -281,15 +222,7 @@ VOID CFG80211DRV_OpsMgmtFrameActionRegister(
         VOID                                            *pData,
 	bool                                     isReg);
 
-bool CFG80211_CheckActionFrameType(
-        IN  struct rtmp_adapter 								 *pAd,
-		IN	u8 *									 preStr,
-		IN	u8 *									 pData,
-		IN	uint32_t                              		 length);
-
-
 void CFG80211_SyncPacketWmmIe(struct rtmp_adapter *pAd, VOID *pData, ULONG dataLen);
-bool CFG80211_HandleP2pMgmtFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk, u8 OpMode);
 void CFG80211_SendMgmtFrame(struct rtmp_adapter *pAd, VOID *pData, ULONG Data);
 
 

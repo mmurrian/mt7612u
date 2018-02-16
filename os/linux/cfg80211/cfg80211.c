@@ -172,14 +172,14 @@ static const uint32_t CipherSuites[] = {
 /* get RALINK pAd control block in 80211 Ops */
 struct rtmp_adapter *MAC80211_PAD_GET(struct wiphy *pWiphy)
 {
-	struct rtmp_adapter *pAd = wiphy_priv(pWiphy);
+	struct rtmp_adapter **pAd = wiphy_priv(pWiphy);
 
 	if (pAd == NULL)
-		DBGPRINT(RT_DEBUG_ERROR,								\
-			("80211> %s but pAd = NULL!", __FUNCTION__));	\
+		DBGPRINT(RT_DEBUG_ERROR,
+			("80211> %s but pAd = NULL!", __FUNCTION__));
 
-	return pAd;
-}							\
+	return *pAd;
+}
 
 /*
 ========================================================================
@@ -305,8 +305,6 @@ static int CFG80211_OpsVirtualInfChg(
 		(Type != NL80211_IFTYPE_STATION) &&
 		(Type != NL80211_IFTYPE_MONITOR) &&
 		(Type != NL80211_IFTYPE_AP)
-	    && (Type != NL80211_IFTYPE_P2P_CLIENT)
-	    && (Type != NL80211_IFTYPE_P2P_GO)
 	)
 #endif /* CONFIG_STA_SUPPORT */
 	{
@@ -367,13 +365,6 @@ static int CFG80211_OpsVirtualInfChg(
 	} else if (Type == NL80211_IFTYPE_MONITOR) {
 		Type = RT_CMD_80211_IFTYPE_MONITOR;
 	}
-#ifdef CONFIG_AP_SUPPORT
-	else if (Type == NL80211_IFTYPE_P2P_CLIENT) {
-		Type = RT_CMD_80211_IFTYPE_P2P_CLIENT;
-	} else if (Type == NL80211_IFTYPE_P2P_GO) {
-		Type = RT_CMD_80211_IFTYPE_P2P_GO;
-	}
-#endif /* CONFIG_AP_SUPPORT */
 
 	RTMP_DRIVER_80211_VIF_CHG(pAd, &VifInfo);
 
@@ -450,6 +441,9 @@ static int CFG80211_OpsScan(
 
 	RTMP_DRIVER_NET_DEV_GET(pAd, &pNdev);
 
+	if (pNdev == NULL)
+		return -EINVAL;
+
 	/* YF_TODO: record the scan_req per netdevice */
 	pCfg80211_CB = RTMP_DRIVER_80211_CB_GET(pAd);
 	if (pCfg80211_CB == NULL) {
@@ -458,15 +452,19 @@ static int CFG80211_OpsScan(
 	}
 	pCfg80211_CB->pCfg80211_ScanReq = pRequest; /* used in scan end */
 
+	if (pNdev->ieee80211_ptr == NULL)
+		return -EINVAL;
+
 	if (pNdev->ieee80211_ptr->iftype == NL80211_IFTYPE_AP) {
-			CFG80211OS_ScanEnd(pCfg80211_CB, true);
-			return 0;
+		CFG80211OS_ScanEnd(pCfg80211_CB, true);
+		return 0;
 	}
+
 	/* sanity check */
 	if ((pNdev->ieee80211_ptr->iftype != NL80211_IFTYPE_STATION) &&
 	    (pNdev->ieee80211_ptr->iftype != NL80211_IFTYPE_AP) &&
-	    (pNdev->ieee80211_ptr->iftype != NL80211_IFTYPE_ADHOC) &&
-	    (pNdev->ieee80211_ptr->iftype != NL80211_IFTYPE_P2P_CLIENT)) {
+	    (pNdev->ieee80211_ptr->iftype != NL80211_IFTYPE_ADHOC)
+	    ) {
 		CFG80211DBG(RT_DEBUG_ERROR, ("80211> DeviceType Not Support Scan ==> %d\n", pNdev->ieee80211_ptr->iftype));
 		CFG80211OS_ScanEnd(pCfg80211_CB, true);
 		return -EOPNOTSUPP;
@@ -484,7 +482,6 @@ static int CFG80211_OpsScan(
 		CFG80211OS_ScanEnd(pCfg80211_CB, true);
 		return 0;
 	}
-
 
 	if (pRequest->ie_len != 0) {
 		DBGPRINT(RT_DEBUG_TRACE, ("80211> ExtraIEs Not Null in ProbeRequest from upper layer...\n"));
@@ -547,6 +544,7 @@ static int CFG80211_OpsScan(
 	Wreq.data.length = sizeof(struct iw_scan_req);
 
 	rt_ioctl_siwscan(pNdev, NULL, &Wreq, (char *)&IwReq);
+
 	return 0;
 
 #else
@@ -976,8 +974,7 @@ static int CFG80211_OpsKeyAdd(
 
 
 #ifdef CONFIG_AP_SUPPORT
-	if ((pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_AP) ||
-	    (pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_P2P_GO)) {
+	if (pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_AP) {
 		if (pMacAddr) {
 			CFG80211DBG(RT_DEBUG_TRACE, ("80211> KeyAdd STA(%02X:%02X:%02X:%02X:%02X:%02X) ==>\n",
 						PRINT_MAC(pMacAddr)));
@@ -987,13 +984,6 @@ static int CFG80211_OpsKeyAdd(
 		RTMP_DRIVER_80211_AP_KEY_ADD(pAd, &KeyInfo);
 	} else
 #endif /* CONFIG_AP_SUPPORT */
-
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		if (pNdev->ieee80211_ptr->iftype == NL80211_IFTYPE_P2P_CLIENT) {
-			CFG80211DBG(RT_DEBUG_TRACE, ("80211> APCLI Key Add\n"));
-			RTMP_DRIVER_80211_P2P_CLIENT_KEY_ADD(pAd, &KeyInfo);
-		} else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 		{
 #ifdef CONFIG_STA_SUPPORT
 			CFG80211DBG(RT_DEBUG_TRACE, ("80211> STA Key Add\n"));
@@ -1001,17 +991,7 @@ static int CFG80211_OpsKeyAdd(
 #endif
 		}
 
-#ifdef RT_P2P_SPECIFIC_WIRELESS_EVENT
-	if (pMacAddr) {
-		CFG80211DBG(RT_DEBUG_TRACE, ("80211> P2pSendWirelessEvent(%02X:%02X:%02X:%02X:%02X:%02X) ==>\n",
-						PRINT_MAC(pMacAddr)));
-		RTMP_DRIVER_80211_SEND_WIRELESS_EVENT(pAd, pMacAddr);
-	}
-#endif /* RT_P2P_SPECIFIC_WIRELESS_EVENT */
-
 	return 0;
-
-
 }
 
 
@@ -1113,8 +1093,7 @@ static int CFG80211_OpsKeyDel(
     KeyInfo.bPairwise = Pairwise;
 
 #ifdef CONFIG_AP_SUPPORT
-	if ((pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_AP) ||
-	    (pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_P2P_GO)) {
+	if (pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_AP) {
 		CFG80211DBG(RT_DEBUG_TRACE, ("80211> AP Key Del\n"));
 		RTMP_DRIVER_80211_AP_KEY_DEL(pAd, &KeyInfo);
 	} else
@@ -1166,8 +1145,7 @@ static int CFG80211_OpsKeyDefaultSet(
 	CFG80211DBG(RT_DEBUG_TRACE, ("80211> Default KeyIdx = %d\n", KeyIdx));
 
 #ifdef CONFIG_AP_SUPPORT
-	if ((pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_AP) ||
-	    (pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_P2P_GO))
+	if (pNdev->ieee80211_ptr->iftype == RT_CMD_80211_IFTYPE_AP)
 		RTMP_DRIVER_80211_AP_KEY_DEFAULT_SET(pAd, KeyIdx);
 	else
 #endif /* CONFIG_AP_SUPPORT */
@@ -1346,21 +1324,10 @@ static int CFG80211_OpsConnect(
 	//hex_dump("AssocInfo:", pSme->ie, pSme->ie_len);
 
 	/* YF@20120328: Use SIOCSIWGENIE to make out the WPA/WPS IEs in AssocReq. */
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	if(pNdev->ieee80211_ptr->iftype == NL80211_IFTYPE_P2P_CLIENT) {
-		if (pSme->ie_len > 0)
-			RTMP_DRIVER_80211_P2PCLI_ASSSOC_IE_SET(pAd, pSme->ie, pSme->ie_len);
-		else
-			RTMP_DRIVER_80211_P2PCLI_ASSSOC_IE_SET(pAd, NULL, 0);
-	} else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-	{
-		if (pSme->ie_len > 0)
-			RTMP_DRIVER_80211_GEN_IE_SET(pAd, (u8 *) pSme->ie, pSme->ie_len);
-		else
-			RTMP_DRIVER_80211_GEN_IE_SET(pAd, NULL, 0);
-	}
-
+	if (pSme->ie_len > 0)
+		RTMP_DRIVER_80211_GEN_IE_SET(pAd, (u8 *) pSme->ie, pSme->ie_len);
+	else
+		RTMP_DRIVER_80211_GEN_IE_SET(pAd, NULL, 0);
 
 	if ((pSme->ie_len > 6) /* EID(1) + LEN(1) + OUI(4) */ &&
 	    (pSme->ie[0] == WLAN_EID_VENDOR_SPECIFIC &&
@@ -1441,24 +1408,6 @@ static int CFG80211_OpsRFKill(
 	return active;
 }
 
-
-VOID CFG80211_RFKillStatusUpdate(
-	PVOID			pAd,
-	bool			active)
-{
-	struct wiphy *pWiphy;
-	struct mt7612u_cfg80211_cb *pCfg80211_CB;
-
-	CFG80211DBG(RT_DEBUG_TRACE, ("80211> %s ==>\n", __FUNCTION__));
-	pCfg80211_CB = RTMP_DRIVER_80211_CB_GET(pAd);
-	if (p80211CB == NULL) {
-		CFG80211DBG(RT_DEBUG_ERROR, ("80211> p80211CB == NULL!\n"));
-		return 0;
-	}
-	pWiphy = pCfg80211_CB->pCfg80211_Wdev->wiphy;
-	wiphy_rfkill_set_hw_state(pWiphy, !active);
-	return;
-}
 #endif /* RFKILL_HW_SUPPORT */
 
 
@@ -1960,8 +1909,7 @@ static int CFG80211_OpsStaChg(struct wiphy *pWiphy, struct net_device *dev,
 		return 0;
 	}
 
-	if ((dev->ieee80211_ptr->iftype != RT_CMD_80211_IFTYPE_AP) &&
-	    (dev->ieee80211_ptr->iftype != RT_CMD_80211_IFTYPE_P2P_GO))
+	if (dev->ieee80211_ptr->iftype != RT_CMD_80211_IFTYPE_AP)
 		return -EOPNOTSUPP;
 
 	if(!(params->sta_flags_mask & BIT(NL80211_STA_FLAG_AUTHORIZED))) {
@@ -2034,45 +1982,9 @@ static int CFG80211_OpsVirtualInfDel(
 	return 0;
 }
 
-static int CFG80211_start_p2p_device(
-	struct wiphy *pWiphy,
-	struct wireless_dev *wdev)
-{
-	struct rtmp_adapter *pAd;
-	struct net_device *dev = wdev->netdev;
-
-	CFG80211DBG(RT_DEBUG_OFF, ("80211> %s, %s [%d]==>\n", __FUNCTION__, dev->name, dev->ieee80211_ptr->iftype));
-	pAd = MAC80211_PAD_GET(pWiphy);
-	if (pAd == NULL)
-		return -EINVAL;
-
-	return 0;
-}
-
-static void CFG80211_stop_p2p_device(
-	struct wiphy *pWiphy,
-	struct wireless_dev *wdev)
-{
-	struct rtmp_adapter *pAd;
-	struct net_device *dev = wdev->netdev;
-
-	CFG80211DBG(RT_DEBUG_OFF, ("80211> %s, %s [%d]==>\n", __FUNCTION__, dev->name, dev->ieee80211_ptr->iftype));
-	pAd = MAC80211_PAD_GET(pWiphy);
-	if (pAd == NULL)
-		return;
-
-	return;
-}
-
 static const struct ieee80211_txrx_stypes
 ralink_mgmt_stypes[NUM_NL80211_IFTYPES] = {
 		[NL80211_IFTYPE_STATION] = {
-				.tx = BIT(IEEE80211_STYPE_ACTION >> 4) |
-				BIT(IEEE80211_STYPE_PROBE_RESP >> 4),
-				.rx = BIT(IEEE80211_STYPE_ACTION >> 4) |
-				BIT(IEEE80211_STYPE_PROBE_REQ >> 4)
-		},
-		[NL80211_IFTYPE_P2P_CLIENT] = {
 				.tx = BIT(IEEE80211_STYPE_ACTION >> 4) |
 				BIT(IEEE80211_STYPE_PROBE_RESP >> 4),
 				.rx = BIT(IEEE80211_STYPE_ACTION >> 4) |
@@ -2088,49 +2000,6 @@ ralink_mgmt_stypes[NUM_NL80211_IFTYPES] = {
                         BIT(IEEE80211_STYPE_DEAUTH >> 4) |
                         BIT(IEEE80211_STYPE_ACTION >> 4),
         },
-		[NL80211_IFTYPE_P2P_GO] = {
-				.tx = 0xffff,
-				.rx = BIT(IEEE80211_STYPE_ASSOC_REQ >> 4) |
-				BIT(IEEE80211_STYPE_REASSOC_REQ >> 4) |
-				BIT(IEEE80211_STYPE_PROBE_REQ >> 4) |
-				BIT(IEEE80211_STYPE_DISASSOC >> 4) |
-				BIT(IEEE80211_STYPE_AUTH >> 4) |
-				BIT(IEEE80211_STYPE_DEAUTH >> 4) |
-				BIT(IEEE80211_STYPE_ACTION >> 4),
-		},
-
-};
-
-static const struct ieee80211_iface_limit ra_p2p_sta_go_limits[] =
-{
-	{
-		.max = 1,
-		.types = BIT(NL80211_IFTYPE_STATION),
-	},
-	{
-		.max = 1,
-		.types = BIT(NL80211_IFTYPE_P2P_GO) |
-			 BIT(NL80211_IFTYPE_AP),
-	},
-        {
-                .max = 1,
-                .types = BIT(NL80211_IFTYPE_P2P_CLIENT),
-        },
-};
-
-static const struct ieee80211_iface_combination
-ra_iface_combinations_p2p[] = {
-	{
-#ifdef RT_CFG80211_P2P_MULTI_CHAN_SUPPORT
-		.num_different_channels = 2,
-#else
-		.num_different_channels = 1,
-#endif /* RT_CFG80211_P2P_MULTI_CHAN_SUPPORT */
-		.max_interfaces = 3,
-		.beacon_int_infra_match = true,
-		.limits = ra_p2p_sta_go_limits,
-		.n_limits = ARRAY_SIZE(ra_p2p_sta_go_limits),
-	},
 };
 
 struct cfg80211_ops CFG80211_Ops = {
@@ -2148,10 +2017,6 @@ struct cfg80211_ops CFG80211_Ops = {
 	.change_virtual_intf	= CFG80211_OpsVirtualInfChg,
 	.add_virtual_intf	= CFG80211_OpsVirtualInfAdd,
 	.del_virtual_intf	= CFG80211_OpsVirtualInfDel,
-
-
-	.start_p2p_device	= CFG80211_start_p2p_device,
-	.stop_p2p_device	= CFG80211_stop_p2p_device,
 
 	/* request to do a scan */
 	/*
@@ -2207,17 +2072,9 @@ struct cfg80211_ops CFG80211_Ops = {
 	/* flush all cached PMKIDs */
 	.flush_pmksa		= CFG80211_OpsPmksaFlush,
 
-	/*
-		Request the driver to remain awake on the specified
-		channel for the specified duration to complete an off-channel
-		operation (e.g., public action frame exchange).
-	*/
-	.remain_on_channel	= CFG80211_OpsRemainOnChannel,
-	/* cancel an on-going remain-on-channel operation */
-	.cancel_remain_on_channel =  CFG80211_OpsCancelRemainOnChannel,
 	.mgmt_tx              	= CFG80211_OpsMgmtTx,
 
-	 .mgmt_tx_cancel_wait   = CFG80211_OpsTxCancelWait,
+	.mgmt_tx_cancel_wait   = CFG80211_OpsTxCancelWait,
 
 
 	/* configure connection quality monitor RSSI threshold */
@@ -2295,9 +2152,6 @@ static struct wireless_dev *CFG80211_WdevAlloc(
 
 	pWdev->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
 
-#ifdef RT_CFG80211_P2P_SINGLE_DEVICE
-	pWdev->wiphy->interface_modes |= (BIT(NL80211_IFTYPE_P2P_CLIENT)
-#endif /* RT_CFG80211_P2P_SINGLE_DEVICE */
 #endif /* CONFIG_STA_SUPPORT */
 
 	/* init channel information */
@@ -2327,10 +2181,6 @@ static struct wireless_dev *CFG80211_WdevAlloc(
 	//CFG_TODO
 	//pWdev->wiphy->flags |= WIPHY_FLAG_STRICT_REGULATORY;
 
-	//Driver Report Support TDLS to supplicant
-	/* */
-	//pWdev->wiphy->iface_combinations = ra_iface_combinations_p2p;
-	//pWdev->wiphy->n_iface_combinations = ARRAY_SIZE(ra_iface_combinations_p2p);
 
 	if (wiphy_register(pWdev->wiphy) < 0) {
 		DBGPRINT(RT_DEBUG_ERROR, ("80211> Register wiphy device fail!\n"));

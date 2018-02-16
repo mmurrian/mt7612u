@@ -699,6 +699,10 @@ VOID MlmeHandler(struct rtmp_adapter *pAd)
 		/*From message type, determine which state machine I should drive*/
 		if (MlmeDequeue(&pAd->Mlme.Queue, &Elem))
 		{
+//			printk("%s: %s: pAd=%p, Elem=%p\n", __FILE__, __func__, pAd, Elem);
+
+			if(!Elem)
+				continue;
 			if (Elem->MsgType == MT2_RESET_CONF)
 			{
 				DBGPRINT_RAW(RT_DEBUG_TRACE, ("!!! reset MLME state machine !!!\n"));
@@ -707,6 +711,8 @@ VOID MlmeHandler(struct rtmp_adapter *pAd)
 				Elem->MsgLen = 0;
 				continue;
 			}
+
+//			printk("%s: %s: pAd=%p, Elem->Machine=%0lx\n", __FILE__, __func__, pAd, Elem->Machine);
 
 			/* if dequeue success*/
 			switch (Elem->Machine)
@@ -729,8 +735,10 @@ VOID MlmeHandler(struct rtmp_adapter *pAd)
 					break;
 
 				case SYNC_STATE_MACHINE:
+//					printk("%s: %s: Before action pAd=%p, Elem->Machine=%0lx, pAd->Mlme.SyncMachine.CurrState=%0lx\n", __FILE__, __func__, pAd, Elem->Machine, pAd->Mlme.SyncMachine.CurrState);
 					StateMachinePerformAction(pAd, &pAd->Mlme.SyncMachine,
 										Elem, pAd->Mlme.SyncMachine.CurrState);
+//					printk("%s: %s: After action pAd=%p, Elem->Machine=%0lx, pAd->Mlme.SyncMachine.CurrState=%0lx\n", __FILE__, __func__, pAd, Elem->Machine, pAd->Mlme.SyncMachine.CurrState);
 					break;
 
 				case MLME_CNTL_STATE_MACHINE:
@@ -905,6 +913,8 @@ int MlmeInit(struct rtmp_adapter *pAd)
 		pAd->Mlme.bRunning = false;
 		spin_lock_init(&pAd->Mlme.TaskLock);
 
+		printk("%s: %s: pAd->OpMode=%0x\n", __FILE__, __func__, pAd->OpMode);
+
 #ifdef CONFIG_STA_SUPPORT
 		IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 		{
@@ -992,6 +1002,7 @@ int MlmeInit(struct rtmp_adapter *pAd)
 	}
 	DBGPRINT(RT_DEBUG_TRACE, ("<-- MLME Initialize\n"));
 
+	printk("%s: %s: Exit Status=%u\n", __FILE__, __func__, Status);
 	return Status;
 }
 
@@ -4891,8 +4902,28 @@ VOID StateMachinePerformAction(
 	IN MLME_QUEUE_ELEM *Elem,
 	IN ULONG CurrState)
 {
-	if (S->TransFunc[(CurrState) * S->NrMsg + Elem->MsgType - S->Base])
+/*
+	if(Elem->Machine==SYNC_STATE_MACHINE){
+		printk("%s: %s: Before perform action pAd=%p, S=%p, CurrState=%0lx\n",
+		     __FILE__, __func__, pAd, S, CurrState);
+		printk("%s: %s: Before perform action Elem->Machine=%0lx, Elem->MsgType=%0lx\n",
+		     __FILE__, __func__, Elem->Machine, Elem->MsgType);
+		printk("%s: %s: Before perform action S->NrMsg=%0lx, S->Base=%0lx\n",
+		     __FILE__, __func__, S->NrMsg, S->Base);
+		printk("%s: %s: Before perform action Index=%lx, S->TransFunc=%p\n",
+		     __FILE__, __func__,(CurrState) * S->NrMsg + Elem->MsgType - S->Base, S->TransFunc);
+		if (S->TransFunc)
+			printk("%s: %s: Before perform action S->TransFunc=%p\n",
+			     __FILE__, __func__,S->TransFunc[(CurrState) * S->NrMsg + Elem->MsgType - S->Base]);
+	}
+*/
+	if (S->TransFunc && S->TransFunc[(CurrState) * S->NrMsg + Elem->MsgType - S->Base])
 		(*(S->TransFunc[(CurrState) * S->NrMsg + Elem->MsgType - S->Base]))(pAd, Elem);
+/*
+	if(Elem->Machine==SYNC_STATE_MACHINE)
+		printk("%s: %s: After perform action pAd=%p, S=%p, CurrState=%0lx\n",
+		     __FILE__, __func__, pAd, S, CurrState);
+*/
 }
 
 

@@ -28,15 +28,11 @@ HAS_HOSTAPD_SUPPORT=n
 HAS_CFG80211_SUPPORT=y
 #smooth the scan signal for cfg80211 based driver
 HAS_CFG80211_SCAN_SIGNAL_AVG_SUPPORT=y
-#Cfg80211-based P2P Support
-#Cfg80211-based P2P Mode Selection (must one be chosen)
-HAS_CFG80211_P2P_CONCURRENT_DEVICE=y
-HAS_CFG80211_P2P_SINGLE_DEVICE=n
-
-HAS_CFG80211_P2P_MULTI_CHAN_SUPPORT=n
 
 #Support RFKILL hardware block/unblock LINUX-only function
-HAS_RFKILL_HW_SUPPORT=y
+#broken, need ieee80211_hw structure
+HAS_RFKILL_HW_SUPPORT=n
+
 
 HAS_NEW_RATE_ADAPT_SUPPORT=y
 
@@ -138,14 +134,6 @@ WFLAGS += -DCFG80211_SCAN_SIGNAL_AVG
 endif
 endif
 
-ifeq ($(HAS_CFG80211_P2P_CONCURRENT_DEVICE),y)
-WFLAGS += -DRT_CFG80211_P2P_CONCURRENT_DEVICE
-endif
-
-ifeq ($(HAS_CFG80211_P2P_SINGLE_DEVICE),y)
-WFLAGS += -DRT_CFG80211_P2P_SINGLE_DEVICE
-endif
-
 ##########################################################
 #
 # Common compiler flag
@@ -177,7 +165,6 @@ RELEASE = DPOA
 
 obj_ap :=
 obj_sta :=
-obj_p2p :=
 obj_wsc :=
 obj_vht :=
 obj_cmm := \
@@ -351,7 +338,6 @@ ifeq ($(RT28xx_MODE), STA)
 
 $(MOD_NAME)-objs := \
 	$(obj_sta)\
-	$(obj_p2p)\
 	$(obj_vht)\
 	$(obj_cmm)\
 	$(obj_wsc)\
@@ -393,7 +379,6 @@ $(MOD_NAME)-objs += \
 	os/linux/cfg80211/cfg80211_rx.o\
 	os/linux/cfg80211/cfg80211_tx.o\
 	os/linux/cfg80211/cfg80211_inf.o\
-	os/linux/cfg80211/cfg80211_p2p.o\
 	os/linux/cfg80211/cfg80211_ap.o\
 	os/linux/cfg80211/cfg80211drv.o
 endif
@@ -403,7 +388,6 @@ ifeq ($(RT28xx_MODE), APSTA)
 $(MOD_NAME)-objs := \
 	$(obj_ap)\
 	$(obj_sta)\
-	$(obj_p2p)\
 	$(obj_vht)\
 	$(obj_cmm)\
 	$(obj_wsc)\
@@ -441,7 +425,6 @@ $(MOD_NAME)-objs += \
 	os/linux/cfg80211/cfg80211_rx.o\
 	os/linux/cfg80211/cfg80211_tx.o\
 	os/linux/cfg80211/cfg80211_inf.o\
-	os/linux/cfg80211/cfg80211_p2p.o\
 	os/linux/cfg80211/cfg80211_ap.o\
 	os/linux/cfg80211/cfg80211drv.o
 endif

@@ -3048,9 +3048,6 @@ VOID APHandleRxDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
                 if (IS_MULTICAST_MAC_ADDR(pHeader->Addr3))
                         INC_COUNTER64(pAd->WlanCounters.MulticastReceivedFrameCount);
 #endif /* STATS_COUNT_SUPPORT */
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		FromWhichBSSID += MIN_NET_DEVICE_FOR_CFG80211_VIF_P2P_GO;
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 	}
 
 	ASSERT(pEntry->Aid == pRxBlk->wcid);

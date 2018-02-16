@@ -151,10 +151,6 @@ VOID RTUSBBulkOutDataPacket(struct rtmp_adapter *pAd, u8 BulkOutPipeId, u8 Index
 
 	if (((!OPSTATUS_TEST_FLAG(pAd, fOP_AP_STATUS_MEDIA_STATE_CONNECTED)) &&
 		( !OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED)))
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-			&& !(RTMP_CFG80211_VIF_P2P_GO_ON(pAd) || RTMP_CFG80211_VIF_P2P_CLI_ON(pAd))
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 		)
 	{
 		pAd->BulkOutPending[BulkOutPipeId] = false;
@@ -904,10 +900,6 @@ static void RTUSBDataBulkOut(struct rtmp_adapter *pAd, ULONG bulkFlag, INT epIdx
         {
         	if (((!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS)) ||
                      (!OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED))
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		     /* CFG_TODO */
-                     || RTMP_CFG80211_VIF_P2P_GO_ON(pAd) || RTMP_CFG80211_VIF_P2P_CLI_ON(pAd)
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
                     ))
                 {
                 	RTUSBBulkOutDataPacket(pAd, epIdx, pAd->NextBulkOutIndex[epIdx]);

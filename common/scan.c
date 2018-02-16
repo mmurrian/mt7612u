@@ -103,14 +103,6 @@ static INT scan_ch_restore(struct rtmp_adapter *pAd, u8 OpMode)
 			DBGPRINT(RT_DEBUG_TRACE, ("%s -- Send null frame\n", __FUNCTION__));
 		}
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-        if (pAd->ApCfg.ApCliTab[MAIN_MBSSID].Valid && RTMP_CFG80211_VIF_P2P_CLI_ON(pAd))
-        {
-                DBGPRINT(RT_DEBUG_TRACE, ("CFG80211_NULL: PWR_ACTIVE SCAN_END\n"));
-                RT_CFG80211_P2P_CLI_SEND_NULL_FRAME(pAd, PWR_ACTIVE);
-        }
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 		/* keep the latest scan channel, could be 0 for scan complete, or other channel*/
 		pAd->StaCfg.LastScanChannel = pAd->MlmeAux.Channel;
 

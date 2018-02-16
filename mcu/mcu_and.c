@@ -402,6 +402,8 @@ static int mt7612u_mcu_usb_load_rom_patch(struct rtmp_adapter *ad)
 	const struct firmware *fw;
 	int fw_chunk_len;
 
+	dev_info(&udev->dev, "%s: %s: ad=%p\n", __FILE__, __func__, ad);
+
 	dev_info(&udev->dev, "loading firmware patch %s\n", cap->fw_patch_name);
 
 	ret = request_firmware(&fw, cap->fw_patch_name, &udev->dev);
@@ -454,11 +456,13 @@ load_patch_protect:
 	mt76u_vendor_reset(ad);
 	mdelay(5);
 
+#if 0
 	/* get rom patch information */
 	DBGPRINT(RT_DEBUG_OFF, ("build time = \n"));
 
 	for (loop = 0; loop < 16; loop++)
 		DBGPRINT(RT_DEBUG_OFF, ("%c", *(fw_patch_image + loop)));
+#endif
 
 	if (IS_MT76x2U(ad)) {
 		if (((strncmp(fw_patch_image, "20130809", 8) >= 0)) &&
@@ -476,7 +480,7 @@ load_patch_protect:
 			goto error0;
 		}
 	}
-
+#if 0
 	DBGPRINT(RT_DEBUG_OFF, ("\n"));
 
 	DBGPRINT(RT_DEBUG_OFF, ("platform =\n"));
@@ -499,7 +503,7 @@ load_patch_protect:
 		DBGPRINT(RT_DEBUG_OFF, ("%c", *(fw_patch_image + 24 + loop)));
 
 	DBGPRINT(RT_DEBUG_OFF, ("\n"));
-
+#endif
 	/* Enable FCE */
 	mt76u_reg_write(ad, FCE_PSE_CTRL, 0x01);
 
@@ -646,6 +650,8 @@ static int mt7612u_mcu_usb_loadfw(struct rtmp_adapter *ad)
 	u8 *fw_image;
 	int fw_chunk_len;
 
+	dev_info(&udev->dev, "%s: %s: ad=%p\n", __FILE__, __func__, ad);
+
 	dev_info(&udev->dev, "loading firmware %s\n", cap->fw_name);
 
 	ret = request_firmware(&fw, cap->fw_name, &udev->dev);
@@ -704,12 +710,14 @@ loadfw_protect:
 	DBGPRINT(RT_DEBUG_OFF, ("fw version:%d.%d.%02d ", (fw_ver & 0xf000) >> 8,
 						(fw_ver & 0x0f00) >> 8, fw_ver & 0x00ff));
 	DBGPRINT(RT_DEBUG_OFF, ("build:%x\n", build_ver));
+#if 0
 	DBGPRINT(RT_DEBUG_OFF, ("build time:"));
 
 	for (loop = 0; loop < 16; loop++)
 		DBGPRINT(RT_DEBUG_OFF, ("%c", *(fw_image + 16 + loop)));
 
 	DBGPRINT(RT_DEBUG_OFF, ("\n"));
+#endif
 
 	if (IS_MT76x2U(ad)) {
 		if (((strncmp(fw_image + 16, "20130811", 8) >= 0)) && (MT_REV_GTE(ad, MT76x2U, REV_MT76x2E3))) {

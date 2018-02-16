@@ -46,6 +46,7 @@ VOID SyncStateMachineInit(
 	IN STATE_MACHINE *Sm,
 	OUT STATE_MACHINE_FUNC Trans[])
 {
+	printk("%s: %s: pAd=%p, Sm=%p, Trans=%p\n", __FILE__, __func__, pAd, Sm, Trans);
 	StateMachineInit(Sm, Trans, MAX_SYNC_STATE, MAX_SYNC_MSG, (STATE_MACHINE_FUNC)Drop, SYNC_IDLE, SYNC_MACHINE_BASE);
 
 	/* column 1 */
@@ -74,7 +75,7 @@ VOID SyncStateMachineInit(
 
 	/* resume scanning for fast-roaming */
 	StateMachineSetAction(Sm, SCAN_PENDING, MT2_MLME_SCAN_REQ, (STATE_MACHINE_FUNC)MlmeScanReqAction);
-       StateMachineSetAction(Sm, SCAN_PENDING, MT2_PEER_BEACON, (STATE_MACHINE_FUNC)PeerBeacon);
+	StateMachineSetAction(Sm, SCAN_PENDING, MT2_PEER_BEACON, (STATE_MACHINE_FUNC)PeerBeacon);
 
 	/* timer init */
 	RTMPInitTimer(pAd, &pAd->MlmeAux.BeaconTimer, GET_TIMER_FUNCTION(BeaconTimeout), pAd, false);
@@ -333,13 +334,6 @@ VOID MlmeForceScanReqAction(
 						  &SsidLen,
 						  &ScanType))
 	{
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-                if (pAd->ApCfg.ApCliTab[MAIN_MBSSID].Valid && RTMP_CFG80211_VIF_P2P_CLI_ON(pAd))
-                {
-                        DBGPRINT(RT_DEBUG_TRACE, ("CFG80211_NULL: PWR_SAVE IN ForceScanStart\n"));
-                        RT_CFG80211_P2P_CLI_SEND_NULL_FRAME(pAd, PWR_SAVE);
-                }
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 
 		/*
 		    To prevent data lost.
@@ -458,15 +452,6 @@ VOID MlmeScanReqAction(
 						  &SsidLen,
 						  &ScanType))
 	{
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-                if (pAd->ApCfg.ApCliTab[MAIN_MBSSID].Valid && RTMP_CFG80211_VIF_P2P_CLI_ON(pAd))
-                {
-                        DBGPRINT(RT_DEBUG_TRACE, ("CFG80211_NULL: PWR_SAVE IN ScanStart\n"));
-                        RT_CFG80211_P2P_CLI_SEND_NULL_FRAME(pAd, PWR_SAVE);
-                }
-
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 		/*
 		    To prevent data lost.
 		    Send an NULL data with turned PSM bit on to current associated AP before SCAN progress.
@@ -863,338 +848,6 @@ VOID MlmeStartReqAction(
 		kfree(VarIE);
 }
 
-
-//+++Add by shiang to check correctness of new sanity function
-VOID rtmp_dbg_sanity_diff(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
-{
-	/* Parameters used for old sanity function */
-	u8 Bssid[MAC_ADDR_LEN], Addr2[MAC_ADDR_LEN];
-	u8 *Ssid = NULL;
-	u8 SsidLen=0, DtimCount, DtimPeriod, BcastFlag, MessageToMe, NewChannel, Channel = 0, BssType;
-	CF_PARM CfParm = {0};
-	unsigned short BeaconPeriod, AtimWin, CapabilityInfo;
-	LARGE_INTEGER TimeStamp;
-	u8 SupRate[MAX_LEN_OF_SUPPORTED_RATES], ExtRate[MAX_LEN_OF_SUPPORTED_RATES];
-	u8 CkipFlag;
-	EDCA_PARM EdcaParm = {0};
-	u8 AironetCellPowerLimit;
-	u8 SupRateLen, ExtRateLen;
-	QBSS_LOAD_PARM QbssLoad;
-	QOS_CAPABILITY_PARM QosCapability = {0};
-	ULONG RalinkIe;
-	u8 		AddHtInfoLen;
-	EXT_CAP_INFO_ELEMENT	ExtCapInfo;
-	HT_CAPABILITY_IE		*pHtCapability = NULL;
-	ADD_HT_INFO_IE		*pAddHtInfo = NULL;	/* AP might use this additional ht info IE */
-	u8 		HtCapabilityLen = 0, PreNHtCapabilityLen = 0;
-	u8 Erp;
-	u8 		NewExtChannelOffset = 0xff;
-	unsigned short LenVIE;
-	u8 *VarIE = NULL;
-	NDIS_802_11_VARIABLE_IEs *pVIE = NULL;
-
-
-	BCN_IE_LIST *ie_list = NULL;
-	bool sanity_new, sanity_old;
-
-	/* allocate memory */
-	Ssid = kmalloc( MAX_LEN_OF_SSID, GFP_ATOMIC);
-	if (Ssid == NULL)
-		goto LabelErr;
-	pHtCapability = kmalloc(sizeof(HT_CAPABILITY_IE), GFP_ATOMIC);
-	if (pHtCapability == NULL)
-		goto LabelErr;
-	pAddHtInfo = kmalloc(sizeof(ADD_HT_INFO_IE), GFP_ATOMIC);
-	if (pAddHtInfo == NULL)
-		goto LabelErr;
-
-
-	memset(&QbssLoad, 0, sizeof(QBSS_LOAD_PARM)); /* woody */
-
-	memset(pHtCapability, 0, sizeof(HT_CAPABILITY_IE));
-	memset(pAddHtInfo, 0, sizeof(ADD_HT_INFO_IE));
-
-	memset(Ssid, 0, MAX_LEN_OF_SSID);
-
-	ie_list = kmalloc(sizeof(BCN_IE_LIST), GFP_ATOMIC);
-	if (ie_list == NULL)
-		goto LabelErr;
-	memset(ie_list, 0, sizeof(BCN_IE_LIST));
-
-
-	sanity_new = PeerBeaconAndProbeRspSanity(pAd,
-						&Elem->Msg[0], Elem->MsgLen,
-						Elem->Channel,
-						ie_list, &LenVIE, pVIE);
-
-	sanity_old = PeerBeaconAndProbeRspSanity_Old(pAd,
-								Elem->Msg,
-								Elem->MsgLen,
-								Elem->Channel,
-								Addr2,
-								Bssid,
-								(PCHAR)Ssid,
-								&SsidLen,
-								&BssType,
-								&BeaconPeriod,
-								&Channel,
-								&NewChannel,
-								&TimeStamp,
-								&CfParm,
-								&AtimWin,
-								&CapabilityInfo,
-								&Erp,
-								&DtimCount,
-								&DtimPeriod,
-								&BcastFlag,
-								&MessageToMe,
-								SupRate,
-								&SupRateLen,
-								ExtRate,
-								&ExtRateLen,
-								&CkipFlag,
-								&AironetCellPowerLimit,
-								&EdcaParm,
-								&QbssLoad,
-								&QosCapability,
-								&RalinkIe,
-								&HtCapabilityLen,
-#ifdef CONFIG_STA_SUPPORT
-								&PreNHtCapabilityLen,
-#ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
-								&SelReg,
-#endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
-#endif /* CONFIG_STA_SUPPORT */
-								pHtCapability,
-								&ExtCapInfo,
-								&AddHtInfoLen,
-								pAddHtInfo,
-								&NewExtChannelOffset,
-								&LenVIE,
-								pVIE);
-
-		if (sanity_old != sanity_new)
-		{
-			DBGPRINT(RT_DEBUG_ERROR, ("sanity mismatch, old=%d, new=%d\n", sanity_old, sanity_new));
-		}
-		else
-		{
-			if (NdisCmpMemory(&ie_list->Addr2[0], &Addr2[0], MAC_ADDR_LEN) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("Add2 mismatch!Old=%02x:%02x:%02x:%02x:%02x:%02x!New=%02x:%02x:%02x:%02x:%02x:%02x!\n",
-									PRINT_MAC(Addr2), PRINT_MAC(ie_list->Addr2)));
-			}
-
-			if (NdisCmpMemory(&ie_list->Bssid[0], &Bssid[0], MAC_ADDR_LEN) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("Bssid mismatch!Old=%02x:%02x:%02x:%02x:%02x:%02x!New=%02x:%02x:%02x:%02x:%02x:%02x!\n",
-									PRINT_MAC(Bssid), PRINT_MAC(ie_list->Bssid)));
-			}
-
-			if (SsidLen != ie_list->SsidLen)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("SsidLen mismatch!Old=%d, New=%d\n", SsidLen, ie_list->SsidLen));
-			}
-
-			if (NdisCmpMemory(&ie_list->Ssid[0], &Ssid[0], SsidLen) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("Ssid mismatch!Old=%s, New=%s\n", Ssid, ie_list->Ssid));
-			}
-
-			if (BssType != ie_list->BssType)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("BssType mismatch!Old=%d, New=%d\n", BssType, ie_list->BssType));
-			}
-
-			if (BeaconPeriod != ie_list->BeaconPeriod)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("BeaconPeriod mismatch!Old=%d, New=%d\n", BeaconPeriod, ie_list->BeaconPeriod));
-			}
-
-			if (Channel != ie_list->Channel)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("Channel mismatch!Old=%d, New=%d\n", Channel, ie_list->Channel));
-			}
-
-			if (NewChannel != ie_list->NewChannel)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("NewChannel mismatch!Old=%d, New=%d\n", NewChannel, ie_list->NewChannel));
-			}
-
-			if (NdisCmpMemory(&ie_list->TimeStamp, &TimeStamp, sizeof(LARGE_INTEGER)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("TimeStamp mismatch!Old=%d - %d, New=%d - %d\n",
-							TimeStamp.u.LowPart, TimeStamp.u.HighPart,
-							ie_list->TimeStamp.u.LowPart, ie_list->TimeStamp.u.HighPart));
-			}
-
-			if (NdisCmpMemory(&ie_list->CfParm, &CfParm, sizeof(CF_PARM)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("CFParam mismatch!\n"));
-				hex_dump("Old CFParam", (u8 *)&CfParm, sizeof(CF_PARM));
-				hex_dump("New CFParam", (u8 *)&ie_list->CfParm, sizeof(CF_PARM));
-			}
-
-			if (AtimWin != ie_list->AtimWin)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("AtimWin mismatch!Old=%d, New=%d\n", AtimWin, ie_list->AtimWin));
-			}
-
-
-			if (CapabilityInfo != ie_list->CapabilityInfo)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("CapabilityInfo mismatch!Old=%d, New=%d\n", CapabilityInfo, ie_list->CapabilityInfo));
-			}
-
-			if (Erp != ie_list->Erp)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("Erp mismatch!Old=%d, New=%d\n", Erp, ie_list->Erp));
-			}
-
-			if (DtimCount != ie_list->DtimCount)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("DtimCount mismatch!Old=%d, New=%d\n", DtimCount, ie_list->DtimCount));
-			}
-
-			if (DtimPeriod != ie_list->DtimPeriod)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("DtimPeriod mismatch!Old=%d, New=%d\n", DtimPeriod, ie_list->DtimPeriod));
-			}
-
-			if (BcastFlag != ie_list->BcastFlag)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("BcastFlag mismatch!Old=%d, New=%d\n", BcastFlag, ie_list->BcastFlag));
-			}
-
-			if (MessageToMe != ie_list->MessageToMe)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("MessageToMe mismatch!Old=%d, New=%d\n", MessageToMe, ie_list->MessageToMe));
-			}
-
-			if (SupRateLen != ie_list->SupRateLen)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("SupRateLen mismatch!Old=%d, New=%d\n", SupRateLen, ie_list->SupRateLen));
-			}
-
-			if (NdisCmpMemory(&ie_list->SupRate[0], &SupRate, ie_list->SupRateLen) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("SupRate mismatch!\n"));
-				hex_dump("Old SupRate", (u8 *)&SupRate, ie_list->SupRateLen);
-				hex_dump("New SupRate", (u8 *)&ie_list->SupRate, ie_list->SupRateLen);
-			}
-
-
-			if (ExtRateLen != ie_list->ExtRateLen)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("ExtRateLen mismatch!Old=%d, New=%d\n", ExtRateLen, ie_list->ExtRateLen));
-			}
-			if (NdisCmpMemory(&ie_list->ExtRate[0], &ExtRate, ie_list->ExtRateLen) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("ExtRate mismatch!\n"));
-				hex_dump("Old ExtRate", (u8 *)&ExtRate, ie_list->ExtRateLen);
-				hex_dump("New ExtRate", (u8 *)&ie_list->ExtRate, ie_list->ExtRateLen);
-			}
-
-
-			if (CkipFlag != ie_list->CkipFlag)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("CkipFlag mismatch!Old=%d, New=%d\n", CkipFlag, ie_list->CkipFlag));
-			}
-
-			if (AironetCellPowerLimit != ie_list->AironetCellPowerLimit)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("AironetCellPowerLimit mismatch!Old=%d, New=%d\n", AironetCellPowerLimit, ie_list->AironetCellPowerLimit));
-			}
-			if (NdisCmpMemory(&ie_list->EdcaParm, &EdcaParm, sizeof(EDCA_PARM)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("EdcaParm mismatch!\n"));
-				hex_dump("Old EdcaParm", (u8 *)&EdcaParm, sizeof(EDCA_PARM));
-				hex_dump("New EdcaParm", (u8 *)&ie_list->EdcaParm, sizeof(EDCA_PARM));
-			}
-
-			if (NdisCmpMemory(&ie_list->QbssLoad, &QbssLoad, sizeof(QBSS_LOAD_PARM)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("QbssLoad mismatch!\n"));
-				hex_dump("Old QbssLoad", (u8 *)&QbssLoad, sizeof(QBSS_LOAD_PARM));
-				hex_dump("New QbssLoad", (u8 *)&ie_list->QbssLoad, sizeof(QBSS_LOAD_PARM));
-			}
-
-			if (NdisCmpMemory(&ie_list->QosCapability, &QosCapability, sizeof(QOS_CAPABILITY_PARM)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("QosCapability mismatch!\n"));
-				hex_dump("Old QosCapability", (u8 *)&QosCapability, sizeof(QOS_CAPABILITY_PARM));
-				hex_dump("New QosCapability", (u8 *)&ie_list->QosCapability, sizeof(QOS_CAPABILITY_PARM));
-			}
-
-			if (RalinkIe != ie_list->RalinkIe)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("RalinkIe mismatch!Old=%lx, New=%lx\n", RalinkIe, ie_list->RalinkIe));
-			}
-
-			if (HtCapabilityLen != ie_list->HtCapabilityLen)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("HtCapabilityLen mismatch!Old=%d, New=%d\n", HtCapabilityLen, ie_list->HtCapabilityLen));
-			}
-
-#ifdef CONFIG_STA_SUPPORT
-			if (PreNHtCapabilityLen != ie_list->PreNHtCapabilityLen)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("PreNHtCapabilityLen mismatch!Old=%d, New=%d\n", PreNHtCapabilityLen, ie_list->PreNHtCapabilityLen));
-			}
-#endif /* CONFIG_STA_SUPPORT */
-			if (NdisCmpMemory(&ie_list->HtCapability, pHtCapability, sizeof(HT_CAPABILITY_IE)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("pHtCapability mismatch!\n"));
-				hex_dump("Old HtCapability", (u8 *)pHtCapability, sizeof(HT_CAPABILITY_IE));
-				hex_dump("New HtCapability", (u8 *)&ie_list->HtCapability, sizeof(HT_CAPABILITY_IE));
-			}
-
-			if (NdisCmpMemory(&ie_list->ExtCapInfo, &ExtCapInfo, sizeof(EXT_CAP_INFO_ELEMENT)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("ExtCapInfo mismatch!\n"));
-				hex_dump("Old ExtCapInfo", (u8 *)&ExtCapInfo, sizeof(EXT_CAP_INFO_ELEMENT));
-				hex_dump("New ExtCapInfo", (u8 *)&ie_list->ExtCapInfo, sizeof(EXT_CAP_INFO_ELEMENT));
-			}
-
-			if (AddHtInfoLen != ie_list->AddHtInfoLen)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("AddHtInfoLen mismatch!Old=%d, New=%d\n", AddHtInfoLen, ie_list->AddHtInfoLen));
-			}
-
-			if (NdisCmpMemory(&ie_list->AddHtInfo, pAddHtInfo, sizeof(ADD_HT_INFO_IE)) != 0)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("AddHtInfo mismatch!\n"));
-				hex_dump("Old AddHtInfo", (u8 *)pAddHtInfo, sizeof(ADD_HT_INFO_IE));
-				hex_dump("New AddHtInfo", (u8 *)&ie_list->AddHtInfo, sizeof(ADD_HT_INFO_IE));
-			}
-
-			if (NewExtChannelOffset != ie_list->NewExtChannelOffset)
-			{
-				DBGPRINT(RT_DEBUG_ERROR, ("AddHtInfoLen mismatch!Old=%d, New=%d\n", NewExtChannelOffset, ie_list->NewExtChannelOffset));
-			}
-		}
-		goto LabelOK;
-
-LabelErr:
-	DBGPRINT(RT_DEBUG_ERROR, ("%s: Allocate memory fail!!!\n", __FUNCTION__));
-
-LabelOK:
-	if (Ssid != NULL)
-		kfree(Ssid);
-	if (VarIE != NULL)
-		kfree(VarIE);
-	if (pHtCapability != NULL)
-		kfree(pHtCapability);
-	if (pAddHtInfo != NULL)
-		kfree(pAddHtInfo);
-
-	if (ie_list != NULL)
-		kfree(ie_list);
-
-}
-//---Add by shiang to check correctness of new sanity function
-
-
 /*
 	==========================================================================
 	Description:
@@ -1313,9 +966,6 @@ VOID PeerBeaconAtScanAction(
 
 #ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
-		if (RTMPEqualMemory(ie_list->Ssid, "DIRECT-", 7))
-			DBGPRINT(RT_DEBUG_OFF, ("%s P2P_SCANNING: %s [%ld]\n", __FUNCTION__, ie_list->Ssid, Idx));
-
 		RT_CFG80211_SCANNING_INFORM(pAd, Idx, Elem->Channel, (u8 *)pFrame,
 									Elem->MsgLen, Rssi);
 #endif /* RT_CFG80211_SUPPORT */
@@ -1465,11 +1115,6 @@ VOID PeerBeaconAtJoinAction(
 						*/
 						if ((((wdev->WepStatus != Ndis802_11WEPDisabled) << 4) ^ ie_list->CapabilityInfo) & 0x0010)
 						{
-#ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
-							/* When using -Dwext and trigger WPS, do not check security. */
-							if ( SelReg == 0 )
-#endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
-							{
 							MLME_SCAN_REQ_STRUCT ScanReq;
 							DBGPRINT(RT_DEBUG_TRACE, ("%s:AP privacy %d is differenct from STA privacy%d\n",
 										__FUNCTION__, (ie_list->CapabilityInfo & 0x0010) >> 4 ,
@@ -1482,7 +1127,6 @@ VOID PeerBeaconAtJoinAction(
 							RTMP_MLME_HANDLER(pAd);
 							goto LabelOK;
 						}
-					}
 					}
 
 					/* Multiple SSID case, used correct CapabilityInfo */
@@ -1677,9 +1321,6 @@ VOID PeerBeaconAtJoinAction(
 
 #ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
-			if (RTMPEqualMemory(ie_list->Ssid, "DIRECT-", 7))
-                        	DBGPRINT(RT_DEBUG_OFF, ("%s P2P_SCANNING: %s [%ld]\n", __FUNCTION__, ie_list->Ssid, Idx));
-
 			RT_CFG80211_SCANNING_INFORM(pAd, Idx, Elem->Channel, Elem->Msg,
 										Elem->MsgLen, Rssi);
 #endif /* RT_CFG80211_SUPPORT */
@@ -1906,12 +1547,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 				if (pEntry)
 				{
 					Update_Rssi_Sample(pAd, &pEntry->RssiSample, &RxWI);
-#ifdef RT_CFG80211_P2P_SINGLE_DEVICE
-					if (CFG_P2PCLI_ON(pAd))
-					{
-						CFG80211_PeerP2pBeacon(pAd, bcn_ie_list->Addr2, Elem, bcn_ie_list->TimeStamp);
-					}
-#endif /* RT_CFG80211_P2P_SINGLE_DEVICE */
 				}
 			}
 
@@ -1962,12 +1597,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 			{
 				if ((((wdev->WepStatus != Ndis802_11WEPDisabled) << 4) ^ bcn_ie_list->CapabilityInfo) & 0x0010)
 				{
-
-#ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
-					/* When using -Dwext and trigger WPS, do not check security. */
-					if ( SelReg == 0 )
-#endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
-					{
 					/*
 						To prevent STA connect to OPEN/WEP AP when STA is OPEN/NONE or
 						STA connect to OPEN/NONE AP when STA is OPEN/WEP AP.
@@ -1982,7 +1611,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 					}
 					goto LabelOK;
 				}
-			}
 			}
 
 #ifdef LINUX

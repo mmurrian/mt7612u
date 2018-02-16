@@ -2813,13 +2813,6 @@ VOID dev_rx_mgmt_frm(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 	INT op_mode = pRxBlk->OpMode;
 	bool 	bPassTheBcastPkt = false;
 
-#ifdef RT_CFG80211_SUPPORT
-	if (CFG80211_HandleP2pMgmtFrame(pAd, pRxBlk, op_mode))
-		goto done;
-#endif /* RT_CFG80211_SUPPORT */
-
-
-
 #ifdef CONFIG_AP_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
 	{
@@ -3283,8 +3276,6 @@ bool rtmp_rx_done_handle(struct rtmp_adapter *pAd)
 		}
 #endif /* CONFIG_STA_SUPPORT */
 
-
-		// TODO: shiang-usw, for P2P, we original has following code, need to check it and merge to correct place!!!
 
 		switch (pHeader->FC.Type)
 		{

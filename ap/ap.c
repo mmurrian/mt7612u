@@ -682,11 +682,6 @@ VOID MacTableMaintenance(struct rtmp_adapter *pAd)
 
 	startWcid = 1;
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	/* Skip the Infra Side */
-	startWcid = 2;
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 	for (i = startWcid; i < MAX_LEN_OF_MAC_TABLE; i++)
 	{
 		MAC_TABLE_ENTRY *pEntry = &pMacTable->Content[i];

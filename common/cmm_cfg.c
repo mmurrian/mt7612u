@@ -884,23 +884,6 @@ INT RTMP_COM_IoctlHandle(
 			break;
 #endif /* RT_CFG80211_SUPPORT */
 
-#ifdef INF_PPA_SUPPORT
-		case CMD_RTPRIV_IOCTL_INF_PPA_INIT:
-			pAd->pDirectpathCb =
-				kmalloc(sizeof(PPA_DIRECTPATH_CB), GFP_ATOMIC);
-			break;
-
-		case CMD_RTPRIV_IOCTL_INF_PPA_EXIT:
-			if (ppa_hook_directpath_register_dev_fn && (pAd->PPAEnable == true))
-			{
-				UINT status;
-				status = ppa_hook_directpath_register_dev_fn(&pAd->g_if_id, pAd->net_dev, NULL, 0);
-				DBGPRINT(RT_DEBUG_TRACE, ("Unregister PPA::status=%d, if_id=%d\n", status, pAd->g_if_id));
-			}
-			kfree(pAd->pDirectpathCb);
-			break;
-#endif /* INF_PPA_SUPPORT*/
-
 		case CMD_RTPRIV_IOCTL_VIRTUAL_INF_UP:
 		/* interface up */
 		{
@@ -1114,11 +1097,6 @@ INT RTMP_COM_IoctlHandle(
 
 		case CMD_RTPRIV_IOCTL_INF_MAIN_CHECK:
 			if (Data != INT_MAIN)
-				return NDIS_STATUS_FAILURE;
-			break;
-
-		case CMD_RTPRIV_IOCTL_INF_P2P_CHECK:
-			if (Data != INT_P2P)
 				return NDIS_STATUS_FAILURE;
 			break;
 

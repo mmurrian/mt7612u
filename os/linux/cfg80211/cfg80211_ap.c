@@ -268,12 +268,8 @@ VOID CFG80211_UpdateBeacon(
 		 return;
 	}
 
-    BeaconTransmit.word = 0;
-	/* Should be Find the P2P IE Then Set Basic Rate to 6M */
-	if (RTMP_CFG80211_VIF_P2P_GO_ON(pAd))
-	BeaconTransmit.field.MODE = MODE_OFDM; /* Use 6Mbps */
-	else
-		BeaconTransmit.field.MODE = MODE_CCK;
+	BeaconTransmit.word = 0;
+	BeaconTransmit.field.MODE = MODE_CCK;
 	BeaconTransmit.field.MCS = MCS_RATE_6;
 
 	//YF
@@ -349,30 +345,13 @@ bool CFG80211DRV_OpsBeaconAdd(struct rtmp_adapter *pAd, VOID *pData)
 	wdev->func_dev = (void *)&pAd->ApCfg.MBSSID[MAIN_MBSSID];
 	wdev->sys_handle = pAd;
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	/* Using netDev ptr from VifList if VifDevList Exist */
-	struct net_device *pNetDev = NULL;
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
-	   ((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
-	{
-		pMbss->MSSIDDev = pNetDev;
-		wdev->if_dev = pNetDev;
-		COPY_MAC_ADDR(wdev->bssid, pNetDev->dev_addr);
-		COPY_MAC_ADDR(wdev->if_addr, pNetDev->dev_addr);
+	pMbss->MSSIDDev = pAd->net_dev;
+	wdev->if_dev = pAd->net_dev;
+	COPY_MAC_ADDR(wdev->bssid, pAd->CurrentAddress);
+	COPY_MAC_ADDR(wdev->if_addr, pAd->CurrentAddress);
 
-		RTMP_OS_NETDEV_SET_WDEV(pNetDev, wdev);
-	}
-	else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-	{
-		pMbss->MSSIDDev = pAd->net_dev;
-		wdev->if_dev = pAd->net_dev;
-		COPY_MAC_ADDR(wdev->bssid, pAd->CurrentAddress);
-		COPY_MAC_ADDR(wdev->if_addr, pAd->CurrentAddress);
-
-		/* assoc to MBSSID's wdev */
-		RTMP_OS_NETDEV_SET_WDEV(pAd->net_dev, wdev);
-	}
+	/* assoc to MBSSID's wdev */
+	RTMP_OS_NETDEV_SET_WDEV(pAd->net_dev, wdev);
 
 	DBGPRINT(RT_DEBUG_TRACE, ("New AP BSSID %02x:%02x:%02x:%02x:%02x:%02x (%d)\n",
 		PRINT_MAC(wdev->bssid), pAd->CommonCfg.PhyMode));
@@ -423,11 +402,6 @@ bool CFG80211DRV_OpsBeaconAdd(struct rtmp_adapter *pAd, VOID *pData)
 	AsicBBPAdjust(pAd);
 	//MlmeSetTxPreamble(pAd, (unsigned short)pAd->CommonCfg.TxPreamble);
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	/* P2P_GO */
-	MlmeUpdateTxRates(pAd, false, MAIN_MBSSID + MIN_NET_DEVICE_FOR_CFG80211_VIF_P2P_GO);
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 	/*AP */
 		MlmeUpdateTxRates(pAd, false, MIN_NET_DEVICE_FOR_MBSSID);
 
@@ -453,8 +427,6 @@ bool CFG80211DRV_OpsBeaconAdd(struct rtmp_adapter *pAd, VOID *pData)
 
 	/* Enable BSS Sync*/
 	AsicEnableApBssSync(pAd);
-	//pAd->P2pCfg.bSentProbeRSP = true;
-
 	AsicSetPreTbtt(pAd, true);
 
 	/*
@@ -719,13 +691,7 @@ void CFG80211_ApStaDel(
 
 	if (pMac == NULL)
 	{
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		/* From WCID=2 */
-		if (INFRA_ON(pAd))
-			;//P2PMacTableReset(pAd);
-		else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-			MacTableReset(pAd);
+		MacTableReset(pAd);
 	}
 	else
 	{
@@ -751,20 +717,8 @@ INT CFG80211_setApDefaultKey(
 
 void CFG80211_ApStaDelSendEvent(struct rtmp_adapter *pAd, const u8 *mac_addr)
 {
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	struct net_device *pNetDev = NULL;
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
-		((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
-	{
-		DBGPRINT(RT_DEBUG_TRACE, ("CONCURRENT_DEVICE CFG : GO NOITFY THE CLIENT Disconnected\n"));
-		CFG80211OS_DelSta(pNetDev, mac_addr);
-	}
-	else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-	{
-		DBGPRINT(RT_DEBUG_TRACE, ("SINGLE_DEVICE CFG : GO NOITFY THE CLIENT Disconnected\n"));
-		CFG80211OS_DelSta(pAd->net_dev, mac_addr);
-	}
+	DBGPRINT(RT_DEBUG_TRACE, ("SINGLE_DEVICE CFG : GO NOITFY THE CLIENT Disconnected\n"));
+	CFG80211OS_DelSta(pAd->net_dev, mac_addr);
 }
 
 #endif /* CONFIG_AP_SUPPORT */

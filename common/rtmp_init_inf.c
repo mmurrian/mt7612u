@@ -762,6 +762,8 @@ struct net_device *RtmpPhyNetDevMainCreate(struct rtmp_adapter *pAd)
 	pDevNew = RtmpOSNetDevCreate((int32_t)MC_RowID, (uint32_t *)&IoctlIF,
 					INT_MAIN, 0, sizeof(struct mt_dev_priv), dev_name);
 
+	printk("%s: %s: pAd=%p, pDevNew=%p, dev_name=%s\n", __FILE__, __func__, pAd, pDevNew, dev_name);
+
 #ifdef HOSTAPD_SUPPORT
 	pAd->IoctlIF = IoctlIF;
 #endif /* HOSTAPD_SUPPORT */

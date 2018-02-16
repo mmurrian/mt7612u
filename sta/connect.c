@@ -1566,11 +1566,6 @@ VOID LinkUp(struct rtmp_adapter *pAd, u8 BssType)
 		ComposePsPoll(pAd);
 		ComposeNullFrame(pAd);
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		if (CFG_P2PGO_ON(pAd))
-			AsicEnableApBssSync(pAd);
-		else
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 			AsicEnableBssSync(pAd);
 
 		/*
@@ -2775,7 +2770,6 @@ VOID AdjustChannelRelatedValue(
 
 
 	// TODO: shiang-6590, this function need to revise to make sure two purpose can achieved!
-	//	1. Channel-binding rule between STA and P2P-GO mode
 	//	2. Stop MAC Tx/Rx when bandwidth change
 
 	*pBwFallBack = 0;

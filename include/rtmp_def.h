@@ -417,8 +417,6 @@ enum WIFI_MODE{
 
 #define MAX_APCLI_NUM				0
 
-#define MAX_P2P_NUM				0
-
 #define MAX_MBSSID_NUM(__pAd)		1
 
 #ifdef MAC_APCLI_SUPPORT
@@ -730,7 +728,6 @@ enum WIFI_MODE{
 #define IE_VENDOR_SPECIFIC              221	/* Wifi WMM (WME) */
 #define	IE_WFA_WSC							221
 
-#define OUI_P2P					0x09
 #define OUI_HS2_INDICATION		0x10
 #define OUI_BROADCOM_HT              51	/* */
 #define OUI_BROADCOM_HTADD           52	/* */
@@ -1549,13 +1546,11 @@ enum WIFI_MODE{
 #define INF_WDS_DEV_NAME		"wdsi"
 #define INF_APCLI_DEV_NAME		"apclii"
 #define INF_MESH_DEV_NAME		"meshi"
-#define INF_P2P_DEV_NAME		"p2pi"
 #define INF_MONITOR_DEV_NAME	"moni"
 #else
 #define INF_WDS_DEV_NAME		"wds"
 #define INF_APCLI_DEV_NAME		"apcli"
 #define INF_MESH_DEV_NAME		"mesh"
-#define INF_P2P_DEV_NAME		"p2p"
 #define INF_MONITOR_DEV_NAME	"mon"
 #endif
 

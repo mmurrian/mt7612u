@@ -26,14 +26,9 @@
 
 #ifdef RT_CFG80211_SUPPORT
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-#define CFG80211_GetEventDevice(__pAd) __pAd->cfg80211_ctrl.dummy_p2p_net_dev
-#else
 #define CFG80211_GetEventDevice(__pAd) __pAd->net_dev
-#endif	/* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 
 
-//yiwei debug for P2P 7.1.3
 
 
 #endif /* RT_CFG80211_SUPPORT */

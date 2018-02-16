@@ -134,16 +134,6 @@ bool CFG80211DRV_OpsScanCheckStatus(struct rtmp_adapter *pAd,
 		return false;
 	}
 
-#ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-	if (RTMP_CFG80211_VIF_P2P_CLI_ON(pAd) &&
-	    (pAd->cfg80211_ctrl.FlgCfg80211Connecting == true) &&
-        (IfType == RT_CMD_80211_IFTYPE_STATION))
-	{
-		DBGPRINT(RT_DEBUG_ERROR,("SCAN_FAIL: P2P_CLIENT In Connecting & Canncel Scan with Infra Side\n"));
-		return false;
-	}
-#endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-
 #ifdef RT_CFG80211_SUPPORT
 	if (pAd->cfg80211_ctrl.FlgCfg8021Disable2040Scan == true &&
         (IfType == RT_CMD_80211_IFTYPE_AP))
