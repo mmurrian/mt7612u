@@ -556,10 +556,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			Peer_DelBA_Tx_Adapt_Init(pAd, pEntry);
 #endif /* PEER_DELBA_TX_ADAPT */
 
-#ifdef DROP_MASK_SUPPORT
-			drop_mask_init_per_client(pAd, pEntry);
-#endif /* DROP_MASK_SUPPORT */
-
 #ifdef CONFIG_AP_SUPPORT
 			IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
 				;
@@ -750,15 +746,6 @@ bool MacTableDeleteEntry(struct rtmp_adapter *pAd, unsigned short wcid, u8 *pAdd
 			pEntry->EnqueueEapolStartTimerRunning = EAPOL_START_DISABLE;
 		}
 		RTMPReleaseTimer(&pEntry->EnqueueStartForPSKTimer, &Cancelled);
-
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-#ifdef DROP_MASK_SUPPORT
-			drop_mask_release_per_client(pAd, pEntry);
-#endif /* DROP_MASK_SUPPORT */
-
 
 //   			memset(pEntry, 0, sizeof(MAC_TABLE_ENTRY));
 			memset(pEntry->Addr, 0, MAC_ADDR_LEN);

@@ -134,10 +134,6 @@ DECLARE_TIMER_FUNCTION(APScanTimeout);
 DECLARE_TIMER_FUNCTION(APQuickResponeForRateUpExec);
 
 
-#ifdef DROP_MASK_SUPPORT
-DECLARE_TIMER_FUNCTION(drop_mask_timer_action);
-#endif /* DROP_MASK_SUPPORT */
-
 #endif /* CONFIG_AP_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT

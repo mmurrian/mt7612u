@@ -790,12 +790,6 @@ VOID GREKEYPeriodicExec(
                 {
 					pEntry->GTKState = REKEY_NEGOTIATING;
 
-#ifdef DROP_MASK_SUPPORT
-					/* Disable Drop Mask */
-					set_drop_mask_per_client(pAd, pEntry, 1, 0);
-					set_drop_mask_per_client(pAd, pEntry, 2, 0);
-#endif /* DROP_MASK_SUPPORT */
-
                 	WPAStart2WayGroupHS(pAd, pEntry);
                     DBGPRINT(RT_DEBUG_TRACE, ("Rekey interval excess, Update Group Key for  %x %x %x  %x %x %x , DefaultKeyId= %x \n",\
 										PRINT_MAC(pEntry->Addr), wdev->DefaultKeyId));

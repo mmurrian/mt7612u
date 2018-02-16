@@ -2212,14 +2212,6 @@ typedef struct _MAC_TABLE_ENTRY {
 	u8 EnqueueEapolStartTimerRunning;	/* Enqueue EAPoL-Start for triggering EAP SM */
 	RALINK_TIMER_STRUCT EnqueueStartForPSKTimer;	/* A timer which enqueue EAPoL-Start for triggering PSK SM */
 
-
-#ifdef DROP_MASK_SUPPORT
-	bool	tx_fail_drop_mask_enabled;
-	spinlock_t	drop_mask_lock;
-	bool	ps_drop_mask_enabled;
-	RALINK_TIMER_STRUCT	dropmask_timer;
-#endif /* DROP_MASK_SUPPORT */
-
 	/* record which entry revoke MIC Failure , if it leaves the BSS itself, AP won't update aMICFailTime MIB */
 	u8 CMTimerRunning;
 	u8 RSNIE_Len;
@@ -6659,38 +6651,6 @@ INT set_rx_rts_cts(struct rtmp_adapter *pAd, char *arg);
 
 
 
-#ifdef DROP_MASK_SUPPORT
-VOID asic_set_drop_mask(
-	struct rtmp_adapter *ad,
-	unsigned short wcid,
-	bool enable);
-
-VOID asic_drop_mask_reset(
-	struct rtmp_adapter *ad);
-
-VOID drop_mask_init_per_client(
-	struct rtmp_adapter *ad,
-	MAC_TABLE_ENTRY *entry);
-
-VOID drop_mask_release_per_client(
-	struct rtmp_adapter *ad,
-	MAC_TABLE_ENTRY *entry);
-
-VOID drop_mask_per_client_reset(
-	struct rtmp_adapter *ad);
-
-VOID set_drop_mask_per_client(
-	struct rtmp_adapter *ad,
-	MAC_TABLE_ENTRY *entry,
-	UINT8 type,
-	bool enable);
-
-VOID drop_mask_timer_action(
-	PVOID SystemSpecific1,
-	PVOID FunctionContext,
-	PVOID SystemSpecific2,
-	PVOID SystemSpecific3);
-#endif /* DROP_MASK_SUPPORT */
 
 #ifdef PEER_DELBA_TX_ADAPT
 VOID Peer_DelBA_Tx_Adapt_Init(
