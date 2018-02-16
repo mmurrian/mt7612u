@@ -1505,13 +1505,6 @@ typedef union _AUTO_RSP_CFG_STRUC {
 
 #define EXT_CCA_CFG			0x141c
 
-#ifdef MAC_APCLI_SUPPORT
-#define APCLI_BSSID_IDX			8
-#define MAC_APCLI_BSSID_DW0		0x1090
-#define MAC_APCLI_BSSID_DW1		0x1094
-#endif /* MAC_APCLI_SUPPORT */
-
-
 
 /*  4.5 MAC Security configuration (offset:0x1500) */
 #define TX_SEC_CNT0		0x1500

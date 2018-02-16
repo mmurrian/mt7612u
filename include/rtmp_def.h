@@ -419,11 +419,7 @@ enum WIFI_MODE{
 
 #define MAX_MBSSID_NUM(__pAd)		1
 
-#ifdef MAC_APCLI_SUPPORT
-#define APCLI_BSS_BASE				8
-#else
 #define APCLI_BSS_BASE				0
-#endif /* MAC_APCLI_SUPPORT */
 
 
 #ifdef MBSS_SUPPORT

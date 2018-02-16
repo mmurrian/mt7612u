@@ -2260,42 +2260,6 @@ INT AsicSetChannel(struct rtmp_adapter *pAd, u8 ch, UINT8 bw, UINT8 ext_ch, bool
 	return 0;
 }
 
-
-#ifdef MAC_APCLI_SUPPORT
-/*
-	==========================================================================
-	Description:
-		Set BSSID of Root AP
-
-	IRQL = DISPATCH_LEVEL
-
-	==========================================================================
- */
-VOID AsicSetApCliBssid(
-	IN struct rtmp_adapter *pAd,
-	IN u8 *pBssid,
-	IN u8 index)
-{
-	uint32_t 	  Addr4 = 0;
-
-	DBGPRINT(RT_DEBUG_TRACE, ("%s():%x:%x:%x:%x:%x:%x\n",
-				__FUNCTION__, PRINT_MAC(pBssid)));
-
-	Addr4 = (uint32_t)(pBssid[0]) |
-			(uint32_t)(pBssid[1] << 8)  |
-			(uint32_t)(pBssid[2] << 16) |
-			(uint32_t)(pBssid[3] << 24);
-	mt76u_reg_write(pAd, MAC_APCLI_BSSID_DW0, Addr4);
-
-	Addr4 = 0;
-	Addr4 = (ULONG)(pBssid[4]) | (ULONG)(pBssid[5] << 8);
-	/* Enable APCLI mode */
-	Addr4 |= 0x10000;
-
-	mt76u_reg_write(pAd, MAC_APCLI_BSSID_DW1, Addr4);
-}
-#endif /* MAC_APCLI_SUPPORT */
-
 #ifdef MULTI_CLIENT_SUPPORT
 VOID asic_change_tx_retry(
 	IN struct rtmp_adapter *pAd,
