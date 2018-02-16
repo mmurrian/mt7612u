@@ -1876,9 +1876,6 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 		if (pAd->StaCfg.LastScanTime > 10 * OS_HZ)
 			pAd->StaCfg.LastScanTime -= (10 * OS_HZ);
 
-#ifdef PROFILE_STORE
-		pAd->bWriteDat = false;
-#endif /* PROFILE_STORE */
 #ifdef WPA_SUPPLICANT_SUPPORT
 		pAd->StaCfg.wdev.IEEE8021X = false;
 		pAd->StaCfg.wpa_supplicant_info.IEEE8021x_required_keys = false;
@@ -1887,9 +1884,6 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 
 #if defined(NATIVE_WPA_SUPPLICANT_SUPPORT) || defined(RT_CFG80211_SUPPORT)
 		pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP = WPA_SUPPLICANT_ENABLE;
-#ifdef PROFILE_STORE
-		pAd->bWriteDat = true;
-#endif /* PROFILE_STORE */
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT || RT_CFG80211_SUPPORT */
 
 		pAd->StaCfg.wpa_supplicant_info.bLostAp = false;
