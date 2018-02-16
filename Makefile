@@ -76,9 +76,6 @@ WFLAGS += -DNATIVE_WPA_SUPPLICANT_SUPPORT
 endif
 endif
 
-ifeq ($(HAS_WIDI_SUPPORT),y)
-WFLAGS += -DWIDI_SUPPORT
-
 endif
 
 endif
