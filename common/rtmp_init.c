@@ -669,15 +669,6 @@ VOID NICInitAsicFromEEPROM(struct rtmp_adapter *pAd)
 	}
 #endif /* CONFIG_STA_SUPPORT */
 
-#ifdef WIN_NDIS
-	/* Turn off patching for cardbus controller */
-	/*
-	if (NicConfig2.field.CardbusAcceleration == 1)
-		pAd->bTest1 = true;
-	*/
-#endif /* WIN_NDIS */
-
-
 	mt7612u_bbp_set_rxpath(pAd, pAd->Antenna.field.RxPath);
 
 #ifdef CONFIG_STA_SUPPORT
