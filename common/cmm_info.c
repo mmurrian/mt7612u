@@ -282,11 +282,6 @@ INT	Set_Channel_Proc(
 
 	Channel = (u8) simple_strtol(arg, 0, 10);
 
-#ifdef APCLI_AUTO_CONNECT_SUPPORT
-	if (pAd->ApCfg.ApCliAutoConnectChannelSwitching == false)
-		pAd->ApCfg.ApCliAutoConnectChannelSwitching = true;
-#endif /* APCLI_AUTO_CONNECT_SUPPORT */
-
 	/* check if this channel is valid*/
 	if (ChannelSanity(pAd, Channel) == true)
 	{
@@ -410,9 +405,6 @@ INT	Set_Channel_Proc(
 #endif /* DFS_ATP_SUPPORT */
 	}
 
-#ifdef APCLI_AUTO_CONNECT_SUPPORT
-		pAd->ApCfg.ApCliAutoConnectChannelSwitching = false;
-#endif /* APCLI_AUTO_CONNECT_SUPPORT */
 	return success;
 }
 

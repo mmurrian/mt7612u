@@ -2516,9 +2516,6 @@ typedef struct _APCLI_STRUCT {
 	ULONG AssocCurrState;
 	ULONG WpaPskCurrState;
 
-#ifdef APCLI_AUTO_CONNECT_SUPPORT
-	unsigned short ProbeReqCnt;
-#endif /* APCLI_AUTO_CONNECT_SUPPORT */
 	unsigned short AuthReqCnt;
 	unsigned short AssocReqCnt;
 
@@ -3293,11 +3290,8 @@ struct rtmp_adapter {
 
 
 
-/*#ifdef AUTO_CH_SELECT_ENHANCE */
 	PBSSINFO pBssInfoTab;
 	PCHANNELINFO pChannelInfo;
-/*#endif // AUTO_CH_SELECT_ENHANCE */
-
 
 #endif /* CONFIG_AP_SUPPORT */
 
