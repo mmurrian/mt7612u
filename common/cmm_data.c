@@ -916,8 +916,6 @@ bool RTMP_FillTxBlkInfo(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 		else
 			TX_BLK_SET_FLAG(pTxBlk, fTX_bAckRequired);
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 		{
 #ifdef CONFIG_AP_SUPPORT
@@ -1400,9 +1398,6 @@ VOID RTMPSuspendMsduTransmission(
 {
 	DBGPRINT(RT_DEBUG_TRACE,("SCANNING, suspend MSDU transmission ...\n"));
 
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
 	/*
 		Before BSS_SCAN_IN_PROGRESS, we need to keep Current R66 value and
 		use Lowbound as R66 value on ScanNextChannel(...)
@@ -1439,9 +1434,6 @@ VOID RTMPResumeMsduTransmission(
 	IN struct rtmp_adapter *pAd)
 {
 	DBGPRINT(RT_DEBUG_TRACE,("SCAN done, resume MSDU transmission ...\n"));
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
 
 	/*
 		After finish BSS_SCAN_IN_PROGRESS, we need to restore Current R66 value
@@ -1891,11 +1883,6 @@ bool RTMPCheckEtherType(
 						RTMP_SET_PACKET_DHCP(pPacket, 1);
 					}
 
-#ifdef CONFIG_AP_SUPPORT
-					if (wdev->wdev_type == WDEV_TYPE_AP)
-					{
-					}
-#endif /* CONFIG_AP_SUPPORT */
 				}
 				else if (*(pSrcBuf + 9) == 0x01)
 				{
@@ -1916,25 +1903,11 @@ bool RTMPCheckEtherType(
 			break;
 		case ETH_TYPE_ARP:
 			{
-#ifdef CONFIG_AP_SUPPORT
-				if (wdev->wdev_type == WDEV_TYPE_AP)
-				{
-				}
-#endif /* CONFIG_AP_SUPPORT */
 				RTMP_SET_PACKET_DHCP(pPacket, 1);
 			}
 			break;
 		case ETH_P_IPV6:
 			{
-#ifdef CONFIG_AP_SUPPORT
-				if (wdev->wdev_type == WDEV_TYPE_AP)
-				{
-				}
-				/*
-					Check if DHCPv6 Packet, and Convert group-address DHCP
-					packets to individually-addressed 802.11 frames
- 				 */
-#endif /* CONFIG_AP_SUPPORT */
 				/* return AC_BE if packet is not IPv6 */
 				if ((*pSrcBuf & 0xf0) != 0x60)
 					up = 0;
@@ -2893,8 +2866,6 @@ VOID dev_rx_mgmt_frm(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 			pAd->StaCfg.LastSNR0 = (u8) (pRxBlk->snr[0]);
 			pAd->StaCfg.LastSNR1 = (u8) (pRxBlk->snr[1]);
 
-#ifdef PRE_ANT_SWITCH
-#endif /* PRE_ANT_SWITCH */
 		}
 
 		if ((pHeader->FC.SubType == SUBTYPE_BEACON) &&
@@ -3064,9 +3035,6 @@ bool rtmp_rx_done_handle(struct rtmp_adapter *pAd)
 	RX_BLK rxblk, *pRxBlk;
 	bool bCmdRspPacket = false;
 
-#ifdef LINUX
-#endif /* LINUX */
-
 	RxProcessed = RxPending = 0;
 
 	/* process whole rx ring */
@@ -3115,9 +3083,6 @@ bool rtmp_rx_done_handle(struct rtmp_adapter *pAd)
 		RTMPFrameEndianChange(pAd, (u8 *)pHeader, DIR_READ, true);
 		RTMPWIEndianChange(pAd , (u8 *)pRxWI, TYPE_RXWI);
 #endif
-
-//+++Add by shiang for debug
-//---Add by shiang for debug
 
 #ifdef DBG_CTRL_SUPPORT
 #ifdef INCLUDE_DEBUG_QUEUE

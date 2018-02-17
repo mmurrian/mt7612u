@@ -78,13 +78,6 @@ VOID ActionStateMachineInit(
 	StateMachineSetAction(S, ACT_IDLE, MT2_MLME_QOS_CATE, (STATE_MACHINE_FUNC)MlmeQOSAction);
 	StateMachineSetAction(S, ACT_IDLE, MT2_MLME_DLS_CATE, (STATE_MACHINE_FUNC)MlmeDLSAction);
 	StateMachineSetAction(S, ACT_IDLE, MT2_ACT_INVALID, (STATE_MACHINE_FUNC)MlmeInvalidAction);
-
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-
-
 }
 
 
@@ -919,12 +912,8 @@ static VOID ReservedAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 
 VOID PeerRMAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 {
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
 	return;
 }
-
-
 
 #ifdef CONFIG_AP_SUPPORT
 VOID SendNotifyBWActionFrame(struct rtmp_adapter *pAd, u8 Wcid, u8 apidx)

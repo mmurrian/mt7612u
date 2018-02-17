@@ -2213,14 +2213,10 @@ int RTMPSetProfileParameters(
 		/*TxBurst*/
 		if(RTMPGetKeyParameter("TxBurst", tmpbuf, 10, pBuffer, true))
 		{
-	/*#ifdef WIFI_TEST*/
-	/*						pAd->CommonCfg.bEnableTxBurst = false;*/
-	/*#else*/
 			if(simple_strtol(tmpbuf, 0, 10) != 0)  /*Enable*/
 				pAd->CommonCfg.bEnableTxBurst = true;
 			else /*Disable*/
 				pAd->CommonCfg.bEnableTxBurst = false;
-	/*#endif*/
 			DBGPRINT(RT_DEBUG_TRACE, ("TxBurst=%d\n", pAd->CommonCfg.bEnableTxBurst));
 		}
 
@@ -3052,19 +3048,6 @@ int RTMPSetProfileParameters(
 					}
 				}
 #endif /* CONFIG_STA_SUPPORT */
-#ifdef CONFIG_AP_SUPPORT
-				IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-				{
-				}
-#endif /* CONFIG_AP_SUPPORT */
-
-
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-
-
 #ifdef CONFIG_AP_SUPPORT
 				/* EntryLifeCheck is used to check */
 				if (RTMPGetKeyParameter("EntryLifeCheck", tmpbuf, 256, pBuffer, true))

@@ -37,7 +37,6 @@
 #endif /* GNU_PACKED */
 
 
-#ifdef LINUX
 /* Put platform dependent declaration here */
 /* For example, linux type definition */
 typedef unsigned char UINT8;
@@ -45,7 +44,6 @@ typedef short INT16;
 
 typedef unsigned int UINT;
 typedef unsigned long ULONG;
-#endif /* LINUX */
 
 /* modified for fixing compile warning on Sigma 8634 platform */
 typedef char STRING;
@@ -58,9 +56,7 @@ typedef signed long long LONGLONG;
 
 typedef unsigned long long ULONGLONG;
 
-#ifdef LINUX
 typedef void VOID;
-#endif /* LINUX */
 
 typedef VOID *PVOID;
 typedef CHAR *PCHAR;

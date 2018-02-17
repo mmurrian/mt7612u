@@ -49,9 +49,6 @@ u8 WME_INFO_ELEM[]  = {0x00, 0x50, 0xf2, 0x02, 0x00, 0x01};
 u8 WME_PARM_ELEM[] = {0x00, 0x50, 0xf2, 0x02, 0x01, 0x01};
 u8 BROADCOM_OUI[]  = {0x00, 0x90, 0x4c};
 u8 WPS_OUI[] = {0x00, 0x50, 0xf2, 0x04};
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 
 u8 OfdmRateToRxwiMCS[12] = {
 	0,  0,	0,  0,
@@ -1273,14 +1270,6 @@ VOID MlmePeriodicExec(
 #endif /* CONFIG_STA_SUPPORT */
 	}
 
-#ifdef CONFIG_AP_SUPPORT
-		IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-		{
-		}
-#endif /* CONFIG_AP_SUPPORT */
-
-
-
 #ifdef CONFIG_STA_SUPPORT
 	if (pAd->chipCap.FreqCalibrationSupport)
 	{
@@ -1294,10 +1283,6 @@ VOID MlmePeriodicExec(
 	if (pAd->Mlme.PeriodicRound %MLME_TASK_EXEC_MULTIPLE == 0)
 	{
 		pAd->Mlme.OneSecPeriodicRound ++;
-
-#ifdef CONFIG_AP_SUPPORT
-
-#endif /* CONFIG_AP_SUPPORT */
 
 		NdisGetSystemUpTime(&pAd->Mlme.Now32);
 
@@ -1360,13 +1345,6 @@ VOID MlmePeriodicExec(
 				}
 			}
 		}
-
-#ifdef VIDEO_TURBINE_SUPPORT
-	/*
-		VideoTurbineUpdate(pAd);
-		VideoTurbineDynamicTune(pAd);
-	*/
-#endif /* VIDEO_TURBINE_SUPPORT */
 
 #ifdef MT76x0_TSSI_CAL_COMPENSATION
 		if (IS_MT76x0(pAd) &&
@@ -2807,9 +2785,6 @@ VOID MlmeUpdateTxRates(struct rtmp_adapter *pAd, bool bLinkUp, u8 apidx)
 		else
 			pAd->MacTab.Content[MCAST_WCID].HTPhyMode.field.MCS = RATE_1;
 		pAd->CommonCfg.BasicMlmeRate = pAd->CommonCfg.MlmeRate;
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
 	}
 
 	DBGPRINT(RT_DEBUG_TRACE, (" %s(): (MaxDesire=%d, MaxSupport=%d, MaxTxRate=%d, MinRate=%d, Rate Switching =%d)\n",

@@ -505,19 +505,13 @@ VOID	RTMPCalculateMICValue(
 	if (((*(pSrc + 12) << 8) + *(pSrc + 13)) == 0x8100)
 		vlan_offset = 4;
 
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-	{
-		RTMPInitMICEngine(
+	RTMPInitMICEngine(
 			pAd,
 			pKey->Key,
 			pSrc,
 			pSrc + 6,
 			UserPriority,
 			pKey->TxMic);
-	}
 
 
 	if (pEncap != NULL)

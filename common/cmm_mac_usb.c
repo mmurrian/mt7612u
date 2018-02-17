@@ -911,9 +911,6 @@ VOID RTUSBBssBeaconStart(struct rtmp_adapter *pAd)
 			}
 #endif /* CONFIG_AP_SUPPORT */
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 			memset(pBeaconSync->BeaconBuf[apidx], 0, HW_BEACON_OFFSET);
 			pBeaconSync->CapabilityInfoLocationInBeacon[apidx] = CapabilityInfoLocationInBeacon;
 			pBeaconSync->TimIELocationInBeacon[apidx] = TimIELocationInBeacon;
