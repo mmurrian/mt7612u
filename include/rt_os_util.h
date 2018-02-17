@@ -684,10 +684,6 @@ extern uint32_t RalinkRate_VHT_1NSS[Rate_BW_MAX][Rate_GI_MAX][Rate_MCS];
 extern UINT8 newRateGetAntenna(UINT8 MCS);
 
 
-#ifdef PLATFORM_UBM_IPX8
-#include "vrut_ubm.h"
-#endif /* PLATFORM_UBM_IPX8 */
-
 int32_t  RtPrivIoctlSetVal(VOID);
 
 void RtmpOsSpinLockIrqSave(spinlock_t *lock, unsigned long *flags);
