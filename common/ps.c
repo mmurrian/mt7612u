@@ -120,7 +120,7 @@ VOID RtmpHandleRxPsPoll(struct rtmp_adapter *pAd, u8 *pAddr, unsigned short wcid
 	*/
 
 	pMacEntry = &pAd->MacTab.Content[wcid];
-	if (RTMPEqualMemory(pMacEntry->Addr, pAddr, MAC_ADDR_LEN))
+	if (!memcmp(pMacEntry->Addr, pAddr, MAC_ADDR_LEN))
 	{
 		/* Sta is change to Power Active stat. Reset ContinueTxFailCnt */
 		pMacEntry->ContinueTxFailCnt = 0;

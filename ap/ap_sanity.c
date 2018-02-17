@@ -196,13 +196,13 @@ bool PeerAssocReqCmmSanity(
             case IE_WPA2:
 
 
-				if (NdisEqualMemory(eid_ptr->Octet, WPS_OUI, 4))
+				if (!memcmp(eid_ptr->Octet, WPS_OUI, 4))
 				{
 					break;
 				}
 
 				/* Handle Atheros and Broadcom draft 11n STAs */
-				if (NdisEqualMemory(eid_ptr->Octet, BROADCOM_OUI, 3))
+				if (!memcmp(eid_ptr->Octet, BROADCOM_OUI, 3))
 				{
 					switch (eid_ptr->Octet[3])
 					{
@@ -224,7 +224,7 @@ bool PeerAssocReqCmmSanity(
 					}
 				}
 
-                if (NdisEqualMemory(eid_ptr->Octet, RALINK_OUI, 3) && (eid_ptr->Len == 7))
+                if (!memcmp(eid_ptr->Octet, RALINK_OUI, 3) && (eid_ptr->Len == 7))
                 {
 			if (eid_ptr->Octet[3] != 0)
 		       	ie_lists->RalinkIe = eid_ptr->Octet[3];
@@ -234,7 +234,7 @@ bool PeerAssocReqCmmSanity(
                 }
 
                 /* WMM_IE */
-                if (NdisEqualMemory(eid_ptr->Octet, WME_INFO_ELEM, 6) && (eid_ptr->Len == 7))
+                if (!memcmp(eid_ptr->Octet, WME_INFO_ELEM, 6) && (eid_ptr->Len == 7))
                 {
                     ie_lists->bWmmCapable = true;
 
@@ -247,8 +247,8 @@ bool PeerAssocReqCmmSanity(
 
                 /* 	If this IE did not begins with 00:0x50:0xf2:0x01,
                 	it would be proprietary. So we ignore it. */
-                if (!NdisEqualMemory(eid_ptr->Octet, WPA1_OUI, sizeof(WPA1_OUI))
-                    && !NdisEqualMemory(&eid_ptr->Octet[2], WPA2_OUI, sizeof(WPA2_OUI)))
+                if (memcmp(eid_ptr->Octet, WPA1_OUI, sizeof(WPA1_OUI))
+                    && memcmp(&eid_ptr->Octet[2], WPA2_OUI, sizeof(WPA2_OUI)))
                 {
                     DBGPRINT(RT_DEBUG_TRACE, ("Not RSN IE, maybe WMM IE!!!\n"));
                     break;

@@ -133,7 +133,7 @@ bool MlmeDelBAReqSanity(
         return false;
     }
 
-	if (NdisEqualMemory(pAd->MacTab.Content[pInfo->Wcid].Addr, pInfo->Addr, MAC_ADDR_LEN) == 0)
+	if (!memcmp(pAd->MacTab.Content[pInfo->Wcid].Addr, pInfo->Addr, MAC_ADDR_LEN) == 0)
     {
         DBGPRINT(RT_DEBUG_ERROR, ("MlmeDelBAReqSanity fail - the peer addr dosen't exist.\n"));
         return false;
@@ -554,7 +554,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
                 if(SubType == SUBTYPE_BEACON)
                 {
 
-					if (INFRA_ON(pAd) && NdisEqualMemory(pBssid, pAd->CommonCfg.Bssid, MAC_ADDR_LEN))
+					if (INFRA_ON(pAd) && !memcmp(pBssid, pAd->CommonCfg.Bssid, MAC_ADDR_LEN))
                     {
                         GetTimBit((PCHAR)pEid, pAd->StaActive.Aid, &TimLen, pBcastFlag, pDtimCount, pDtimPeriod, pMessageToMe);
                     }
@@ -576,7 +576,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
             /* case IE_WPA:*/
             case IE_VENDOR_SPECIFIC:
                 /* Check the OUI version, filter out non-standard usage*/
-                if (NdisEqualMemory(pEid->Octet, RALINK_OUI, 3) && (pEid->Len == 7))
+                if (!memcmp(pEid->Octet, RALINK_OUI, 3) && (pEid->Len == 7))
                 {
 			if (pEid->Octet[3] != 0)
         				*pRalinkIe = pEid->Octet[3];
@@ -588,7 +588,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
 
                 /* Other vendors had production before IE_HT_CAP value is assigned. To backward support those old-firmware AP,*/
                 /* Check broadcom-defiend pre-802.11nD1.0 OUI for HT related IE, including HT Capatilities IE and HT Information IE*/
-                else if ((*pHtCapabilityLen == 0) && NdisEqualMemory(pEid->Octet, BROADCOM_OUI, 3) && (pEid->Len >= 4) && (pAd->OpMode == OPMODE_STA))
+                else if ((*pHtCapabilityLen == 0) && !memcmp(pEid->Octet, BROADCOM_OUI, 3) && (pEid->Len >= 4) && (pAd->OpMode == OPMODE_STA))
                 {
                     if ((pEid->Octet[3] == OUI_BROADCOM_HT) && (pEid->Len >= 30) && (*pHtCapabilityLen == 0))
                     {
@@ -603,14 +603,14 @@ bool PeerBeaconAndProbeRspSanity_Old(
                     }
                 }
 #endif /* CONFIG_STA_SUPPORT */
-                else if (NdisEqualMemory(pEid->Octet, WPA_OUI, 4))
+                else if (!memcmp(pEid->Octet, WPA_OUI, 4))
                 {
                     /* Copy to pVIE which will report to bssid list.*/
                     Ptr = (u8 *) pVIE;
                     memmove(Ptr + *LengthVIE, &pEid->Eid, pEid->Len + 2);
                     *LengthVIE += (pEid->Len + 2);
                 }
-                else if (NdisEqualMemory(pEid->Octet, WME_PARM_ELEM, 6) && (pEid->Len == 24))
+                else if (!memcmp(pEid->Octet, WME_PARM_ELEM, 6) && (pEid->Len == 24))
                 {
                     u8 *ptr;
                     int i;
@@ -634,7 +634,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
                         ptr += 4; /* point to next AC*/
                     }
                 }
-                else if (NdisEqualMemory(pEid->Octet, WME_INFO_ELEM, 6) && (pEid->Len == 7))
+                else if (!memcmp(pEid->Octet, WME_INFO_ELEM, 6) && (pEid->Len == 7))
                 {
                     /* parsing EDCA parameters*/
                     pEdcaParm->bValid          = true;
@@ -669,7 +669,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
                     pEdcaParm->Cwmax[QID_AC_VO] = pAd->wmm_cw_max - 1;
                     pEdcaParm->Txop[QID_AC_VO]  = 48;   /* AC_VO: 48*32us ~= 1.5ms*/
                 }
-				else if (NdisEqualMemory(pEid->Octet, WPS_OUI, 4)
+				else if (!memcmp(pEid->Octet, WPS_OUI, 4)
  				)
                 {
 					if (pPeerWscIe)
@@ -792,14 +792,14 @@ bool PeerBeaconAndProbeRspSanity_Old(
                     break;
 
                 /* Get cell power limit in dBm*/
-                if (NdisEqualMemory(pEid->Octet, CISCO_OUI, 3) == 1)
+                if (!memcmp(pEid->Octet, CISCO_OUI, 3) == 1)
                     *pAironetCellPowerLimit = *(pEid->Octet + 4);
                 break;
 
             /* WPA2 & 802.11i RSN*/
             case IE_RSN:
                 /* There is no OUI for version anymore, check the group cipher OUI before copying*/
-                if (RTMPEqualMemory(pEid->Octet + 2, RSN_OUI, 3))
+                if (!memcmp(pEid->Octet + 2, RSN_OUI, 3))
                 {
                     /* Copy to pVIE which will report to microsoft bssid list.*/
                     Ptr = (u8 *) pVIE;
@@ -1163,7 +1163,7 @@ bool PeerBeaconAndProbeRspSanity(
 			if(SubType == SUBTYPE_BEACON)
 			{
 
-				if (INFRA_ON(pAd) && NdisEqualMemory(&ie_list->Bssid[0], pAd->CommonCfg.Bssid, MAC_ADDR_LEN))
+				if (INFRA_ON(pAd) && !memcmp(&ie_list->Bssid[0], pAd->CommonCfg.Bssid, MAC_ADDR_LEN))
 				{
 					GetTimBit((PCHAR)pEid, pAd->StaActive.Aid, &TimLen, &ie_list->BcastFlag,
 					&ie_list->DtimCount, &ie_list->DtimPeriod, &ie_list->MessageToMe);
@@ -1184,7 +1184,7 @@ bool PeerBeaconAndProbeRspSanity(
 		/* case IE_WPA:*/
 		case IE_VENDOR_SPECIFIC:
 			/* Check the OUI version, filter out non-standard usage*/
-			if (NdisEqualMemory(pEid->Octet, RALINK_OUI, 3) && (pEid->Len == 7))
+			if (!memcmp(pEid->Octet, RALINK_OUI, 3) && (pEid->Len == 7))
 			{
 				if (pEid->Octet[3] != 0)
 					ie_list->RalinkIe = pEid->Octet[3];
@@ -1196,7 +1196,7 @@ bool PeerBeaconAndProbeRspSanity(
 
 			/* Other vendors had production before IE_HT_CAP value is assigned. To backward support those old-firmware AP,*/
 			/* Check broadcom-defiend pre-802.11nD1.0 OUI for HT related IE, including HT Capatilities IE and HT Information IE*/
-			else if ((ie_list->HtCapabilityLen == 0) && NdisEqualMemory(pEid->Octet, BROADCOM_OUI, 3) && (pEid->Len >= 4) && (pAd->OpMode == OPMODE_STA))
+			else if ((ie_list->HtCapabilityLen == 0) && !memcmp(pEid->Octet, BROADCOM_OUI, 3) && (pEid->Len >= 4) && (pAd->OpMode == OPMODE_STA))
 			{
 				if ((pEid->Octet[3] == OUI_BROADCOM_HT) && (pEid->Len >= 30) && (ie_list->HtCapabilityLen == 0))
 				{
@@ -1211,14 +1211,14 @@ bool PeerBeaconAndProbeRspSanity(
 				}
 			}
 #endif /* CONFIG_STA_SUPPORT */
-			else if (NdisEqualMemory(pEid->Octet, WPA_OUI, 4))
+			else if (!memcmp(pEid->Octet, WPA_OUI, 4))
 			{
 				/* Copy to pVIE which will report to bssid list.*/
 				Ptr = (u8 *) pVIE;
 				memmove(Ptr + *LengthVIE, &pEid->Eid, pEid->Len + 2);
 				*LengthVIE += (pEid->Len + 2);
 			}
-			else if (NdisEqualMemory(pEid->Octet, WME_PARM_ELEM, 6) && (pEid->Len == 24))
+			else if (!memcmp(pEid->Octet, WME_PARM_ELEM, 6) && (pEid->Len == 24))
 			{
 				u8 *ptr;
 				int i;
@@ -1242,7 +1242,7 @@ bool PeerBeaconAndProbeRspSanity(
 					ptr += 4; /* point to next AC*/
 				}
 			}
-			else if (NdisEqualMemory(pEid->Octet, WME_INFO_ELEM, 6) && (pEid->Len == 7))
+			else if (!memcmp(pEid->Octet, WME_INFO_ELEM, 6) && (pEid->Len == 7))
 			{
 				/* parsing EDCA parameters*/
 				ie_list->EdcaParm.bValid          = true;
@@ -1277,7 +1277,7 @@ bool PeerBeaconAndProbeRspSanity(
 				ie_list->EdcaParm.Cwmax[QID_AC_VO] = pAd->wmm_cw_max - 1;
 				ie_list->EdcaParm.Txop[QID_AC_VO]  = 48;   /* AC_VO: 48*32us ~= 1.5ms*/
 			}
-			else if (NdisEqualMemory(pEid->Octet, WPS_OUI, 4)
+			else if (!memcmp(pEid->Octet, WPS_OUI, 4)
 			)
 			{
 				if (pPeerWscIe)
@@ -1393,14 +1393,14 @@ bool PeerBeaconAndProbeRspSanity(
 				break;
 
 			/* Get cell power limit in dBm*/
-			if (NdisEqualMemory(pEid->Octet, CISCO_OUI, 3) == 1)
+			if (!memcmp(pEid->Octet, CISCO_OUI, 3) == 1)
 				ie_list->AironetCellPowerLimit = *(pEid->Octet + 4);
 			break;
 
 		/* WPA2 & 802.11i RSN*/
 		case IE_RSN:
 			/* There is no OUI for version anymore, check the group cipher OUI before copying*/
-			if (RTMPEqualMemory(pEid->Octet + 2, RSN_OUI, 3))
+			if (!memcmp(pEid->Octet + 2, RSN_OUI, 3))
 			{
 				/* Copy to pVIE which will report to microsoft bssid list.*/
 				Ptr = (u8 *) pVIE;

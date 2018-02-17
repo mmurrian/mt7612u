@@ -221,7 +221,7 @@ bool PeerAssocRspSanity(
 
 			case IE_VENDOR_SPECIFIC:
 				/* handle WME PARAMTER ELEMENT */
-				if (NdisEqualMemory(pEid->Octet, WME_PARM_ELEM, 6) && (pEid->Len == 24))
+				if (!memcmp(pEid->Octet, WME_PARM_ELEM, 6) && (pEid->Len == 24))
 				{
 					u8 *ptr;
 					int i;

@@ -2486,12 +2486,12 @@ VOID APRxEAPOLFrameIndicate(
 		CheckPktSanity = false;
 		DBGPRINT(RT_DEBUG_ERROR, ("Total pkts size is too small.\n"));
 	}
-	else if (!RTMPEqualMemory(SNAP_802_1H, pRxBlk->pData, 6))
+	else if (memcmp(SNAP_802_1H, pRxBlk->pData, 6))
 	{
 		CheckPktSanity = false;
 		DBGPRINT(RT_DEBUG_ERROR, ("Can't find SNAP_802_1H parameter.\n"));
 	}
-	else if (!RTMPEqualMemory(EAPOL, pRxBlk->pData+6, 2))
+	else if (memcmp(EAPOL, pRxBlk->pData+6, 2))
 	{
 		CheckPktSanity = false;
 		DBGPRINT(RT_DEBUG_ERROR, ("Can't find EAPOL parameter.\n"));

@@ -402,8 +402,8 @@ typedef struct _RTMP_SCATTER_GATHER_LIST {
 	if (((*(_pBufVA + 12) << 8) + *(_pBufVA + 13)) > 1500)		\
 	{															\
 		_pExtraLlcSnapEncap = SNAP_802_1H;						\
-		if (NdisEqualMemory(IPX, _pBufVA + 12, 2) || 			\
-			NdisEqualMemory(APPLE_TALK, _pBufVA + 12, 2))		\
+		if (!memcmp(IPX, _pBufVA + 12, 2) || 			\
+			!memcmp(APPLE_TALK, _pBufVA + 12, 2))		\
 		{														\
 			_pExtraLlcSnapEncap = SNAP_BRIDGE_TUNNEL;			\
 		}														\
@@ -420,8 +420,8 @@ typedef struct _RTMP_SCATTER_GATHER_LIST {
 	if (((*(_pBufVA) << 8) + *(_pBufVA + 1)) > 1500)			\
 	{															\
 		_pExtraLlcSnapEncap = SNAP_802_1H;						\
-		if (NdisEqualMemory(IPX, _pBufVA, 2) || 				\
-			NdisEqualMemory(APPLE_TALK, _pBufVA, 2))			\
+		if (!memcmp(IPX, _pBufVA, 2) || 				\
+			!memcmp(APPLE_TALK, _pBufVA, 2))			\
 		{														\
 			_pExtraLlcSnapEncap = SNAP_BRIDGE_TUNNEL;			\
 		}														\
@@ -456,13 +456,13 @@ typedef struct _RTMP_SCATTER_GATHER_LIST {
     char LLC_Len[2];                                                    \
                                                                         \
     _pRemovedLLCSNAP = NULL;                                            \
-    if (NdisEqualMemory(SNAP_802_1H, _pData, 6)  ||                     \
-        NdisEqualMemory(SNAP_BRIDGE_TUNNEL, _pData, 6))                 \
+    if (!memcmp(SNAP_802_1H, _pData, 6)  ||                     \
+        !memcmp(SNAP_BRIDGE_TUNNEL, _pData, 6))                 \
     {                                                                   \
         u8 *pProto = _pData + 6;                                     \
                                                                         \
-        if ((NdisEqualMemory(IPX, pProto, 2) || NdisEqualMemory(APPLE_TALK, pProto, 2)) &&  \
-            NdisEqualMemory(SNAP_802_1H, _pData, 6))                    \
+        if ((!memcmp(IPX, pProto, 2) || !memcmp(APPLE_TALK, pProto, 2)) &&  \
+            !memcmp(SNAP_802_1H, _pData, 6))                    \
         {                                                               \
             LLC_Len[0] = (u8)(_DataSize >> 8);                       \
             LLC_Len[1] = (u8)(_DataSize & (256 - 1));                \
@@ -495,10 +495,10 @@ typedef struct _RTMP_SCATTER_GATHER_LIST {
     MlmeEnqueueForRecv(_pAd, Wcid, High32TSF, Low32TSF, (u8)_Rssi0, (u8)_Rssi1,(u8)_Rssi2,_FrameSize, _pFrame, (u8)_MinSNR, _OpMode);   \
 }
 
-#define IPV4_ADDR_EQUAL(pAddr1, pAddr2)         RTMPEqualMemory((PVOID)(pAddr1), (PVOID)(pAddr2), 4)
-#define IPV6_ADDR_EQUAL(pAddr1, pAddr2)         RTMPEqualMemory((PVOID)(pAddr1), (PVOID)(pAddr2), 16)
-#define MAC_ADDR_EQUAL(pAddr1,pAddr2)           RTMPEqualMemory((PVOID)(pAddr1), (PVOID)(pAddr2), MAC_ADDR_LEN)
-#define SSID_EQUAL(ssid1, len1, ssid2, len2)    ((len1==len2) && (RTMPEqualMemory(ssid1, ssid2, len1)))
+#define IPV4_ADDR_EQUAL(pAddr1, pAddr2)         !memcmp((PVOID)(pAddr1), (PVOID)(pAddr2), 4)
+#define IPV6_ADDR_EQUAL(pAddr1, pAddr2)         !memcmp((PVOID)(pAddr1), (PVOID)(pAddr2), 16)
+#define MAC_ADDR_EQUAL(pAddr1,pAddr2)           !memcmp((PVOID)(pAddr1), (PVOID)(pAddr2), MAC_ADDR_LEN)
+#define SSID_EQUAL(ssid1, len1, ssid2, len2)    ((len1==len2) && (!memcmp(ssid1, ssid2, len1)))
 
 
 #ifdef CONFIG_STA_SUPPORT

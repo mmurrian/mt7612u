@@ -46,7 +46,7 @@ u8 get_apidx_by_addr(struct rtmp_adapter *pAd, u8 *addr)
 
 	for (apidx=0; apidx<pAd->ApCfg.BssidNum; apidx++)
 	{
-		if (RTMPEqualMemory(addr, pAd->ApCfg.MBSSID[apidx].wdev.bssid, MAC_ADDR_LEN))
+		if (!memcmp(addr, pAd->ApCfg.MBSSID[apidx].wdev.bssid, MAC_ADDR_LEN))
 			break;
 	}
 

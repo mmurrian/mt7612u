@@ -77,7 +77,7 @@ VOID APPeerProbeReqAction(
 		PhyMode = wdev->PhyMode;
 
 		if ( ((((ProbeReqParam.SsidLen == 0) && (!mbss->bHideSsid)) ||
-			   ((ProbeReqParam.SsidLen == mbss->SsidLen) && NdisEqualMemory(ProbeReqParam.Ssid, mbss->Ssid, (ULONG) ProbeReqParam.SsidLen)))
+			   ((ProbeReqParam.SsidLen == mbss->SsidLen) && !memcmp(ProbeReqParam.Ssid, mbss->Ssid, (ULONG) ProbeReqParam.SsidLen)))
 			 )
 		)
 			;

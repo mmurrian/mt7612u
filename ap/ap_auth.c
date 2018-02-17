@@ -247,7 +247,7 @@ static VOID APPeerAuthReqAtIdleAction(
 	if (pEntry && IS_ENTRY_CLIENT(pEntry))
 	{
 
-		if (!RTMPEqualMemory(Addr1, pAd->ApCfg.MBSSID[pEntry->apidx].wdev.bssid, MAC_ADDR_LEN))
+		if (memcmp(Addr1, pAd->ApCfg.MBSSID[pEntry->apidx].wdev.bssid, MAC_ADDR_LEN))
 		{
 			MacTableDeleteEntry(pAd, pEntry->wcid, pEntry->Addr);
 			pEntry = NULL;
@@ -437,7 +437,7 @@ static VOID APPeerAuthConfirmAction(
 	pEntry = &pAd->MacTab.Content[Elem->Wcid];
 	if (pEntry && IS_ENTRY_CLIENT(pEntry))
 	{
-		if (!RTMPEqualMemory(Addr1, pAd->ApCfg.MBSSID[pEntry->apidx].wdev.bssid, MAC_ADDR_LEN))
+		if (memcmp(Addr1, pAd->ApCfg.MBSSID[pEntry->apidx].wdev.bssid, MAC_ADDR_LEN))
 		{
 			MacTableDeleteEntry(pAd, pEntry->wcid, pEntry->Addr);
 			pEntry = NULL;
@@ -468,7 +468,7 @@ static VOID APPeerAuthConfirmAction(
 	if (pEntry && MAC_ADDR_EQUAL(Addr2, pAd->ApMlmeAux.Addr))
 	{
 		if ((pRcvHdr->FC.Wep == 1) &&
-			NdisEqualMemory(Chtxt, pAd->ApMlmeAux.Challenge, CIPHER_TEXT_LEN))
+			!memcmp(Chtxt, pAd->ApMlmeAux.Challenge, CIPHER_TEXT_LEN))
 		{
 			/* Successful */
 			APPeerAuthSimpleRspGenAndSend(pAd, pRcvHdr, Alg, Seq + 1, MLME_SUCCESS);

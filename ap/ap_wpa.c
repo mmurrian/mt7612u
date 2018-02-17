@@ -84,7 +84,7 @@ bool RTMPCheckMcast(
             else if (wdev->AuthMode == Ndis802_11AuthModeWPA1PSKWPA2PSK)
                 pEntry->AuthMode = Ndis802_11AuthModeWPAPSK;
 
-            if (NdisEqualMemory(&eid_ptr->Octet[6], &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][6], 4))
+            if (!memcmp(&eid_ptr->Octet[6], &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][6], 4))
                 return true;
         }
         else if (eid_ptr->Eid == IE_WPA2)
@@ -101,7 +101,7 @@ bool RTMPCheckMcast(
             else if (wdev->AuthMode == Ndis802_11AuthModeWPA1PSKWPA2PSK)
                 pEntry->AuthMode = Ndis802_11AuthModeWPA2PSK;
 
-            if (NdisEqualMemory(&eid_ptr->Octet[2], &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][2], 4))
+            if (!memcmp(&eid_ptr->Octet[2], &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][2], 4))
                 return true;
         }
     }
@@ -183,7 +183,7 @@ bool RTMPCheckUcast(
 					if (MIX_CIPHER_WPA_TKIP_ON(wdev->WpaMixPairCipher))
 					{
 						/* Compare if peer STA uses the TKIP as its unicast cipher */
-					if (RTMPEqualMemory(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][12], 4))
+					if (!memcmp(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][12], 4))
 					{
 						pEntry->WepStatus = Ndis802_11TKIPEnable;
 						return true;
@@ -193,7 +193,7 @@ bool RTMPCheckUcast(
 						/* Compare if the peer STA use AES as its unicast cipher */
 						if (MIX_CIPHER_WPA_AES_ON(wdev->WpaMixPairCipher))
 						{
-							if (RTMPEqualMemory(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][16], 4))
+							if (!memcmp(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][16], 4))
 							{
 								pEntry->WepStatus = Ndis802_11AESEnable;
 								return true;
@@ -203,7 +203,7 @@ bool RTMPCheckUcast(
 					else
 					{
 					/* AES */
-						if (RTMPEqualMemory(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][12], 4))
+						if (!memcmp(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][12], 4))
 					{
 						pEntry->WepStatus = Ndis802_11AESEnable;
 						return true;
@@ -218,7 +218,7 @@ bool RTMPCheckUcast(
     		{/* single cipher */
     			while (Count > 0)
     			{
-    				if (RTMPEqualMemory(pStaTmp , &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][12], 4))
+    				if (!memcmp(pStaTmp , &pAd->ApCfg.MBSSID[apidx].RSN_IE[0][12], 4))
 		            	return true;
 
 					pStaTmp += 4;
@@ -243,7 +243,7 @@ bool RTMPCheckUcast(
 					if (MIX_CIPHER_WPA2_TKIP_ON(wdev->WpaMixPairCipher))
 					{
 						/* Compare if peer STA uses the TKIP as its unicast cipher */
-					if (RTMPEqualMemory(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][8], 4))
+					if (!memcmp(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][8], 4))
 					{
 						pEntry->WepStatus = Ndis802_11TKIPEnable;
 						return true;
@@ -253,7 +253,7 @@ bool RTMPCheckUcast(
 						/* Compare if the peer STA use AES as its unicast cipher */
 						if (MIX_CIPHER_WPA2_AES_ON(wdev->WpaMixPairCipher))
 						{
-							if (RTMPEqualMemory(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][12], 4))
+							if (!memcmp(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][12], 4))
 							{
 								pEntry->WepStatus = Ndis802_11AESEnable;
 								return true;
@@ -263,7 +263,7 @@ bool RTMPCheckUcast(
 					else
 					{
 					/* AES */
-						if (RTMPEqualMemory(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][8], 4))
+						if (!memcmp(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][8], 4))
 					{
 						pEntry->WepStatus = Ndis802_11AESEnable;
 						return true;
@@ -278,7 +278,7 @@ bool RTMPCheckUcast(
 			{/* single cipher */
 				while (Count > 0)
     			{
-					if (RTMPEqualMemory(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][8], 4))
+					if (!memcmp(pStaTmp, &pAd->ApCfg.MBSSID[apidx].RSN_IE[IE_Idx][8], 4))
 						return true;
 
 					pStaTmp += 4;
@@ -335,7 +335,7 @@ bool RTMPCheckAKM(u8 *sta_akm, u8 *ap_rsn_ie, INT iswpa2)
     while (Count > 0)
     {
 		/*rtmp_hexdump(RT_DEBUG_TRACE,"MBSS WPA_IE AKM ",pTmp,4); */
-		if(RTMPEqualMemory(sta_akm,pTmp,4))
+		if(!memcmp(sta_akm,pTmp,4))
 		   return true;
     	else
 		{
@@ -872,7 +872,7 @@ VOID WpaSend(struct rtmp_adapter *pAdapter, u8 *pPacket, ULONG Len)
 						  (pEntry->PortSecured == WPA_802_1X_PORT_SECURED) ? false : true);
 
 
-    if (RTMPEqualMemory((pPacket+12), EAPOL, 2))
+    if (!memcmp((pPacket+12), EAPOL, 2))
     {
         switch (pEapHdr->code)
         {

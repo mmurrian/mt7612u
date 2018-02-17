@@ -764,7 +764,7 @@ VOID RT28xx_UpdateBeaconToAsic(struct rtmp_adapter *pAd,
 #ifdef __BIG_ENDIAN
 		RTMPWIEndianChange(pAd, ptr, TYPE_TXWI);
 #endif
-		if (NdisEqualMemory(pBeaconSync->BeaconTxWI[bcn_idx], &pAd->BeaconTxWI, TXWISize) == false) {
+		if (!memcmp(pBeaconSync->BeaconTxWI[bcn_idx], &pAd->BeaconTxWI, TXWISize) == false) {
 			/* If BeaconTxWI changed, we need to rewrite the TxWI for the Beacon frames.*/
 			pBeaconSync->BeaconBitMap &= (~(BEACON_BITMAP_MASK & (1 << bcn_idx)));
 			memmove(pBeaconSync->BeaconTxWI[bcn_idx], &pAd->BeaconTxWI, TXWISize);
@@ -794,7 +794,7 @@ VOID RT28xx_UpdateBeaconToAsic(struct rtmp_adapter *pAd,
 		/* ULLI : WTH ???, are programmers lazy of pointers ?? */
 
 		for (i = 0 ; i < FrameLen /*HW_BEACON_OFFSET*/; i += 4) {
-			if (NdisEqualMemory(ptr, pBeaconFrame, 4) == false) {
+			if (!memcmp(ptr, pBeaconFrame, 4) == false) {
 				u32 dword;
 
 				memmove(ptr, pBeaconFrame, 4);

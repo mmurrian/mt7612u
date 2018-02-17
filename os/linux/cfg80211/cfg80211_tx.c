@@ -111,7 +111,7 @@ void CFG80211_ParseBeaconIE(struct rtmp_adapter *pAd, MULTISSID_STRUCT *pMbss, s
 	{
 		pEid = (PEID_STRUCT) wpa_ie;
 		pTmp = (u8 *) pEid;
-		if (NdisEqualMemory(pEid->Octet, WPA_OUI, 4))
+		if (!memcmp(pEid->Octet, WPA_OUI, 4))
 		{
 			wdev->AuthMode = Ndis802_11AuthModeOpen;
 			DBGPRINT(RT_DEBUG_TRACE,("%s:: WPA case\n", __FUNCTION__));
@@ -232,7 +232,7 @@ void CFG80211_ParseBeaconIE(struct rtmp_adapter *pAd, MULTISSID_STRUCT *pMbss, s
 			/* 1. Check group cipher*/
 			pCipher = (PCIPHER_SUITE_STRUCT) pTmp;
 
-			if (NdisEqualMemory(pTmp, RSN_OUI, 3))
+			if (!memcmp(pTmp, RSN_OUI, 3))
 			{
 				DBGPRINT(RT_DEBUG_TRACE,("%s:: WPA2 case\n", __FUNCTION__));
 				bWPA2 = true;
@@ -315,7 +315,7 @@ void CFG80211_ParseBeaconIE(struct rtmp_adapter *pAd, MULTISSID_STRUCT *pMbss, s
 					while (Count > 0)
 					{
 						pAKM = (PAKM_SUITE_STRUCT) pTmp;
-						if (!RTMPEqualMemory(pTmp, RSN_OUI, 3))
+						if (memcmp(pTmp, RSN_OUI, 3))
 							break;
 
 						switch (pAKM->Type)

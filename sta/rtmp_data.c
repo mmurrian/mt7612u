@@ -307,7 +307,7 @@ VOID STAHandleRxDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 			/* Infrastructure mode, check address 2 for BSSID */
 			if (1
 			    ) {
-				if (!RTMPEqualMemory(&pHeader->Addr2, &pAd->MlmeAux.Bssid, 6))
+				if (memcmp(&pHeader->Addr2, &pAd->MlmeAux.Bssid, 6))
 				{
 					/* Receive frame not my BSSID */
 					dev_kfree_skb_any(pRxPacket);
@@ -319,7 +319,7 @@ VOID STAHandleRxDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 		{	/* Ad-Hoc mode or Not associated */
 
 			/* Ad-Hoc mode, check address 3 for BSSID */
-			if (!RTMPEqualMemory(&pHeader->Addr3, &pAd->CommonCfg.Bssid, 6)) {
+			if (memcmp(&pHeader->Addr3, &pAd->CommonCfg.Bssid, 6)) {
 				/* Receive frame not my BSSID */
 				dev_kfree_skb_any(pRxPacket);
 				return;

@@ -160,7 +160,7 @@ PCFG80211_VIF_DEV RTMP_CFG80211_FindVifEntry_ByMac(struct rtmp_adapter *pAd, str
 	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	while (pDevEntry != NULL)
 	{
-		if (RTMPEqualMemory(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
+		if (!memcmp(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
 			return pDevEntry;
 
 		pListEntry = pListEntry->pNext;
