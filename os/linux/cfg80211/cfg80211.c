@@ -1491,6 +1491,7 @@ static int CFG80211_OpsPmksaFlush(
 	return 0;
 } /* End of CFG80211_OpsPmksaFlush */
 
+#if 0
 static int CFG80211_OpsRemainOnChannel(
 	struct wiphy 		*pWiphy,
 	struct wireless_dev	*pWdev,
@@ -1536,6 +1537,7 @@ static int CFG80211_OpsRemainOnChannel(
 	RTMP_DRIVER_80211_REMAIN_ON_CHAN_SET(pAd, &ChanInfo, duration);
 	return 0;
 }
+#endif
 
 #if 0
 static void CFG80211_OpsMgmtFrameRegister(
@@ -1615,6 +1617,7 @@ static int CFG80211_OpsTxCancelWait(
     	return 0;
 }
 
+#if 0
 static int CFG80211_OpsCancelRemainOnChannel(
 	struct wiphy *pWiphy,
 	struct wireless_dev *wdev,
@@ -1631,6 +1634,7 @@ static int CFG80211_OpsCancelRemainOnChannel(
     RTMP_DRIVER_80211_CANCEL_REMAIN_ON_CHAN_SET(pAd, cookie);
     return 0;
 }
+#endif
 
 static int CFG80211_OpsStartAp(
 	struct wiphy *pWiphy,
