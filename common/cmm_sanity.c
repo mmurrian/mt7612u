@@ -158,17 +158,7 @@ bool PeerAddBAReqActionSanity(
 		return false;
 	}
 	/* we support immediate BA.*/
-#ifdef UNALIGNMENT_SUPPORT
-	{
-		BA_PARM		tmpBaParm;
-
-		memmove(&tmpBaParm, &pAddFrame->BaParm, sizeof(BA_PARM));
-		*(unsigned short *)(&tmpBaParm) = cpu2le16(*(unsigned short *)(&tmpBaParm));
-		memmove(&pAddFrame->BaParm, &tmpBaParm, sizeof(BA_PARM));
-	}
-#else
 	*(unsigned short *)(&pAddFrame->BaParm) = cpu2le16(*(unsigned short *)(&pAddFrame->BaParm));
-#endif
 	pAddFrame->TimeOutValue = cpu2le16(pAddFrame->TimeOutValue);
 	pAddFrame->BaStartSeq.word = cpu2le16(pAddFrame->BaStartSeq.word);
 
@@ -198,17 +188,7 @@ bool PeerAddBARspActionSanity(
 		return false;
 	}
 	/* we support immediate BA.*/
-#ifdef UNALIGNMENT_SUPPORT
-	{
-		BA_PARM		tmpBaParm;
-
-		memmove(&tmpBaParm, &pAddFrame->BaParm, sizeof(BA_PARM));
-		*(unsigned short *)(&tmpBaParm) = cpu2le16(*(unsigned short *)(&tmpBaParm));
-		memmove(&pAddFrame->BaParm), &tmpBaParm, sizeof(BA_PARM));
-	}
-#else
 	*(unsigned short *)(&pAddFrame->BaParm) = cpu2le16(*(unsigned short *)(&pAddFrame->BaParm));
-#endif
 	pAddFrame->StatusCode = cpu2le16(pAddFrame->StatusCode);
 	pAddFrame->TimeOutValue = cpu2le16(pAddFrame->TimeOutValue);
 
@@ -450,16 +430,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
 				*pHtCapabilityLen = SIZE_HT_CAP_IE;	/* Nnow we only support 26 bytes.*/
 
 				*(unsigned short *)(&pHtCapability->HtCapInfo) = cpu2le16(*(unsigned short *)(&pHtCapability->HtCapInfo));
-#ifdef UNALIGNMENT_SUPPORT
-				{
-					EXT_HT_CAP_INFO extHtCapInfo;
-					memmove(&extHtCapInfo, &pHtCapability->ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-					*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-					memmove(&pHtCapability->ExtHtCapInfo, &extHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-				}
-#else
 				*(unsigned short *)(&pHtCapability->ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&pHtCapability->ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
 				IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
@@ -1071,16 +1042,7 @@ bool PeerBeaconAndProbeRspSanity(
 				ie_list->HtCapabilityLen = SIZE_HT_CAP_IE;	/* Nnow we only support 26 bytes.*/
 
 				*(unsigned short *)(&ie_list->HtCapability.HtCapInfo) = cpu2le16(*(unsigned short *)(&ie_list->HtCapability.HtCapInfo));
-#ifdef UNALIGNMENT_SUPPORT
-				{
-					EXT_HT_CAP_INFO extHtCapInfo;
-					memmove(&extHtCapInfo, &ie_list->HtCapability.ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-					*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-					memmove(&ie_list->HtCapability.ExtHtCapInfo, &extHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-				}
-#else
 				*(unsigned short *)(&ie_list->HtCapability.ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&ie_list->HtCapability.ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
 				IF_DEV_CONFIG_OPMODE_ON_STA(pAd)

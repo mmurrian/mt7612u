@@ -192,17 +192,7 @@ VOID APPeerProbeReqAction(
 #else
 			memmove(&HtCapabilityTmp, &pAd->CommonCfg.HtCapability, HtLen);
 			*(unsigned short *)(&HtCapabilityTmp.HtCapInfo) = SWAP16(*(unsigned short *)(&HtCapabilityTmp.HtCapInfo));
-#ifdef UNALIGNMENT_SUPPORT
-			{
-				EXT_HT_CAP_INFO extHtCapInfo;
-
-				memmove(&extHtCapInfo, &HtCapabilityTmp.ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-				*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-				memmove(&HtCapabilityTmp.ExtHtCapInfo, &extHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-			}
-#else
 			*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
 
 			memmove(&addHTInfoTmp, &pAd->CommonCfg.AddHTInfo, AddHtLen);
 			*(unsigned short *)(&addHTInfoTmp.AddHtInfo2) = SWAP16(*(unsigned short *)(&addHTInfoTmp.AddHtInfo2));
@@ -512,17 +502,7 @@ VOID APPeerProbeReqAction(
 #else
 				memmove(&HtCapabilityTmp, &pAd->CommonCfg.HtCapability, HtLen);
 				*(unsigned short *)(&HtCapabilityTmp.HtCapInfo) = SWAP16(*(unsigned short *)(&HtCapabilityTmp.HtCapInfo));
-#ifdef UNALIGNMENT_SUPPORT
-			{
-				EXT_HT_CAP_INFO extHtCapInfo;
-
-				memmove(&extHtCapInfo), &HtCapabilityTmp.ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-				*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-				memmove(&HtCapabilityTmp.ExtHtCapInfo, &extHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-			}
-#else
-			*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
+				*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo));
 
 				MakeOutgoingFrame(pOutBuffer + FrameLen,         &TmpLen,
 								1,                               &WpaIe,

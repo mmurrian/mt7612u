@@ -145,17 +145,7 @@ VOID MlmeADDBAAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 		Frame.BaStartSeq.field.FragNum = 0;
 		Frame.BaStartSeq.field.StartSeq = pEntry->TxSeq[pInfo->TID];
 
-#ifdef UNALIGNMENT_SUPPORT
-		{
-			BA_PARM tmpBaParm;
-
-			memmove(&tmpBaParm, &Frame.BaParm, sizeof(BA_PARM));
-			*(unsigned short *)(&tmpBaParm) = cpu2le16(*(unsigned short *)(&tmpBaParm));
-			memmove(&Frame.BaParm, &tmpBaParm, sizeof(BA_PARM));
-		}
-#else
 		*(unsigned short *)(&(Frame.BaParm)) = cpu2le16((*(unsigned short *)(&(Frame.BaParm))));
-#endif /* UNALIGNMENT_SUPPORT */
 
 		Frame.TimeOutValue = cpu2le16(Frame.TimeOutValue);
 		Frame.BaStartSeq.word = cpu2le16(Frame.BaStartSeq.word);
