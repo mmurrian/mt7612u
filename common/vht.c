@@ -463,18 +463,6 @@ INT build_vht_cap_ie(struct rtmp_adapter *pAd, u8 *buf)
 
 	rx_nss = pAd->CommonCfg.RxStream;
 	tx_nss = pAd->CommonCfg.TxStream;
-#ifdef WFA_VHT_PF
-	if ((pAd->CommonCfg.vht_nss_cap > 0) &&
-		(pAd->CommonCfg.vht_nss_cap < pAd->CommonCfg.RxStream))
-		rx_nss = pAd->CommonCfg.vht_nss_cap;
-
-	if ((pAd->CommonCfg.vht_nss_cap > 0) &&
-		(pAd->CommonCfg.vht_nss_cap < pAd->CommonCfg.TxStream))
-		tx_nss = pAd->CommonCfg.vht_nss_cap;
-
-	if (pAd->CommonCfg.vht_mcs_cap <pAd->chipCap.max_vht_mcs)
-		mcs_cap = pAd->CommonCfg.vht_mcs_cap;
-#endif /* WFA_VHT_PF */
 
 	switch  (rx_nss) {
 	case 1:

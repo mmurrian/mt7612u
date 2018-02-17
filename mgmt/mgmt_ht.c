@@ -458,16 +458,6 @@ VOID RTMPSetIndividualHT(struct rtmp_adapter *pAd, u8 apidx)
 
 				pDesired_ht_phy = &wdev->DesiredHtPhyInfo;
 				DesiredMcs = wdev->DesiredTransmitSetting.field.MCS;
-#ifdef WFA_VHT_PF
-				// TODO: Sigma, this code segment used to work around for Sigma Automation!
-				if (WMODE_CAP_AC(pAd->CommonCfg.PhyMode) && (DesiredMcs != MCS_AUTO)) {
-					DesiredMcs += ((TxStream - 1) << 4);
-					pAd->ApCfg.MBSSID[apidx].DesiredTransmitSetting.field.FixedTxMode = FIXED_TXMODE_VHT;
-					RT_CfgSetAutoFallBack(pAd, "0");
-				} else {
-					RT_CfgSetAutoFallBack(pAd, "1");
-				}
-#endif /* WFA_VHT_PF */
 				encrypt_mode = wdev->WepStatus;
 				pAd->ApCfg.MBSSID[apidx].wdev.bWmmCapable = true;
 				wdev->bAutoTxRateSwitch = (DesiredMcs == MCS_AUTO) ? true : false;

@@ -3539,18 +3539,6 @@ struct rtmp_adapter {
 
 
 
-#ifdef WFA_VHT_PF
-	bool force_amsdu;
-	bool force_noack;
-	bool vht_force_sgi;
-	bool vht_force_tx_stbc;
-
-	bool force_vht_op_mode;
-	u8 vht_pf_op_ss;
-	u8 vht_pf_op_bw;
-#endif /* WFA_VHT_PF */
-
-
 #ifdef DBG_DIAGNOSE
 	RtmpDiagStruct DiagStruct;
 #endif /* DBG_DIAGNOSE */
@@ -3727,21 +3715,6 @@ typedef struct _TX_BLK {
 #define fTX_bClearEAPFrame		0x0100
 
 #define	fTX_bSwEncrypt			0x0400	/* this packet need to be encrypted by software before TX */
-#ifdef CONFIG_AP_SUPPORT
-
-#endif /* CONFIG_AP_SUPPORT */
-
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
-
-
-
-
-#ifdef WFA_VHT_PF
-#define fTX_AmsduInAmpdu			0x40000
-#endif /* WFA_VHT_PF */
 
 #define TX_BLK_SET_FLAG(_pTxBlk, _flag)		(_pTxBlk->Flags |= _flag)
 #define TX_BLK_TEST_FLAG(_pTxBlk, _flag)	(((_pTxBlk->Flags & _flag) == _flag) ? 1 : 0)
@@ -6578,24 +6551,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 	IN u8 apidx,
 	IN u8 OpMode,
 	IN bool CleanAll);
-
-#ifdef WFA_VHT_PF
-/* for SIGMA */
-INT set_vht_nss_mcs_cap(struct rtmp_adapter *pAd, char *arg);
-INT set_vht_nss_mcs_opt(struct rtmp_adapter *pAd, char *arg);
-INT set_vht_opmode_notify_ie(struct rtmp_adapter *pAd, char *arg);
-
-INT set_force_operating_mode(struct rtmp_adapter *pAd, char *arg);
-INT set_force_amsdu(struct rtmp_adapter *pAd, char *arg);
-INT set_force_noack(struct rtmp_adapter *pAd, char *arg);
-INT set_force_vht_sgi(struct rtmp_adapter *pAd, char *arg);
-INT set_force_vht_tx_stbc(struct rtmp_adapter *pAd, char *arg);
-INT set_force_ext_cca(struct rtmp_adapter *pAd, char *arg);
-INT set_rx_rts_cts(struct rtmp_adapter *pAd, char *arg);
-#endif /* WFA_VHT_PF */
-
-
-
 
 #ifdef PEER_DELBA_TX_ADAPT
 VOID Peer_DelBA_Tx_Adapt_Init(

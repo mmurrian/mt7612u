@@ -1217,10 +1217,6 @@ VOID PeerAddBAReqAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 	else
 		ADDframe.BaParm.AMSDUSupported = 0;
 
-#ifdef WFA_VHT_PF
-	if (pAd->CommonCfg.DesiredHtPhy.AmsduEnable)
-		ADDframe.BaParm.AMSDUSupported = 1;
-#endif /* WFA_VHT_PF */
 	ADDframe.BaParm.TID = pAddreqFrame->BaParm.TID;
 	ADDframe.BaParm.BufSize = min(((u8)pAddreqFrame->BaParm.BufSize), (u8)pAd->CommonCfg.BACapability.field.RxBAWinLimit);
 	if (ADDframe.BaParm.BufSize == 0)

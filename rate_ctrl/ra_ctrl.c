@@ -1062,17 +1062,7 @@ VOID APMlmeSetTxRate(
 			if ((tx_bw != BW_10) && (tx_bw >= bw_cap))
 				tx_bw = bw_cap;
 		}
-
-#ifdef WFA_VHT_PF
-		if (pAd->CommonCfg.vht_bw_signal && tx_bw == BW_40 &&
-			pAdaptTbEntry->Mode == MODE_VHT &&
-			(pAd->MacTab.fAnyStation20Only == false))
-		{
-			// try to use BW_40 for VHT mode!
-			tx_mode = pAdaptTbEntry->Mode;
-		}
-#endif /* WFA_VHT_PF */
-DBGPRINT(RT_DEBUG_INFO, ("%s(): txbw=%d, txmode=%d\n", __FUNCTION__, tx_bw, tx_mode));
+		DBGPRINT(RT_DEBUG_INFO, ("%s(): txbw=%d, txmode=%d\n", __FUNCTION__, tx_bw, tx_mode));
 	}
 
 	if (tx_mode == MODE_HTMIX || tx_mode == MODE_HTGREENFIELD)
@@ -1101,9 +1091,6 @@ DBGPRINT(RT_DEBUG_INFO, ("%s(): txbw=%d, txmode=%d\n", __FUNCTION__, tx_bw, tx_m
 		if (((CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_SGI80_CAPABLE)) ||
 			CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_2G_256QAM_CAPABLE)) &&
 			(pTxRate->ShortGI
-#ifdef WFA_VHT_PF
-			|| pAd->vht_force_sgi
-#endif /* WFA_VHT_PF */
 			)
 		)
 			pEntry->HTPhyMode.field.ShortGI = GI_400;
@@ -1156,17 +1143,6 @@ DBGPRINT(RT_DEBUG_INFO, ("%s(): txbw=%d, txmode=%d\n", __FUNCTION__, tx_bw, tx_m
 		pEntry->HTPhyMode.field.MCS = pAdaptTbEntry->CurrMCS | ((pAdaptTbEntry->dataRate -1) <<4);
 		pEntry->HTPhyMode.field.BW = tx_bw;
 
-#ifdef WFA_VHT_PF
-		if ((pAd->vht_force_tx_stbc)
-			&& (pEntry->HTPhyMode.field.MODE == MODE_VHT)
-			&& (CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_VHT_RXSTBC_CAPABLE))
-			&& (pEntry->HTPhyMode.field.STBC == STBC_NONE)
-		)
-		{
-			pEntry->HTPhyMode.field.MCS = pAdaptTbEntry->CurrMCS;
-			pEntry->HTPhyMode.field.STBC = STBC_USE;
-		}
-#endif /* WFA_VHT_PF */
 	}
 	else if (IS_VHT_STA(pEntry))
 	{
@@ -1506,12 +1482,6 @@ VOID MlmeSelectTxRateTable(
 				}
 			}
 
-#ifdef WFA_VHT_PF
-			if ((pAd->CommonCfg.vht_nss_cap > 0) &&
-				(ss > pAd->CommonCfg.vht_nss_cap))
-				ss = pAd->CommonCfg.vht_nss_cap;
-#endif /* WFA_VHT_PF */
-
 			if ((pEntry->force_op_mode == true) &&
 			    (pEntry->operating_mode.rx_nss_type == 0))
 			{
@@ -1563,14 +1533,6 @@ VOID MlmeSelectTxRateTable(
 
 			break;
 
-#ifdef WFA_VHT_PF
-			// TODO: shiang, add for Realtek behavior when run in BW signaling mode test and we are the testbed!
-			// TODO: add at 11/15!
-			if ((pAd->CommonCfg.vht_bw_signal == BW_SIGNALING_DYNAMIC) &&
-				(bw == BW_40) &&
-				(pAd->MacTab.fAnyStation20Only == false))
-				break;
-#endif /* WFA_VHT_PF */
 		}
 
 #ifdef CONFIG_STA_SUPPORT

@@ -413,13 +413,6 @@ static unsigned short update_associated_mac_entry(
 	{
 		pEntry->HTPhyMode.field.MCS = wdev->HTPhyMode.field.MCS;
 		pEntry->bAutoTxRateSwitch = false;
-#ifdef WFA_VHT_PF
-		if (WMODE_CAP_AC(pAd->CommonCfg.PhyMode)) {
-			pEntry->HTPhyMode.field.MCS = wdev->DesiredTransmitSetting.field.MCS +
-										((pAd->CommonCfg.TxStream - 1) << 4);
-		}
-#endif /* WFA_VHT_PF */
-
 		/* If the legacy mode is set, overwrite the transmit setting of this entry. */
 		RTMPUpdateLegacyTxSetting((u8)wdev->DesiredTransmitSetting.field.FixedTxMode, pEntry);
 

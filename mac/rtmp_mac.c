@@ -350,10 +350,6 @@ VOID RTMPWriteTxWI_Data(struct rtmp_adapter *pAd, struct mt7612u_txwi *txwi, TX_
 			txwi->TxPktId &= 0x7f;
 			DBGPRINT(RT_DEBUG_INFO,("PktID : [%x]\n",txwi->TxPktId));
 		}
-#ifdef WFA_VHT_PF
-		if (pAd->force_noack == true)
-			txwi->ACK = 0;
-#endif /* WFA_VHT_PF */
 
 		if (pTxBlk->TxSndgPkt > SNDG_TYPE_DISABLE)
 			txwi->txop = IFS_BACKOFF; // Reserve larger TXOP to prevent sounding packet from collision
@@ -513,10 +509,6 @@ VOID RTMPWriteTxWI_Cache(struct rtmp_adapter *pAd, struct mt7612u_txwi *txwi, TX
 		txwi->TxPktId = pkt_id;
 		txwi->MPDUtotalByteCnt = pTxBlk->MpduHeaderLen + pTxBlk->SrcBufLen;
 		txwi->ACK = TX_BLK_TEST_FLAG(pTxBlk, fTX_bAckRequired);
-#ifdef WFA_VHT_PF
-		if (pAd->force_noack == true)
-			txwi->ACK = 0;
-#endif /* WFA_VHT_PF */
 
 		txwi->AMPDU = ampdu;
 		if (basize)
