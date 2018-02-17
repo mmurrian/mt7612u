@@ -1226,12 +1226,6 @@ VOID MlmePeriodicExec(
 
 	/* execute every 100ms, update the Tx FIFO Cnt for update Tx Rate.*/
 	NICUpdateFifoStaCounters(pAd);
-#ifdef CONFIG_AP_SUPPORT
-#ifdef CARRIER_DETECTION_FIRMWARE_SUPPORT
-	if (pAd->CommonCfg.CarrierDetect.Enable)
-		CarrierDetectionPeriodicStateCtrl(pAd);
-#endif /* CARRIER_DETECTION_FIRMWARE_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
 
 	/* by default, execute every 500ms */
 	if ((pAd->ra_interval) &&
