@@ -48,10 +48,6 @@
 ULONG RTDebugLevel = RT_DEBUG_ERROR;
 ULONG RTDebugFunc = 0;
 
-#ifdef VENDOR_FEATURE4_SUPPORT
-ULONG OS_NumOfMemAlloc = 0, OS_NumOfMemFree = 0;
-#endif /* VENDOR_FEATURE4_SUPPORT */
-
 /*
  * the lock will not be used in TX/RX
  * path so throughput should not be impacted
