@@ -1040,7 +1040,7 @@ INT AES_CCM_Decrypt (
     /*
      * 6. Check the MIC
      */
-    if (NdisCmpMemory(Block_MAC_From_Cipher, Block_MAC, MACLength) != 0) {
+    if (memcmp(Block_MAC_From_Cipher, Block_MAC, MACLength)) {
     	DBGPRINT(RT_DEBUG_ERROR, ("AES_CCM_Decrypt: The MIC does not match.\n"));
         return -5;
     }
@@ -1308,7 +1308,7 @@ VOID AES_CBC_Encrypt (
     }
 
     memmove(Block, (&PlainText[0] + PlainBlockStart), (PlainTextLength - PlainBlockStart));
-    NdisFillMemory((Block + (((UINT) AES_BLOCK_SIZES) -PaddingSize)), PaddingSize, (UINT8) PaddingSize);
+    memset((Block + (((UINT) AES_BLOCK_SIZES) -PaddingSize)), (UINT8) PaddingSize, PaddingSize);
     if (CipherBlockStart == 0) {
        for (Index = 0; Index < AES_BLOCK_SIZES; Index++)
            Block[Index] ^= IV[Index];

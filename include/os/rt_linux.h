@@ -331,8 +331,6 @@ do { \
  ***********************************************************************************/
 #define MEM_ALLOC_FLAG      (GFP_ATOMIC) /*(GFP_DMA | GFP_ATOMIC) */
 
-#define NdisFillMemory(Destination, Length, Fill)   memset(Destination, Fill, Length)
-#define NdisCmpMemory(Destination, Source, Length)  memcmp(Destination, Source, Length)
 #define COPY_MAC_ADDR(Addr1, Addr2)             memcpy((Addr1), (Addr2), MAC_ADDR_LEN)
 
 
