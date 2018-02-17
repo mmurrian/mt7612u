@@ -1967,14 +1967,6 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 
 #endif /* CONFIG_AP_SUPPORT */
 
-
-#ifdef IP_ASSEMBLY
-	if (pAd->OpMode == OPMODE_STA)
-	{
-		pAd->StaCfg.bFragFlag = true;
-	}
-#endif /* IP_ASSEMBLY */
-
 	/*
 		part IV. others
 	*/
