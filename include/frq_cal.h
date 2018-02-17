@@ -54,8 +54,6 @@ typedef struct _FREQUENCY_CALIBRATION_CONTROL
 #define UPPERBOUND_OF_FREQUENCY_OFFSET		127
 #define LOWERBOUND_OF_FREQUENCY_OFFSET	-127
 
-
-/*#ifdef RT5390 */
 /* */
 /* The trigger point of the high/low frequency */
 /* */
@@ -72,7 +70,6 @@ typedef struct _FREQUENCY_CALIBRATION_CONTROL
 #define INCREASE_FREQUENCY_OFFSET_OFDM			-10
 #define DECREASE_FREQUENCY_OFFSET_CCK			2
 #define INCREASE_FREQUENCY_OFFSET_CCK			-2
-/*#endif // RT5390 */
 /* */
 /* The trigger point of decreasng/increasing the frequency offset */
 /* */
