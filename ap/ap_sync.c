@@ -856,44 +856,6 @@ VOID APScanTimeoutAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 	ScanNextChannel(pAd, OPMODE_AP);
 }
 
-#ifdef CON_WPS
-VOID APMlmeScanCompleteAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
-{
-	PWSC_CTRL   pWscControl;
-	PWSC_CTRL   pApCliWscControl;
-	u8       apidx;
-	INT         IsAPConfigured;
-
-	DBGPRINT(RT_DEBUG_TRACE, ("AP SYNC - APMlmeScanCompleteAction\n"));
-
-	/* If We catch the SR=true in last scan_res, stop the AP Wsc SM */
-	pApCliWscControl = &pAd->ApCfg.ApCliTab[BSS0].WscControl;
-	WscPBCBssTableSort(pAd, pApCliWscControl);
-
-	for(apidx=0; apidx<pAd->ApCfg.BssidNum; apidx++)
-	{
-		pWscControl = &pAd->ApCfg.MBSSID[apidx].WscControl;
-		IsAPConfigured = pWscControl->WscConfStatus;
-
-		DBGPRINT(RT_DEBUG_TRACE, ("CON_WPS[%d]: info %d, %d\n", apidx, pWscControl->WscState, pWscControl->bWscTrigger));
-		if ((pWscControl->WscConfMode != WSC_DISABLE) &&
-		    (pWscControl->bWscTrigger == true) &&
-		    (pApCliWscControl->WscPBCBssCount > 0))
-		{
-			DBGPRINT(RT_DEBUG_TRACE, ("CON_WPS[%d]: Stop the AP Wsc Machine\n", apidx));
-			WscBuildBeaconIE(pAd, IsAPConfigured, false, 0, 0, apidx, NULL, 0, AP_MODE);
-			WscBuildProbeRespIE(pAd, WSC_MSGTYPE_AP_WLAN_MGR, IsAPConfigured, false, 0, 0, apidx, NULL, 0, AP_MODE);
-			APUpdateBeaconFrame(pAd, apidx);
-			WscStop(pAd, false, pWscControl);
-			/* AP: For stop the other side of the band with WSC SM */
-			WscConWpsStop(pAd, false, pWscControl);
-			continue;
-		}
-	}
-
-}
-#endif /* CON_WPS*/
-
 /*
     ==========================================================================
     Description:
@@ -1166,10 +1128,6 @@ VOID APSyncStateMachineInit(
 	StateMachineSetAction(Sm, AP_SYNC_IDLE, APMT2_PEER_BEACON, (STATE_MACHINE_FUNC)APPeerBeaconAction);
 #ifdef AP_SCAN_SUPPORT
 	StateMachineSetAction(Sm, AP_SYNC_IDLE, APMT2_MLME_SCAN_REQ, (STATE_MACHINE_FUNC)APMlmeScanReqAction);
-#ifdef CON_WPS
-	StateMachineSetAction(Sm, AP_SYNC_IDLE, APMT2_MLME_SCAN_COMPLETE, (STATE_MACHINE_FUNC)APMlmeScanCompleteAction);
-#endif /* CON_WPS */
-
 	/* scan_listen state */
 	StateMachineSetAction(Sm, AP_SCAN_LISTEN, APMT2_MLME_SCAN_REQ, (STATE_MACHINE_FUNC)APInvalidStateWhenScan);
 	StateMachineSetAction(Sm, AP_SCAN_LISTEN, APMT2_PEER_BEACON, (STATE_MACHINE_FUNC)APPeerBeaconAtScanAction);

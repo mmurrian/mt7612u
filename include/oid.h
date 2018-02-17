@@ -910,13 +910,6 @@ typedef struct _NDIS_802_11_CAPABILITY {
 #define RT_OID_WSC_QUERY_PEER_INFO_ON_RUNNING		0x075C
 #define RT_OID_WSC_MAC_ADDRESS						0x0760
 
-#ifdef CON_WPS
-#define RT_OID_WSC_SET_CON_WPS_STOP                 0x0764
-#endif /* CON_WPS */
-
-
-
-
 /* New for MeetingHouse Api support */
 #define OID_MH_802_1X_SUPPORTED               0xFFEDC100
 
