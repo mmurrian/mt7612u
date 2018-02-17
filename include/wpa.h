@@ -91,58 +91,6 @@
 #define MIX_CIPHER_WPA2_TKIP_ON(x)      (((x) & 0x02) != 0)
 #define MIX_CIPHER_WPA2_AES_ON(x)       (((x) & 0x01) != 0)
 
-/* Some definition are different between Keneral mode and Daemon mode */
-#ifdef WPA_DAEMON_MODE
-/* The definition for Daemon mode */
-#define WPA_GET_BSS_NUM(_pAd)		(_pAd)->mbss_num
-
-#define WPA_GET_PMK(_pAd, _pEntry, _pmk)					\
-{															\
-	_pmk = _pAd->MBSS[_pEntry->apidx].PMK;					\
-}
-
-#define WPA_GET_GTK(_pAd, _pEntry, _gtk)					\
-{															\
-	_gtk = _pAd->MBSS[_pEntry->apidx].GTK;					\
-}
-
-#define WPA_GET_GROUP_CIPHER(_pAd, _pEntry, _cipher)		\
-{															\
-	_cipher = (_pAd)->MBSS[_pEntry->apidx].GroupEncrypType;	\
-}
-
-#define WPA_GET_DEFAULT_KEY_ID(_pAd, _pEntry, _idx)			\
-{															\
-	_idx = (_pAd)->MBSS[_pEntry->apidx].DefaultKeyId;		\
-}
-
-#define WPA_GET_BMCST_TSC(_pAd, _pEntry, _tsc)				\
-{															\
-	_tsc = 1;												\
-}
-
-#define WPA_BSSID(_pAd, _apidx)		(_pAd)->MBSS[_apidx].wlan_addr
-
-#define WPA_OS_MALLOC(_p, _s)		\
-{									\
-	_p = os_malloc(_s);			\
-}
-
-#define WPA_OS_FREE(_p)		\
-{								\
-	os_free(_p);				\
-}
-
-#define WPA_GET_CURRENT_TIME(_time)		\
-{										\
-	struct timeval tv;					\
-	gettimeofday(&tv, NULL);			\
-	*(_time) = tv.tv_sec;					\
-}
-
-#else
-/* The definition for Driver mode */
-
 #if defined(CONFIG_AP_SUPPORT) && defined(CONFIG_STA_SUPPORT)
 #define WPA_GET_BSS_NUM(_pAd)		(((_pAd)->OpMode == OPMODE_AP) ? (_pAd)->ApCfg.BssidNum : 1)
 #define WPA_GET_GROUP_CIPHER(_pAd, _pEntry, _cipher)					\
@@ -187,8 +135,6 @@
 #endif /* defined(CONFIG_STA_SUPPORT) */
 
 #define WPA_GET_CURRENT_TIME(_time)		NdisGetSystemUpTime(_time);
-
-#endif /* End of Driver Mode */
 
 #ifdef CONFIG_AP_SUPPORT
 /*========================================
