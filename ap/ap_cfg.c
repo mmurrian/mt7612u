@@ -952,14 +952,6 @@ INT	Set_AP_WmmCapable_Proc(
 
 	pAd->ApCfg.MBSSID[pObj->ioctl_if].bWmmCapableOrg = \
 								pAd->ApCfg.MBSSID[pObj->ioctl_if].wdev.bWmmCapable;
-
-#ifdef RTL865X_FAST_PATH
-	if (!isFastPathCapable(pAd)) {
-		rtlairgo_fast_tx_unregister();
-		rtl865x_extDev_unregisterUcastTxDev(pAd->net_dev);
-	}
-#endif
-
 	/*Sync with the HT relate info. In N mode, we should re-enable it */
 	SetCommonHT(pAd);
 
