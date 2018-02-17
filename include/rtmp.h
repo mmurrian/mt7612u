@@ -3465,9 +3465,6 @@ struct rtmp_adapter {
 	VOID *iw_stats;
 	VOID *stats;
 
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
 	ULONG TbttTickCount;	/* beacon timestamp work-around */
 
 #ifdef CONFIG_AP_SUPPORT
@@ -3485,10 +3482,6 @@ struct rtmp_adapter {
 
 	UINT8 FlgCtsEnabled;
 	UINT8 PM_FlgSuspend;
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 
 	u8 FifoUpdateDone, FifoUpdateRx;
 
@@ -3517,17 +3510,10 @@ struct rtmp_adapter {
 	/* purpose: Cancel all timers when module is removed */
 	LIST_HEADER RscTimerCreateList;	/* timers list */
 
-
-
 	struct mt7612u_txwi NullTxWI;
 	unsigned short NullBufOffset[2];
 
 	struct mt7612u_mcu_ctrl MCUCtrl;
-
-#ifdef WLAN_SKB_RECYCLE
-    struct sk_buff_head rx0_recycle;
-#endif /* WLAN_SKB_RECYCLE */
-
 
 
 #ifdef DBG_DIAGNOSE
@@ -3539,7 +3525,7 @@ struct rtmp_adapter {
 
 
 	bool NDPA_Request;
-    bool BeaconSndDimensionFlag;    // Peer sounding dimension flag
+	bool BeaconSndDimensionFlag;    // Peer sounding dimension flag
 };
 
 
@@ -4139,9 +4125,6 @@ VOID SendBeaconRequest(
 	IN u8 			Wcid);
 #endif /* CONFIG_AP_SUPPORT */
 
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 VOID RECBATimerTimeout(
     IN PVOID SystemSpecific1,
@@ -4829,16 +4812,6 @@ VOID PeerAuthSimpleRspGenAndSend(
 	IN  unsigned short Seq,
 	IN  unsigned short Reason,
 	IN  unsigned short Status);
-
-/* */
-/* Private routines in dls.c */
-/* */
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 
 bool PeerProbeReqSanity(
     IN struct rtmp_adapter *pAd,
@@ -6175,10 +6148,6 @@ VOID RTMPIoctlGetSiteSurvey(
 	IN	struct rtmp_adapter *pAd,
 	IN	RTMP_IOCTL_INPUT_STRUCT *wrq);
 #endif
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
 
 
 #ifdef CONFIG_AP_SUPPORT

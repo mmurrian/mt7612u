@@ -82,10 +82,6 @@ int rt28xx_init(struct rtmp_adapter *pAd)
 	else
 		pAd->CommonCfg.NumOfBulkInIRP = 1;
 
-#ifdef WLAN_SKB_RECYCLE
-	skb_queue_head_init(&pAd->rx0_recycle);
-#endif /* WLAN_SKB_RECYCLE */
-
 	RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_IN_USE);
 
 	/* initialize MLME*/
@@ -141,8 +137,6 @@ int rt28xx_init(struct rtmp_adapter *pAd)
 
 	/* We should read EEPROM for all cases */
 	NICReadEEPROMParameters(pAd);
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 	DBGPRINT(RT_DEBUG_OFF, ("2. Phy Mode = %d\n", pAd->CommonCfg.PhyMode));
 
 	/* After operation mode is finialized, init the AP or STA mode */
@@ -161,7 +155,7 @@ int rt28xx_init(struct rtmp_adapter *pAd)
 #endif /* CONFIG_STA_SUPPORT */
 
 
-   	/*Init Ba Capability parameters.*/
+	/*Init Ba Capability parameters.*/
 	pAd->CommonCfg.DesiredHtPhy.MpduDensity = (u8)pAd->CommonCfg.BACapability.field.MpduDensity;
 	pAd->CommonCfg.DesiredHtPhy.AmsduEnable = (unsigned short)pAd->CommonCfg.BACapability.field.AmsduEnable;
 	pAd->CommonCfg.DesiredHtPhy.AmsduSize = (unsigned short)pAd->CommonCfg.BACapability.field.AmsduSize;
@@ -567,8 +561,6 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 	MeasureReqTabExit(pAd);
 	TpcReqTabExit(pAd);
 
-
-
 	/* Close kernel threads*/
 	RtmpMgmtTaskExit(pAd);
 
@@ -582,7 +574,6 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 	}
 #endif /* CONFIG_AP_SUPPORT */
 
-
 	/* Free IRQ*/
 	if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_IN_USE))
 	{
@@ -594,26 +585,12 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 
 	RTMP_CLEAR_FLAG(pAd, fRTMP_ADAPTER_HALT_IN_PROGRESS);
 
-#ifdef WLAN_SKB_RECYCLE
-	skb_queue_purge(&pAd->rx0_recycle);
-#endif /* WLAN_SKB_RECYCLE */
-
 	/* Free BA reorder resource*/
 	ba_reordering_resource_release(pAd);
 
 	UserCfgExit(pAd); /* must after ba_reordering_resource_release */
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 	RTMP_CLEAR_FLAG(pAd, fRTMP_ADAPTER_START_UP);
-
-/*+++Modify by woody to solve the bulk fail+++*/
-#ifdef CONFIG_STA_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
-	{
-	}
-#endif /* CONFIG_STA_SUPPORT */
 
 	/* clear MAC table */
 	/* TODO: do not clear spin lock, such as fLastChangeAccordingMfbLock */
@@ -622,11 +599,7 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 	/* release all timers */
 	mdelay(2);
 	RTMP_AllTimerListRelease(pAd);
-
-
-
 }
-
 
 VOID RTMPInfClose(struct rtmp_adapter *pAd)
 {
