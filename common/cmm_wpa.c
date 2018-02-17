@@ -145,9 +145,6 @@ VOID WpaEAPOLStartAction(
     MAC_TABLE_ENTRY     *pEntry;
     PHEADER_802_11      pHeader;
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
     DBGPRINT(RT_DEBUG_TRACE, ("WpaEAPOLStartAction ===> \n"));
 
     pHeader = (PHEADER_802_11)Elem->Msg;
@@ -201,9 +198,6 @@ VOID WpaEAPOLKeyAction(
 	PEAPOL_PACKET       pEapol_packet;
 	KEY_INFO			peerKeyInfo;
 	UINT				eapol_len;
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 	DBGPRINT(RT_DEBUG_TRACE, ("WpaEAPOLKeyAction ===>\n"));
 
@@ -474,11 +468,6 @@ VOID RTMPToWirelessSta(
 			RTMP_SET_PACKET_CLEAR_EAP_FRAME(pPacket, 1);
 		else
 			RTMP_SET_PACKET_CLEAR_EAP_FRAME(pPacket, 0);
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-		{
-		}
 
 		RTMP_SET_PACKET_NET_DEVICE_MBSSID(pPacket, MAIN_MBSSID);	/* set a default value*/
 		if(pEntry->apidx != 0)
@@ -753,9 +742,6 @@ VOID WPAStart4WayHS(
 	MULTISSID_STRUCT *pMbss;
 #endif /* CONFIG_AP_SUPPORT */
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 	DBGPRINT(RT_DEBUG_TRACE, ("===> WPAStart4WayHS\n"));
 
 	if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_RESET_IN_PROGRESS |
@@ -912,11 +898,6 @@ VOID PeerPairMsg1Action(
     if (Elem->MsgLen < (LENGTH_802_11 + LENGTH_802_1_H + LENGTH_EAPOL_H + MIN_LEN_OF_EAPOL_KEY_MSG))
         return;
 
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-	}
-#endif /* CONFIG_AP_SUPPORT */
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 	{
@@ -1233,19 +1214,13 @@ VOID PeerPairMsg3Action(
     if (Elem->MsgLen < (LENGTH_802_11 + LENGTH_802_1_H + LENGTH_EAPOL_H + MIN_LEN_OF_EAPOL_KEY_MSG))
 		return;
 
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-	}
-#endif /* CONFIG_AP_SUPPORT */
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 	{
 		{
 		pCurrentAddr = pAd->CurrentAddress;
 		group_cipher = pAd->StaCfg.GroupCipher;
-
-	}
+		}
 	}
 #endif /* CONFIG_STA_SUPPORT */
 
@@ -1295,11 +1270,6 @@ VOID PeerPairMsg3Action(
 	/* Update WpaState*/
 	pEntry->WpaState = AS_PTKINITDONE;
 	/* Update pairwise key		*/
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-	}
-#endif /* CONFIG_AP_SUPPORT */
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 	{
@@ -1320,12 +1290,6 @@ VOID PeerPairMsg3Action(
 		pEntry->PortSecured = WPA_802_1X_PORT_SECURED;
 		pEntry->PrivacyFilter = Ndis802_11PrivFilterAcceptAll;
 
-#ifdef CONFIG_AP_SUPPORT
-		IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-		{
-		}
-#endif /* CONFIG_AP_SUPPORT */
-
 #ifdef CONFIG_STA_SUPPORT
 		STA_PORT_SECURED(pAd);
 #endif /* CONFIG_STA_SUPPORT */
@@ -1333,14 +1297,6 @@ VOID PeerPairMsg3Action(
 									GetAuthMode(pEntry->AuthMode),
 									GetEncryptType(pEntry->WepStatus),
 									GetEncryptType(group_cipher)));
-	}
-	else
-	{
-#ifdef CONFIG_AP_SUPPORT
-		IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-		{
-		}
-#endif /* CONFIG_AP_SUPPORT */
 	}
 
 	/* Init 802.3 header and send out*/
@@ -1597,12 +1553,6 @@ VOID	PeerGroupMsg1Action(
 	if ((!pEntry) || (!IS_ENTRY_CLIENT(pEntry) && !IS_ENTRY_APCLI(pEntry)))
         return;
 
-
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-	}
-#endif /* CONFIG_AP_SUPPORT */
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 	{
@@ -1622,13 +1572,6 @@ VOID	PeerGroupMsg1Action(
 	/* Sanity Check peer group message 1 - Replay Counter, MIC, RSNIE*/
 	if (PeerWpaMessageSanity(pAd, pGroup, MsgLen, EAPOL_GROUP_MSG_1, pEntry) == false)
 		return;
-
-	/* delete retry timer*/
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-	}
-#endif /* CONFIG_AP_SUPPORT */
 
 	/* Save Replay counter, it will use to construct message 2*/
 	memmove(pEntry->R_Counter, pGroup->KeyDesc.ReplayCounter, LEN_KEY_DESC_REPLAY);
@@ -1659,12 +1602,6 @@ VOID	PeerGroupMsg1Action(
     /* open 802.1x port control and privacy filter*/
 	pEntry->PortSecured = WPA_802_1X_PORT_SECURED;
 	pEntry->PrivacyFilter = Ndis802_11PrivFilterAcceptAll;
-
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-	}
-#endif /* CONFIG_AP_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
 	STA_PORT_SECURED(pAd);
@@ -2740,10 +2677,6 @@ static VOID RTMPMakeRsnIeCap(
 	}
 #endif /* CONFIG_AP_SUPPORT */
 
-#ifdef CONFIG_STA_SUPPORT
-
-#endif /* CONFIG_STA_SUPPORT */
-
 	pRSN_Cap->word = cpu2le16(pRSN_Cap->word);
 
 	(*rsn_len) += sizeof(RSN_CAPABILITIES);	/* update current RSNIE length*/
@@ -3016,11 +2949,6 @@ bool RTMPCheckWPAframe(
     {
         case EAPPacket:
 			Body_len = (*(pData+2)<<8) | (*(pData+3));
-#ifdef CONFIG_AP_SUPPORT
-			IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-			{
-			}
-#endif /* CONFIG_AP_SUPPORT */
             DBGPRINT(RT_DEBUG_TRACE, ("Receive EAP-Packet frame, TYPE = 0, Length = %ld\n", Body_len));
             break;
         case EAPOLStart:
@@ -3280,9 +3208,6 @@ bool RTMPParseEapolKeyData(
      	DBGPRINT(RT_DEBUG_ERROR, ("ERROR: GTK Key index(%d) is invalid in %s %s \n", DefaultIdx, ((bWPA2) ? "WPA2" : "WPA"), GetEapolMsgType(MsgType)));
         return false;
     }
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
@@ -3871,8 +3796,6 @@ CIPHER_KEY *RTMPSwCipherKeySelection(
 		if (pRxBlk->pRxInfo->U2M)
 			pKey = &pEntry->PairwiseKey;
 		else {
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 		    	pKey = &pAd->SharedKey[pEntry->apidx][keyIdx];
         }
 	}

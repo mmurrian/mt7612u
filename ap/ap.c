@@ -547,13 +547,6 @@ VOID APStop(
 
 	DBGPRINT(RT_DEBUG_TRACE, ("!!! APStop !!!\n"));
 
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-
-
-
 	MacTableReset(pAd);
 
 	RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_HALT_IN_PROGRESS);

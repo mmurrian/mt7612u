@@ -986,8 +986,6 @@ static int ChannelRescanHdlr(IN struct rtmp_adapter *pAd, IN PCmdQElmt CMDQelmt)
 }
 #endif /* CONFIG_AP_SUPPORT*/
 
-
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 static int RegHintHdlr (struct rtmp_adapter *pAd, IN PCmdQElmt CMDQelmt)
 {
@@ -1018,12 +1016,6 @@ static int RT_Mac80211_ConnResultInfom(struct rtmp_adapter *pAd, IN PCmdQElmt CM
 	return NDIS_STATUS_SUCCESS;
 }
 #endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
-
-
-
-
-
 
 typedef int (*CMDHdlr)(struct rtmp_adapter *pAd, IN PCmdQElmt CMDQelmt);
 
@@ -1089,8 +1081,6 @@ static CMDHdlr CMDHdlrTable[] = {
 
 	UpdateProtectHdlr,				/* CMDTHREAD_UPDATE_PROTECT*/
 
-
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 	RegHintHdlr,
 	RegHint11DHdlr,
@@ -1102,13 +1092,6 @@ static CMDHdlr CMDHdlrTable[] = {
 	NULL,
 	NULL,
 #endif /* RT_CFG80211_SUPPORT */
-
-#else
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-#endif /* LINUX */
 
 	NULL,
 

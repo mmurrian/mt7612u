@@ -270,11 +270,9 @@ int rt28xx_open(struct net_device *net_dev)
 
 
 
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 	RTMP_DRIVER_CFG80211_START(pAd);
 #endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 
 	RTMPDrvOpen(pAd);
 

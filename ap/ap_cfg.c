@@ -2688,10 +2688,6 @@ INT Show_RAInfo_Proc(struct rtmp_adapter *pAd, char *arg)
 }
 
 
-#ifdef DBG_DIAGNOSE
-#endif /* DBG_DIAGNOSE */
-
-
 INT	Show_Sat_Proc(
 	IN	struct rtmp_adapter *pAd,
 	IN	char *		arg)
@@ -3347,18 +3343,6 @@ VOID RTMPIoctlSetIdleTimeout(
 
 
 #endif /* DOT1X_SUPPORT */
-
-
-#if defined(DBG)
-
-#ifdef MT_RF
-#endif /* MT_RF */
-
-#ifdef RTMP_RF_RW_SUPPORT
-#endif /* RTMP_RF_RW_SUPPORT */
-#endif /*#ifdef DBG */
-
-
 
 /*
     ==========================================================================
@@ -4387,11 +4371,6 @@ INT RTMP_AP_IoctlHandle(
 		case CMD_RTPRIV_IOCTL_QUERY_BATABLE:
 		    RTMPIoctlQueryBaTable(pAd, wrq);
 		    break;
-
-#ifdef DBG
-#ifdef RTMP_RF_RW_SUPPORT
-#endif /* RTMP_RF_RW_SUPPORT */
-#endif /* defined(DBG) || defined(BB_SOC) */
 
 		case CMD_RTPRIV_IOCTL_GET_MAC_TABLE_STRUCT:
 			RTMPIoctlGetMacTableStaInfo(pAd, wrq);

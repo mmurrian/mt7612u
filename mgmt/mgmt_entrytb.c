@@ -384,13 +384,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			}
 
 			do {
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
 #ifdef CONFIG_AP_SUPPORT
 					IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
 						/* be a regular-entry*/
@@ -416,9 +409,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			pEntry->bIAmBadAtheros = false;
 
 			RTMPInitTimer(pAd, &pEntry->EnqueueStartForPSKTimer, GET_TIMER_FUNCTION(EnqueueStartForPSKExec), pEntry, false);
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 #ifdef CONFIG_AP_SUPPORT
 			IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
@@ -446,8 +436,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			else if (IS_ENTRY_WDS(pEntry))
 				pEntry->apidx = (apidx - MIN_NET_DEVICE_FOR_WDS);
 #endif /* CONFIG_AP_SUPPORT */
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 			else
 				pEntry->apidx = apidx;
 
@@ -495,9 +483,7 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			pEntry->GTKState = REKEY_NEGOTIATING;
 			pEntry->PairwiseKey.KeyLen = 0;
 			pEntry->PairwiseKey.CipherAlg = CIPHER_NONE;
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-				pEntry->PortSecured = WPA_802_1X_PORT_NOT_SECURED;
+			pEntry->PortSecured = WPA_802_1X_PORT_NOT_SECURED;
 
 			pEntry->PMKID_CacheIdx = ENTRY_NOT_FOUND;
 			COPY_MAC_ADDR(pEntry->Addr, pAddr);
@@ -507,8 +493,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			}
 
 			do {
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
 #ifdef CONFIG_AP_SUPPORT
 				if (OpMode == OPMODE_AP) {
 					COPY_MAC_ADDR(pEntry->bssid, pAd->ApCfg.MBSSID[apidx].wdev.bssid);
@@ -537,13 +521,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			pEntry->TimeStamp_toTxRing = 0;
 			InitializeQueueHeader(&pEntry->PsQueue);
 
-
-#ifdef CONFIG_AP_SUPPORT
-			IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
-				;
-			}
-#endif /* CONFIG_AP_SUPPORT */
-
 			pAd->MacTab.Size ++;
 
 			/* Set the security mode of this entry as OPEN-NONE in ASIC */
@@ -555,12 +532,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 #ifdef PEER_DELBA_TX_ADAPT
 			Peer_DelBA_Tx_Adapt_Init(pAd, pEntry);
 #endif /* PEER_DELBA_TX_ADAPT */
-
-#ifdef CONFIG_AP_SUPPORT
-			IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
-				;
-			}
-#endif /* CONFIG_AP_SUPPORT */
 
 			if (pAd->chipCap.FlgHwTxBfCap)
 				spin_lock_init(&pEntry->TxSndgLock);
@@ -583,13 +554,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 				pCurrEntry = pCurrEntry->pNext;
 			pCurrEntry->pNext = pEntry;
 		}
-#ifdef CONFIG_AP_SUPPORT
-		IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
-			;
-		}
-#endif /* CONFIG_AP_SUPPORT */
-
-
 	}
 
 #ifdef CONFIG_AP_SUPPORT
@@ -661,11 +625,6 @@ bool MacTableDeleteEntry(struct rtmp_adapter *pAd, unsigned short wcid, u8 *pAdd
 
 			if (pAd->chipCap.FlgHwTxBfCap)
 				RTMPReleaseTimer(&pEntry->eTxBfProbeTimer, &Cancelled);
-
-
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 #ifdef CONFIG_AP_SUPPORT
 			if (IS_ENTRY_CLIENT(pEntry)
@@ -811,8 +770,6 @@ VOID MacTableReset(struct rtmp_adapter *pAd)
 		if (IS_ENTRY_CLIENT(pMacEntry))
 		{
 			RTMPReleaseTimer(&pMacEntry->EnqueueStartForPSKTimer, &Cancelled);
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 			pMacEntry->EnqueueEapolStartTimerRunning = EAPOL_START_DISABLE;
 
 #ifdef CONFIG_AP_SUPPORT

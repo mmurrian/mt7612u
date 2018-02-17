@@ -834,9 +834,6 @@ INT	Set_ResetStatCounter_Proc(
 	memset(&pAd->Counters8023, 0, sizeof(COUNTER_802_3));
 	memset(&pAd->RalinkCounters, 0, sizeof(COUNTER_RALINK));
 
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
 	if (pAd->chipCap.FlgHwTxBfCap)
 	{
 		int i;
@@ -1600,9 +1597,6 @@ VOID RTMPIoctlGetSiteSurvey(
 	BSS_ENTRY *pBss;
 	uint32_t TotalLen, BufLen = IW_SCAN_MAX_DATA;
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 	TotalLen = sizeof(CHAR)*((MAX_LEN_OF_BSS_TABLE)*max_len) + 100;
 
 	if (wrq->u.data.length == 0)
@@ -1621,10 +1615,6 @@ VOID RTMPIoctlGetSiteSurvey(
 
 	sprintf(msg+strlen(msg),"%-4s%-33s%-20s%-23s%-9s%-7s%-7s%-3s\n",
 	    "Ch", "SSID", "BSSID", "Security", "Siganl(%)", "W-Mode", " ExtCH"," NT");
-
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 	WaitCnt = 0;
 #ifdef CONFIG_STA_SUPPORT
@@ -1646,10 +1636,6 @@ VOID RTMPIoctlGetSiteSurvey(
 
 
 		RTMPCommSiteSurveyData(msg, pBss, TotalLen);
-
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 	}
 
 #ifdef CONFIG_STA_SUPPORT

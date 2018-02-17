@@ -424,15 +424,6 @@ VOID RTMP_CFG80211_VirtualIF_Init(
 		DBGPRINT(RT_DEBUG_TRACE, ("Register CFG80211 I/F (%s)\n", RTMP_OS_NETDEV_GET_DEVNAME(new_dev_p)));
 	}
 
-#if 1
-/* XXX */
-	if (!pAd->net_dev){
-		printk("%s: %s: SET net_dev! pAd=%p, new_dev_p=%p\n", __FILE__, __func__, pAd, new_dev_p);
-		pAd->net_dev=new_dev_p;
-	}
-
-#endif
-
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,9))
 	new_dev_p->needs_free_netdev = true;
 #else

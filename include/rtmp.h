@@ -3485,12 +3485,10 @@ struct rtmp_adapter {
 
 	u8 FifoUpdateDone, FifoUpdateRx;
 
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 	CFG80211_CTRL cfg80211_ctrl;
 	struct mt7612u_cfg80211_cb *pCfg80211_CB;
 #endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 
 	uint32_t ContinueMemAllocFailCount;
 

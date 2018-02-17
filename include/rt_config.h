@@ -90,10 +90,6 @@
 #define WSC_INCLUDED
 #endif
 
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-
 
 #ifdef CONFIG_STA_SUPPORT
 #ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
@@ -104,31 +100,15 @@
 
 #endif /* CONFIG_STA_SUPPORT */
 
-
-
-
-
-
 #include "vht.h"
-
-
-
-
-
 #include "frq_cal.h"
-
 #include "rt_txbf.h"
-
-
 #include "mac_ral/fce.h"
 
-
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 #include "cfg80211extr.h"
 #include "cfg80211_cmm.h"
 #endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 
 #endif	/* __RT_CONFIG_H__ */
 

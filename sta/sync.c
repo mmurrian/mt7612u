@@ -964,12 +964,10 @@ VOID PeerBeaconAtScanAction(
 			}
 		}
 
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 		RT_CFG80211_SCANNING_INFORM(pAd, Idx, Elem->Channel, (u8 *)pFrame,
 									Elem->MsgLen, Rssi);
 #endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 	}
 	/* sanity check fail, ignored */
 	goto LabelOK;
@@ -1319,12 +1317,10 @@ VOID PeerBeaconAtJoinAction(
 			Status = MLME_SUCCESS;
 			MlmeEnqueue(pAd, MLME_CNTL_STATE_MACHINE, MT2_JOIN_CONF, 2, &Status, 0);
 
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 			RT_CFG80211_SCANNING_INFORM(pAd, Idx, Elem->Channel, Elem->Msg,
 										Elem->MsgLen, Rssi);
 #endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 		}
 		/* not to me BEACON, ignored */
 	}
@@ -1437,7 +1433,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 				memmove(pBssEntry->MacAddr, bcn_ie_list->Addr2, MAC_ADDR_LEN);
 
 
-#ifdef LINUX
 #ifdef RT_CFG80211_SUPPORT
 //                if (RTMPEqualMemory(ie_list->Ssid, "DIRECT-", 7))
                         DBGPRINT(RT_DEBUG_INFO, ("%s PASSIVE SCANNING: %s [%ld]\n", __FUNCTION__, bcn_ie_list->Ssid, Bssidx));
@@ -1445,7 +1440,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
                   RT_CFG80211_SCANNING_INFORM(pAd, Bssidx, Elem->Channel, Elem->Msg,
                                                                         Elem->MsgLen, RealRssi);
 #endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 
 			}
 		}
@@ -1612,12 +1606,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 					goto LabelOK;
 				}
 			}
-
-#ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
-/*			CFG80211_BeaconCountryRegionParse(pAd, pVIE, LenVIE); */
-#endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 
 			if (bcn_ie_list->AironetCellPowerLimit != 0xFF)
 			{

@@ -1579,11 +1579,9 @@ void convert_reordering_packet_to_preAMSDU_or_802_3_packet(
 #ifdef CONFIG_STA_SUPPORT
 		IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 		{
-#ifdef LINUX
 			u8 *data_p;
 			data_p = skb_push(pRxPkt, LENGTH_802_3);
 			memmove(data_p, Header802_3, LENGTH_802_3);
-#endif
 		}
 #endif /* CONFIG_STA_SUPPORT */
 	}

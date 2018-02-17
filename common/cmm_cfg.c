@@ -765,9 +765,6 @@ INT RTMP_COM_IoctlHandle(
 			break;
 
 #ifdef CONFIG_STA_SUPPORT
-#ifdef CONFIG_PM
-
-#endif /* CONFIG_PM */
 
 		case CMD_RTPRIV_IOCTL_AP_BSSID_GET:
 			if (pAd->StaCfg.wdev.PortSecured == WPA_802_1X_PORT_NOT_SECURED)

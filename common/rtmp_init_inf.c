@@ -398,10 +398,6 @@ err1:
 	if(pAd->mpdu_blk_pool.mem)
 		kfree(pAd->mpdu_blk_pool.mem); /* free BA pool*/
 
-#ifdef ST
-err0:
-#endif /* ST */
-
 	DBGPRINT(RT_DEBUG_ERROR, ("!!! rt28xx init fail !!!\n"));
 	return false;
 }
@@ -412,8 +408,6 @@ VOID RTMPDrvOpen(struct rtmp_adapter *pAdSrc)
 	struct rtmp_adapter *pAd = (struct rtmp_adapter *)pAdSrc;
 
 	RTMP_CLEAR_PSFLAG(pAd, fRTMP_PS_MCU_SLEEP);
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 	RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_START_UP);
 
@@ -434,10 +428,6 @@ VOID RTMPDrvOpen(struct rtmp_adapter *pAdSrc)
 	DBGPRINT(RT_DEBUG_OFF, ("%s(2):Check if PDMA is idle!\n", __FUNCTION__));
 	mt7612u_wait_pdma_usecs(pAd, 5, 10);
 //---Add by shiang for debug
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 
 #ifdef CONFIG_AP_SUPPORT
 #ifdef MULTI_CLIENT_SUPPORT
@@ -550,11 +540,6 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 		/* Shutdown Access Point function, release all related resources */
 		APShutdown(pAd);
 
-/*#ifdef AUTO_CH_SELECT_ENHANCE*/
-		/* Free BssTab & ChannelInfo tabbles.*/
-/*		AutoChBssTableDestroy(pAd); */
-/*		ChannelInfoDestroy(pAd); */
-/*#endif  AUTO_CH_SELECT_ENHANCE */
 	}
 #endif /* CONFIG_AP_SUPPORT */
 

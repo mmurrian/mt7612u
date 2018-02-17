@@ -926,9 +926,6 @@ INT AsicSetRxFilter(struct rtmp_adapter *pAd)
 	)
 	{
 		rx_filter_flag = APNORMAL;
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
 	}
 #ifdef CONFIG_STA_SUPPORT
 	else
@@ -1394,10 +1391,6 @@ VOID AsicSetEdcaParm(struct rtmp_adapter *pAd, PEDCA_PARM pEdcaParm)
 			 FIELD_PREP(MT_EDCA_CFG_CWMIN, pEdcaParm->Cwmin[QID_AC_VO]) |
 			 FIELD_PREP(MT_EDCA_CFG_CWMAX, pEdcaParm->Cwmax[QID_AC_VO]) |
 			 FIELD_PREP(MT_EDCA_CFG_AIFSN, pEdcaParm->Aifsn[QID_AC_VO]);
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 
 		mt76u_reg_write(pAd, EDCA_AC0_CFG, Ac0Cfg);
 		mt76u_reg_write(pAd, EDCA_AC1_CFG, Ac1Cfg);
