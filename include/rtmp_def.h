@@ -70,11 +70,7 @@
 #define MAX_TX_PROCESS          4
 #define LOCAL_TXBUF_SIZE        2048
 
-#ifdef MEMORY_OPTIMIZATION
-#define MAX_RX_PROCESS		32
-#else
 #define MAX_RX_PROCESS		128	/*64 //32 */
-#endif
 #define NUM_OF_LOCAL_TXBUF      2
 #define TXD_SIZE		16	/* TXD_SIZE = TxD + TxInfo */
 #define RXD_SIZE		16
@@ -537,13 +533,8 @@ enum WIFI_MODE{
 #define MAX_LEN_OF_BA_REC_TABLE          ((NUM_OF_TID * MAX_LEN_OF_MAC_TABLE)/2)	/*   (NUM_OF_TID*MAX_AID_BA + 32)        //Block ACK recipient */
 #define MAX_LEN_OF_BA_ORI_TABLE          ((NUM_OF_TID * MAX_LEN_OF_MAC_TABLE)/2)	/*   (NUM_OF_TID*MAX_AID_BA + 32)   // Block ACK originator */
 
-#ifdef MEMORY_OPTIMIZATION
-#define MAX_LEN_OF_BSS_TABLE             1
-#define MAX_REORDERING_MPDU_NUM			 256
-#else
 #define MAX_LEN_OF_BSS_TABLE             128 /* 64 */
 #define MAX_REORDERING_MPDU_NUM			 512
-#endif
 
 /* key related definitions */
 #define SHARE_KEY_NUM                   4

@@ -171,8 +171,6 @@ static int rt2870_probe(
 	if (status != 0)
 		goto err_out_free_netdev;
 
-/*#ifdef KTHREAD_SUPPORT */
-
 	*ppAd = pAd;
 
 	DBGPRINT(RT_DEBUG_TRACE, ("<===rt2870_probe()!\n"));
