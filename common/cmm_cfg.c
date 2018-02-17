@@ -1206,16 +1206,10 @@ INT Set_SiteSurvey_Proc(
         	Ssid.SsidLength = strlen(arg);
 		}
 
-#ifndef APCLI_CONNECTION_TRIAL
 		if (Ssid.SsidLength == 0)
 			ApSiteSurvey(pAd, &Ssid, SCAN_PASSIVE, false);
 		else
 			ApSiteSurvey(pAd, &Ssid, SCAN_ACTIVE, false);
-#else
-		/*for shorter scan time. use active scan and send probe req.*/
-		DBGPRINT(RT_DEBUG_TRACE, ("!!! Fast Scan for connection trial !!!\n"));
-		ApSiteSurvey(pAd, &Ssid, FAST_SCAN_ACTIVE, false);
-#endif /* APCLI_CONNECTION_TRIAL */
 
 		return true;
 	}

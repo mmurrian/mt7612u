@@ -2491,17 +2491,6 @@ typedef struct _APCLI_STRUCT {
 	u8 SsidLen;
 	CHAR Ssid[MAX_LEN_OF_SSID];
 
-#ifdef APCLI_CONNECTION_TRIAL
-	u8 TrialCh; /* the channel that Apcli interface will try to connect the rootap locates */
-	RALINK_TIMER_STRUCT TrialConnectTimer;
-	RALINK_TIMER_STRUCT TrialConnectPhase2Timer;
-	RALINK_TIMER_STRUCT TrialConnectRetryTimer;
-	MAC_TABLE_ENTRY	oldRootAP;
-	unsigned short NewRootApRetryCnt;
-	u8 ifIndex;
-	PVOID pAd;
-#endif /* APCLI_CONNECTION_TRIAL */
-
 	u8 CfgSsidLen;
 	CHAR CfgSsid[MAX_LEN_OF_SSID];
 	u8 CfgApCliBssid[MAC_ADDR_LEN];

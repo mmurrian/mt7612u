@@ -2067,10 +2067,6 @@ int RTMPSetProfileParameters(
 			else
 				pAd->CommonCfg.BeaconPeriod = 100;	/* Default value*/
 
-#ifdef APCLI_CONNECTION_TRIAL
-			pAd->CommonCfg.BeaconPeriod = 200;
-#endif /* APCLI_CONNECTION_TRIAL */
-
 			DBGPRINT(RT_DEBUG_TRACE, ("BeaconPeriod=%d\n", pAd->CommonCfg.BeaconPeriod));
 		}
 

@@ -214,11 +214,10 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 
 	/* There is no need to send broadcast probe request if active scan is in effect.*/
 	SsidLen = 0;
-#ifndef APCLI_CONNECTION_TRIAL
+
 	if ((ScanType == SCAN_ACTIVE) || (ScanType == FAST_SCAN_ACTIVE)
 		)
 		SsidLen = pAd->MlmeAux.SsidLen;
-#endif /* APCLI_CONNECTION_TRIAL */
 
 	{
 #ifdef CONFIG_AP_SUPPORT
