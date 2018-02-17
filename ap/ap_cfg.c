@@ -349,11 +349,6 @@ INT Set_AutoChannelSel_Proc(
 	IN	struct rtmp_adapter *pAd,
 	IN	char *		arg);
 
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-INT Set_PartialScan_Proc(
-	IN	struct rtmp_adapter *pAd,
-	IN	char *	arg);
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
 
 #ifdef AP_SCAN_SUPPORT
 INT Set_AutoChannelSelCheckTime_Proc(
@@ -2477,18 +2472,6 @@ INT Set_AutoChannelSel_Proc(
     return true;
 
 }
-
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-INT Set_PartialScan_Proc(
-	IN	struct rtmp_adapter *pAd,
-	IN	char *	arg)
-{
-	UINT8 bPartialScanning = simple_strtol(arg, 0, 10);
-	pAd->ApCfg.bPartialScanning = bPartialScanning ? true:false;
-	DBGPRINT(RT_DEBUG_TRACE, ("%s(): bPartialScanning = %u \n", __FUNCTION__, pAd->ApCfg.bPartialScanning));
-	return true;
-}
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
 
 /*
     ==========================================================================

@@ -2079,22 +2079,9 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 	pAd->Dot11_H.ChMovingTime = 65;
 	pAd->Dot11_H.bDFSIndoor = 1;
 
-
-
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-	pAd->ApCfg.bPartialScanning = false;
-	pAd->ApCfg.PartialScanChannelNum = DEFLAUT_PARTIAL_SCAN_CH_NUM;
-	pAd->ApCfg.LastPartialScanChannel = 0;
-	pAd->ApCfg.PartialScanBreakTime = 0;
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
-
-
-
-
 	pAd->CommonCfg.bNonVhtDisallow = false;
 
 	pAd->usb_ctl.usb_aggregation = true;
-
 
 	DBGPRINT(RT_DEBUG_TRACE, ("<-- UserCfgInit\n"));
 }

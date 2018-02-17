@@ -162,11 +162,6 @@ VOID SupportRate(
 
 bool ApScanRunning(struct rtmp_adapter *pAd);
 
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-u8 FindPartialScanChannel(
-	IN struct rtmp_adapter *pAd);
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
-
 VOID APUpdateOperationMode(struct rtmp_adapter *pAd);
 
 VOID APOverlappingBSSScan(struct rtmp_adapter *pAd);

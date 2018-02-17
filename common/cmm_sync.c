@@ -308,18 +308,6 @@ u8 RTMPFindScanChannel(
 	UINT8			  LastScanChannel)
 {
 	u8 scan_channel = 0;
-#ifdef CONFIG_AP_SUPPORT
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-		if (pAd->ApCfg.bPartialScanning == true)
-		{
-			scan_channel = FindPartialScanChannel(pAd);
-			return scan_channel;
-		}
-	}
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
 
 	if (LastScanChannel == 0)
 		scan_channel = FirstChannel(pAd);

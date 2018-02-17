@@ -2612,15 +2612,6 @@ typedef struct _AP_ADMIN_CONFIG {
 	MULTISSID_STRUCT MBSSID[HW_BEACON_MAX_NUM];
 	ULONG IsolateInterStaTrafficBTNBSSID;
 
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-	bool bPartialScanning;
-#define DEFLAUT_PARTIAL_SCAN_CH_NUM		1   /* Must be move to other place */
-	UINT8	 PartialScanChannelNum; /* How many channels to scan each time */
-	UINT8	 LastPartialScanChannel;
-#define DEFLAUT_PARTIAL_SCAN_BREAK_TIME	4  /* Period of partial scaning: unit: 100ms *//* Must be move to other place */
-	UINT8	 PartialScanBreakTime;	/* Period of partial scaning: unit: 100ms */
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
-
 	/* for wpa */
 	RALINK_TIMER_STRUCT CounterMeasureTimer;
 
