@@ -127,8 +127,6 @@ __inline VOID VIRTUAL_IF_DOWN(struct rtmp_adapter *pAd)
 	return;
 }
 
-#ifdef RTMP_MODULE_OS
-
 #ifdef CONFIG_AP_SUPPORT
 INT rt28xx_ap_ioctl(
 	IN	struct net_device *	net_dev,
@@ -149,8 +147,6 @@ struct net_device *RtmpPhyNetDevInit(struct rtmp_adapter *pAd,
 bool RtmpPhyNetDevExit(
 	IN struct rtmp_adapter				*pAd,
 	IN struct net_device *				net_dev);
-
-#endif /* RTMP_MODULE_OS */
 
 
 VOID RT28xx_MBSS_Init(struct rtmp_adapter *pAd, struct net_device *main_dev_p);

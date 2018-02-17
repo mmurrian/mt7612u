@@ -28,9 +28,6 @@
 
 ***************************************************************************/
 
-#define RTMP_MODULE_OS
-#define RTMP_MODULE_OS_UTIL
-
 #include "rtmp_comm.h"
 #include "rt_os_util.h"
 #include "dot11i_wpa.h"

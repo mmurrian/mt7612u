@@ -22,9 +22,6 @@
 
 ***************************************************************************/
 #ifdef RT_CFG80211_SUPPORT
-#define RTMP_MODULE_OS
-#define RTMP_MODULE_OS_UTIL
-
 #include "rtmp_comm.h"
 #include "rt_os_util.h"
 

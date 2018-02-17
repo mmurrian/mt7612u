@@ -72,7 +72,6 @@ typedef enum _RTMP_TASK_STATUS_ {
 
 #define RTMP_OS_TASK_NAME_LEN	16
 
-#if defined(RTMP_MODULE_OS)
 /* used in UTIL/NETIF module */
 typedef struct _RTMP_OS_TASK_ {
 	char taskName[RTMP_OS_TASK_NAME_LEN];
@@ -84,8 +83,6 @@ typedef struct _RTMP_OS_TASK_ {
 	wait_queue_head_t kthread_q;
 	bool kthread_running;
 } OS_TASK;
-#endif /* RTMP_MODULE_OS */
-
 
 #define RTMP_MATOpsInit(__pAd)
 #define RTMP_MATPktRxNeedConvert(__pAd, __pDev)				\

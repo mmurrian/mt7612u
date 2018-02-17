@@ -12,11 +12,6 @@
 
 ***************************************************************************/
 
-#define RTMP_MODULE_OS
-#define RTMP_MODULE_OS_UTIL
-
-/*#include "rt_config.h"
-*/
 #include "rtmp_comm.h"
 #include "rt_os_util.h"
 
