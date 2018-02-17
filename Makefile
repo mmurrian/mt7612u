@@ -77,8 +77,6 @@ endif
 endif
 
 endif
-
-endif
 # endif of ifeq ($(RT28xx_MODE),STA)
 
 ###########################################################
