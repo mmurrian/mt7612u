@@ -206,10 +206,6 @@ INT AsicSetAutoFallBack(struct rtmp_adapter *pAd, bool enable)
 
 INT AsicAutoFallbackInit(struct rtmp_adapter *pAd)
 {
-#ifdef RANGE_EXTEND
-	mt76u_reg_write(pAd, HT_FBK_CFG1, 0xedcba980);
-#endif // RANGE_EXTEND //
-
 	return true;
 }
 
