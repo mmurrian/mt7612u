@@ -4341,16 +4341,6 @@ VOID WPAInstallPairwiseKey(
 		}
 	}
 
-#ifdef SOFT_ENCRYPT
-	if (CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_SOFTWARE_ENCRYPT))
-	{
-		DBGPRINT(RT_DEBUG_TRACE, ("===> SW_ENC ON(wcid=%d) \n", pEntry->wcid));
-		memset(pEntry->PairwiseKey.TxTsc, 0, LEN_WPA_TSC);
-		memset(pEntry->PairwiseKey.RxTsc, 0, LEN_WPA_TSC);
-	}
-	else
-#endif /* SOFT_ENCRYPT */
-	{
 		/* Add Pair-wise key to Asic */
 	    AsicAddPairwiseKeyEntry(
 	        pAd,
@@ -4363,7 +4353,6 @@ VOID WPAInstallPairwiseKey(
 								pEntry->PairwiseKey.CipherAlg,
 								(u8)pEntry->wcid,
 								PAIRWISEKEYTABLE);
-	}
 
 }
 

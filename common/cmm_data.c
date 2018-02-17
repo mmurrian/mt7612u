@@ -2496,64 +2496,6 @@ VOID Indicate_EAPOL_Packet(
 
 }
 
-
-#ifdef SOFT_ENCRYPT
-bool RTMPExpandPacketForSwEncrypt(
-	IN struct rtmp_adapter *pAd,
-	IN TX_BLK *pTxBlk)
-{
-	PACKET_INFO PacketInfo;
-	uint32_t ex_head = 0, ex_tail = 0;
-	u8 	NumberOfFrag = RTMP_GET_PACKET_FRAGMENTS(pTxBlk->pPacket);
-
-	if (pTxBlk->CipherAlg == CIPHER_AES)
-		ex_tail = LEN_CCMP_MIC;
-
-	ex_tail = (NumberOfFrag * ex_tail);
-
-	pTxBlk->pPacket = ExpandPacket(pAd, pTxBlk->pPacket, ex_head, ex_tail);
-	if (pTxBlk->pPacket == NULL)
-	{
-		DBGPRINT(RT_DEBUG_ERROR, ("%s: out of resource.\n", __FUNCTION__));
-		return false;
-	}
-	RTMP_QueryPacketInfo(pTxBlk->pPacket, &PacketInfo, &pTxBlk->pSrcBufHeader, &pTxBlk->SrcBufLen);
-
-	return true;
-}
-
-
-VOID RTMPUpdateSwCacheCipherInfo(
-	IN struct rtmp_adapter *pAd,
-	IN TX_BLK *pTxBlk,
-	IN u8 *pHdr)
-{
-	HEADER_802_11 *pHeader_802_11;
-	MAC_TABLE_ENTRY *pMacEntry;
-
-	pHeader_802_11 = (HEADER_802_11 *) pHdr;
-	pMacEntry = pTxBlk->pMacEntry;
-
-	if (pMacEntry && pHeader_802_11->FC.Wep &&
-		CLIENT_STATUS_TEST_FLAG(pMacEntry, fCLIENT_STATUS_SOFTWARE_ENCRYPT))
-	{
-		PCIPHER_KEY pKey = &pMacEntry->PairwiseKey;
-
-		TX_BLK_SET_FLAG(pTxBlk, fTX_bSwEncrypt);
-
-		pTxBlk->CipherAlg = pKey->CipherAlg;
-		pTxBlk->pKey = pKey;
-		if ((pKey->CipherAlg == CIPHER_WEP64) || (pKey->CipherAlg == CIPHER_WEP128))
-			inc_iv_byte(pKey->TxTsc, LEN_WEP_TSC, 1);
-		else if ((pKey->CipherAlg == CIPHER_TKIP) || (pKey->CipherAlg == CIPHER_AES))
-			inc_iv_byte(pKey->TxTsc, LEN_WPA_TSC, 1);
-
-	}
-
-}
-
-#endif /* SOFT_ENCRYPT */
-
 /*
 	==========================================================================
 	Description:

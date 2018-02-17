@@ -171,15 +171,6 @@ static unsigned short update_associated_mac_entry(
 	else
 		pEntry->PortSecured = WPA_802_1X_PORT_SECURED;
 
-#ifdef SOFT_ENCRYPT
-	/* There are some situation to need to encryption by software
-	   1. The Client support PMF. It shall ony support AES cipher.
-	   2. The Client support WAPI.
-	   If use RT3883 or later, HW can handle the above.
-	   */
-
-#endif /* SOFT_ENCRYPT */
-
 	/*
 		WFA recommend to restrict the encryption type in 11n-HT mode.
 	 	So, the WEP and TKIP are not allowed in HT rate.
