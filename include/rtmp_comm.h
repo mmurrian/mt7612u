@@ -15,12 +15,6 @@
 #ifndef __RT_COMM_H__
 #define __RT_COMM_H__
 
-//#ifdef BB_SOC
-//#endif
-
-
-/*#define MONITOR_FLAG_11N_SNIFFER_SUPPORT */
-
 #define FIFO_STAT_READ_PERIOD		4
 
 /* ======================== Before include files ============================ */

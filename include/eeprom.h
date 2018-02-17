@@ -100,11 +100,7 @@
 #define EEPROM_SIZE					0x400
 
 #define EEPROM_DEFULT_BIN_FILE	"RT30xxEEPROM.bin"
-#ifdef BB_SOC
-#define BIN_FILE_PATH				"/etc/RT30xxEEPROM.bin"
-#else
 #define BIN_FILE_PATH				"/tmp/RT30xxEEPROM.bin"
-#endif /* BB_SOC */
 
 #define EEPROM_FILE_DIR			"/etc_ro/wlan/"
 #define EEPROM_1ST_FILE_DIR		"/etc_ro/Wireless/iNIC/"

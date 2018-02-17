@@ -446,14 +446,6 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 #endif /* CONFIG_AP_SUPPORT */
 #endif/*RT_CFG80211_SUPPORT*/
 
-#ifdef BB_SOC
-	 if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_RADIO_OFF))
-	 {
-	 	DBGPRINT(RT_DEBUG_TRACE, ("Radio_ON first....\n"));
-    		MlmeRadioOn(pAd);
-	 }
-#endif /* BB_SOC */
-
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 	{

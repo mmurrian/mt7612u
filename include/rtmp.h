@@ -64,10 +64,6 @@
 
 struct _RTMP_RA_LEGACY_TB;
 
-#ifdef BB_SOC
-#include "os/bb_soc.h"
-#endif
-
 typedef struct _UAPSD_INFO {
 	bool bAPSDCapable;
 } UAPSD_INFO;

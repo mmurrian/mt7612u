@@ -3369,14 +3369,8 @@ VOID RTMPIoctlStatistics(struct rtmp_adapter *pAd, RTMP_IOCTL_INPUT_STRUCT *wrq)
 	ULONG per, plr;
 	INT i;
 
-#ifdef BB_SOC
-	ULONG txPackets=0, rxPackets=0, txBytes=0, rxBytes=0;
-	u8 index=0;
-#endif
-
 	struct rtmp_chip_cap *pChipCap = &pAd->chipCap;
 
-/*	msg = (char *)kmalloc(sizeof(CHAR)*(2048), MEM_ALLOC_FLAG); */
 	msg = kmalloc(sizeof(CHAR)*(2048), GFP_ATOMIC);
 	if (msg == NULL) {
 		return;
@@ -3522,19 +3516,6 @@ VOID RTMPIoctlStatistics(struct rtmp_adapter *pAd, RTMP_IOCTL_INPUT_STRUCT *wrq)
 /*
  * Let "iwpriv ra0 stat" can print out Tx/Rx Packet and Byte count.
  * Therefore, we can parse them out in cfg_manager. --Trey */
-#ifdef BB_SOC
-	for (index = 0; index < pAd->ApCfg.BssidNum; index++){
-		rxPackets += (ULONG)pAd->ApCfg.MBSSID[index].RxCount;
-		txPackets += (ULONG)pAd->ApCfg.MBSSID[index].TxCount;
-		rxBytes += (ULONG)pAd->ApCfg.MBSSID[index].ReceivedByteCount;
-		txBytes += (ULONG)pAd->ApCfg.MBSSID[index].TransmittedByteCount;
-	}
-	sprintf(msg+strlen(msg), "Packets Received       = %lu\n", rxPackets);
-	sprintf(msg+strlen(msg), "Packets Sent           = %lu\n", txPackets);
-	sprintf(msg+strlen(msg), "Bytes Received         = %lu\n", rxBytes);
-	sprintf(msg+strlen(msg), "Bytes Sent             = %lu\n", txBytes);
-	sprintf(msg+strlen(msg), "\n");
-#endif
 
     /* Copy the information into the user buffer */
     wrq->u.data.length = strlen(msg);

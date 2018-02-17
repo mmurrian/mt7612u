@@ -71,7 +71,7 @@
 #ifdef CONFIG_AP_SUPPORT
 /* Ralink defined OIDs */
 #define RTPRIV_IOCTL_SET							(SIOCIWFIRSTPRIV + 0x02)
-#if defined(DBG) || defined(BB_SOC)
+#if defined(DBG)
 #define RTPRIV_IOCTL_BBP                            (SIOCIWFIRSTPRIV + 0x03)
 #define RTPRIV_IOCTL_MAC                            (SIOCIWFIRSTPRIV + 0x05)
 

@@ -68,11 +68,7 @@
 #define NDIS_802_11_LENGTH_RATES_EX     16
 
 #define MAX_NUMBER_OF_EVENT				10	/* entry # in EVENT table */
-#ifdef BB_SOC
-#define MAX_NUMBER_OF_MAC				8 // if MAX_MBSSID_NUM is 8, this value can't be larger than 211
-#else
 #define MAX_NUMBER_OF_MAC			   	 116
-#endif
 #define MAX_NUMBER_OF_ACL				64
 #define MAX_LENGTH_OF_SUPPORT_RATES		12	/* 1, 2, 5.5, 11, 6, 9, 12, 18, 24, 36, 48, 54 */
 #define MAX_NUMBER_OF_DLS_ENTRY			4
