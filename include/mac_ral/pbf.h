@@ -44,12 +44,7 @@ typedef	union _WPDMA_GLO_CFG_STRUC	{
 		uint32_t rx_2b_offset:1;
 		uint32_t clk_gate_dis:1;
 		uint32_t rsv:14;
-#ifdef DESC_32B_SUPPORT
-		uint32_t RXHdrScater:7;
-		uint32_t Desc32BEn:1;
-#else
 		uint32_t HDR_SEG_LEN:8;
-#endif /* DESC_32B_SUPPORT */
 		uint32_t BigEndian:1;
 		uint32_t EnTXWriteBackDDONE:1;
 		uint32_t WPDMABurstSIZE:2;
@@ -70,12 +65,7 @@ typedef	union _WPDMA_GLO_CFG_STRUC	{
 		uint32_t WPDMABurstSIZE:2;
 		uint32_t EnTXWriteBackDDONE:1;
 		uint32_t BigEndian:1;
-#ifdef DESC_32B_SUPPORT
-		uint32_t Desc32BEn:1;
-		uint32_t RXHdrScater:7;
-#else
 		uint32_t HDR_SEG_LEN:8;
-#endif /* DESC_32B_SUPPORT */
 		uint32_t rsv:14;
 		uint32_t clk_gate_dis:1;
 		uint32_t rx_2b_offset:1;
