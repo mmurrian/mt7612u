@@ -41,8 +41,6 @@
     8. The number of MBSS can be 1, 2, 4, or 8
 
 ***************************************************************************/
-#define RTMP_MODULE_OS
-
 #ifdef MBSS_SUPPORT
 
 /*#include "rt_config.h" */

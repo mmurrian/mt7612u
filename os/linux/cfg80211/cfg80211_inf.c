@@ -26,8 +26,6 @@
 	YF Luo		06-28-2012		Init version
 		        12-26-2013		Integration of NXTC
 */
-#define RTMP_MODULE_OS
-
 #include "rt_config.h"
 #include "rtmp_comm.h"
 #include "rt_os_util.h"

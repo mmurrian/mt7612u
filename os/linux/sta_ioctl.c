@@ -28,12 +28,9 @@
 	Rory Chen   02-14-2005    modify to support RT61
 */
 
-#define RTMP_MODULE_OS
-
 #include "rtmp_comm.h"
 #include "rt_os_util.h"
 #include "rt_os_net.h"
-/*#include	"rt_config.h" */
 
 #ifdef DBG
 extern ULONG RTDebugLevel;
