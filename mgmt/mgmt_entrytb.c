@@ -529,10 +529,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			/* Add this entry into ASIC RX WCID search table */
 			RTMP_STA_ENTRY_ADD(pAd, pEntry);
 
-#ifdef PEER_DELBA_TX_ADAPT
-			Peer_DelBA_Tx_Adapt_Init(pAd, pEntry);
-#endif /* PEER_DELBA_TX_ADAPT */
-
 			if (pAd->chipCap.FlgHwTxBfCap)
 				spin_lock_init(&pEntry->TxSndgLock);
 

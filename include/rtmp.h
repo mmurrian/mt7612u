@@ -2238,11 +2238,6 @@ typedef struct _MAC_TABLE_ENTRY {
 	bool SupportHTMCS[MAX_LEN_OF_HT_RATES];
 	bool SupportVHTMCS[MAX_LEN_OF_VHT_RATES];
 
-#ifdef PEER_DELBA_TX_ADAPT
-	uint32_t bPeerDelBaTxAdaptEn;
-	RALINK_TIMER_STRUCT DelBA_tx_AdaptTimer;
-#endif /* PEER_DELBA_TX_ADAPT */
-
 	u8 		TxSndgType;
 	spinlock_t	TxSndgLock;
 
@@ -6398,18 +6393,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 	IN u8 apidx,
 	IN u8 OpMode,
 	IN bool CleanAll);
-
-#ifdef PEER_DELBA_TX_ADAPT
-VOID Peer_DelBA_Tx_Adapt_Init(
-	IN struct rtmp_adapter *pAd,
-	IN PMAC_TABLE_ENTRY pEntry);
-
-VOID PeerDelBATxAdaptTimeOut(
-	IN PVOID SystemSpecific1,
-	IN PVOID FunctionContext,
-	IN PVOID SystemSpecific2,
-	IN PVOID SystemSpecific3);
-#endif /* PEER_DELBA_TX_ADAPT */
 
 #ifdef DBG_DIAGNOSE
 INT Show_Diag_Proc(struct rtmp_adapter *pAd, char *arg);

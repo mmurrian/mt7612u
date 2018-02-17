@@ -81,13 +81,6 @@ BUILD_TIMER_FUNCTION(RtmpUsbStaAsicForceWakeupTimeout);
 
 BUILD_TIMER_FUNCTION(eTxBfProbeTimerExec);
 
-
-
-
-#ifdef PEER_DELBA_TX_ADAPT
-BUILD_TIMER_FUNCTION(PeerDelBATxAdaptTimeOut);
-#endif /* PEER_DELBA_TX_ADAPT */
-
 #ifdef RTMP_TIMER_TASK_SUPPORT
 static void RtmpTimerQHandle(struct rtmp_adapter *pAd)
 {

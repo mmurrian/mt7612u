@@ -156,16 +156,5 @@ DECLARE_TIMER_FUNCTION(RtmpUsbStaAsicForceWakeupTimeout);
 
 DECLARE_TIMER_FUNCTION(eTxBfProbeTimerExec);
 
-
-
-
-
-
-
-#ifdef PEER_DELBA_TX_ADAPT
-DECLARE_TIMER_FUNCTION(PeerDelBATxAdaptTimeOut);
-#endif /* PEER_DELBA_TX_ADAPT */
-
-
 #endif /* __RTMP_TIMER_H__ */
 

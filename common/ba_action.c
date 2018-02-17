@@ -17,16 +17,6 @@
 
 static void ba_mpdu_blk_free(struct rtmp_adapter *pAd, struct reordering_mpdu *mpdu_blk);
 
-#ifdef PEER_DELBA_TX_ADAPT
-static VOID Peer_DelBA_Tx_Adapt_Enable(
-	IN struct rtmp_adapter *pAd,
-	IN PMAC_TABLE_ENTRY pEntry);
-
-static VOID Peer_DelBA_Tx_Adapt_Disable(
-	IN struct rtmp_adapter *pAd,
-	IN PMAC_TABLE_ENTRY pEntry);
-#endif /* PEER_DELBA_TX_ADAPT */
-
 BA_ORI_ENTRY *BATableAllocOriEntry(struct rtmp_adapter *pAd, unsigned short *Idx);
 BA_REC_ENTRY *BATableAllocRecEntry(struct rtmp_adapter *pAd, unsigned short *Idx);
 
@@ -1160,9 +1150,6 @@ VOID PeerAddBAReqAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 			DBGPRINT(RT_DEBUG_OFF, ("Rcv Wcid(%d) AddBAReq\n", Elem->Wcid));
 			if (BARecSessionAdd(pAd, &pAd->MacTab.Content[Elem->Wcid], pAddreqFrame))
 			{
-#ifdef PEER_DELBA_TX_ADAPT
-				Peer_DelBA_Tx_Adapt_Disable(pAd, &pAd->MacTab.Content[Elem->Wcid]);
-#endif /* PEER_DELBA_TX_ADAPT */
 				Status = 0;
 			}
 			else
@@ -1261,9 +1248,6 @@ VOID PeerAddBARspAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 			case 0:
 				/* I want a BAsession with this peer as an originator. */
 				BAOriSessionAdd(pAd, &pAd->MacTab.Content[Elem->Wcid], pFrame);
-#ifdef PEER_DELBA_TX_ADAPT
-				Peer_DelBA_Tx_Adapt_Disable(pAd, &pAd->MacTab.Content[Elem->Wcid]);
-#endif /* PEER_DELBA_TX_ADAPT */
 				break;
 			default:
 				/* check status == USED ??? */
@@ -1294,11 +1278,6 @@ VOID PeerDelBAAction(
 	if (PeerDelBAActionSanity(pAd, Elem->Wcid, Elem->Msg, Elem->MsgLen))
 	{
 		pDelFrame = (PFRAME_DELBA_REQ)(&Elem->Msg[0]);
-
-#ifdef PEER_DELBA_TX_ADAPT
-		if (pDelFrame->DelbaParm.TID == 0)
-			Peer_DelBA_Tx_Adapt_Enable(pAd, &pAd->MacTab.Content[Elem->Wcid]);
-#endif /* PEER_DELBA_TX_ADAPT */
 
 		if (pDelFrame->DelbaParm.Initiator == ORIGINATOR)
 		{
@@ -1843,41 +1822,3 @@ VOID BaReOrderingBufferMaintain(struct rtmp_adapter *pAd)
         }
     }
 }
-
-
-#ifdef PEER_DELBA_TX_ADAPT
-VOID Peer_DelBA_Tx_Adapt_Init(
-	IN struct rtmp_adapter *pAd,
-	IN PMAC_TABLE_ENTRY pEntry)
-{
-	pEntry->bPeerDelBaTxAdaptEn = 0;
-	RTMPInitTimer(pAd, &pEntry->DelBA_tx_AdaptTimer, GET_TIMER_FUNCTION(PeerDelBATxAdaptTimeOut), pEntry, false);
-}
-
-static VOID Peer_DelBA_Tx_Adapt_Enable(
-	IN struct rtmp_adapter *pAd,
-	IN PMAC_TABLE_ENTRY pEntry)
-{
-}
-
-static VOID Peer_DelBA_Tx_Adapt_Disable(
-	IN struct rtmp_adapter *pAd,
-	IN PMAC_TABLE_ENTRY pEntry)
-{
-}
-
-VOID PeerDelBATxAdaptTimeOut(
-	IN PVOID SystemSpecific1,
-	IN PVOID FunctionContext,
-	IN PVOID SystemSpecific2,
-	IN PVOID SystemSpecific3)
-{
-	PMAC_TABLE_ENTRY pEntry = (PMAC_TABLE_ENTRY) FunctionContext;
-
-	DBGPRINT(RT_DEBUG_OFF, ("%s()\n", __FUNCTION__));
-
-	/* Disable Tx Mac look up table (Ressume original setting) */
-	Peer_DelBA_Tx_Adapt_Disable(pEntry->pAd, pEntry);
-}
-#endif /* PEER_DELBA_TX_ADAPT */
-
