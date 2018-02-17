@@ -145,7 +145,7 @@ bool RtmpPhyNetDevExit(
 	IN struct rtmp_adapter				*pAd,
 	IN struct net_device *				net_dev);
 
-#endif /* RTMP_MODULE_OS && OS_ABL_FUNC_SUPPORT */
+#endif /* RTMP_MODULE_OS */
 
 
 VOID RT28xx_MBSS_Init(struct rtmp_adapter *pAd, struct net_device *main_dev_p);
