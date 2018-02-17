@@ -2542,11 +2542,6 @@ VOID dynamic_tune_be_tx_op(struct rtmp_adapter *pAd, ULONG nonBEpackets)
 				else
 					txop_value = 0;
 
-#ifdef MULTI_CLIENT_SUPPORT
-				if(pAd->ApCfg.EntryClientCount > 2) /* for Multi-Clients */
-					txop_value = 0;
-#endif /* MULTI_CLIENT_SUPPORT */
-
 				RegValue  &= 0xFFFFFF00;
 				/*if ((RegValue & 0x0000FF00) == 0x00005400)
 					RegValue -= 0x00001100; */

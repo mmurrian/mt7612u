@@ -831,9 +831,6 @@ static void rtmp_read_ap_wmm_parms_from_file(IN  struct rtmp_adapter *pAd, char 
 			{
 				pAd->ApCfg.MBSSID[i].wdev.bWmmCapable = true;
 				bEnableWmm = true;
-#ifdef MULTI_CLIENT_SUPPORT
-				pAd->CommonCfg.bWmm = true;
-#endif /* MULTI_CLIENT_SUPPORT */
 			}
 			else
 			{
@@ -896,12 +893,6 @@ static void rtmp_read_ap_wmm_parms_from_file(IN  struct rtmp_adapter *pAd, char 
 	    {
 			pAd->CommonCfg.APEdcaParm.Cwmin[i] = (u8) simple_strtol(macptr, 0, 10);;
 
-#ifdef MULTI_CLIENT_SUPPORT
-			/* record profile cwmin */
-			if (i == 0)
-				pAd->CommonCfg.APCwmin = pAd->CommonCfg.APEdcaParm.Cwmin[0];
-#endif /* MULTI_CLIENT_SUPPORT */
-
 			DBGPRINT(RT_DEBUG_TRACE, ("APCwmin[%d]=%d\n", i, pAd->CommonCfg.APEdcaParm.Cwmin[i]));
 	    }
 	}
@@ -911,12 +902,6 @@ static void rtmp_read_ap_wmm_parms_from_file(IN  struct rtmp_adapter *pAd, char 
 	    for (i = 0, macptr = rstrtok(tmpbuf,";"); macptr; macptr = rstrtok(NULL,";"), i++)
 	    {
 			pAd->CommonCfg.APEdcaParm.Cwmax[i] = (u8) simple_strtol(macptr, 0, 10);;
-
-#ifdef MULTI_CLIENT_SUPPORT
-			/* record profile cwmax */
-			if (i == 0)
-				pAd->CommonCfg.APCwmax= pAd->CommonCfg.APEdcaParm.Cwmax[0];
-#endif /* MULTI_CLIENT_SUPPORT */
 
 			DBGPRINT(RT_DEBUG_TRACE, ("APCwmax[%d]=%d\n", i, pAd->CommonCfg.APEdcaParm.Cwmax[i]));
 	    }
@@ -957,12 +942,6 @@ static void rtmp_read_ap_wmm_parms_from_file(IN  struct rtmp_adapter *pAd, char 
 	    for (i = 0, macptr = rstrtok(tmpbuf,";"); macptr; macptr = rstrtok(NULL,";"), i++)
 	    {
 			pAd->ApCfg.BssEdcaParm.Cwmin[i] = (u8) simple_strtol(macptr, 0, 10);;
-
-#ifdef MULTI_CLIENT_SUPPORT
-			/* record profile cwmin */
-			if (i == 0)
-				pAd->CommonCfg.BSSCwmin = pAd->ApCfg.BssEdcaParm.Cwmin[0];
-#endif /* MULTI_CLIENT_SUPPORT */
 
 			DBGPRINT(RT_DEBUG_TRACE, ("BSSCwmin[%d]=%d\n", i, pAd->ApCfg.BssEdcaParm.Cwmin[i]));
 	    }
