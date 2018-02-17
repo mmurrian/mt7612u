@@ -155,15 +155,6 @@ Ndis802_11InfrastructureMax	/* Not a real value, defined as upper bound */
 #define MODE_HTGREENFIELD	3
 #define MODE_VHT	4
 
-#ifdef NO_CONSISTENT_MEM_SUPPORT
-/* current support RXD_SIZE = 16B and cache line = 16 or 32B */
-#define RTMP_DCACHE_FLUSH(__AddrStart, __Size)							\
-		RtmpOsDCacheFlush((ULONG)(__AddrStart), (ULONG)(__Size))
-#else
-#define RTMP_DCACHE_FLUSH(__AddrStart, __Size)
-#endif /* NO_CONSISTENT_MEM_SUPPORT */
-
-
 /* ======================== Interface ======================================= */
 typedef enum _RTMP_INF_TYPE_
 {
