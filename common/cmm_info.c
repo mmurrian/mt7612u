@@ -395,14 +395,6 @@ INT	Set_Channel_Proc(
 	if (success == true) {
 		DBGPRINT(RT_DEBUG_TRACE, ("Set_Channel_Proc::(Channel=%d)\n",
 					pAd->CommonCfg.Channel));
-#ifdef DFS_ATP_SUPPORT
-		pAd->CommonCfg.RadarDetect.atp_set_channel_ready = true;
-		if ((pAd->CommonCfg.RadarDetect.atp_set_ht_bw
-				|| pAd->CommonCfg.RadarDetect.atp_set_vht_bw)
-				&& pAd->CommonCfg.RadarDetect.atp_set_channel_ready) {
-			printk ("BW and Channel is ready\n");
-		}
-#endif /* DFS_ATP_SUPPORT */
 	}
 
 	return success;
@@ -2004,13 +1996,6 @@ INT	Set_HtBw_Proc(
 
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_HtBw_Proc::(HtBw=%d)\n", pAd->CommonCfg.RegTransmitSetting.field.BW));
 
-#ifdef DFS_ATP_SUPPORT
-	pAd->CommonCfg.RadarDetect.atp_set_ht_bw = true;
-	if (pAd->CommonCfg.RadarDetect.atp_set_channel_ready) {
-		printk ("BW and Channel is ready\n");
-	}
-#endif /* DFS_ATP_SUPPORT */
-
 	return true;
 }
 
@@ -2725,13 +2710,6 @@ INT	Set_VhtBw_Proc(
 
 direct_done:
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_VhtBw_Proc::(VHT_BW=%d)\n", pAd->CommonCfg.vht_bw));
-
-#ifdef DFS_ATP_SUPPORT
-	pAd->CommonCfg.RadarDetect.atp_set_vht_bw = true;
-	if (pAd->CommonCfg.RadarDetect.atp_set_channel_ready) {
-		printk ("BW and Channel is ready\n");
-	}
-#endif /* DFS_ATP_SUPPORT */
 
 	return true;
 }
