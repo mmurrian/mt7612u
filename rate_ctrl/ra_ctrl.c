@@ -270,10 +270,6 @@ u8 RateSwitchTable11BGN3SForABand[] = { /* 3*3*/
 
 #ifdef NEW_RATE_ADAPT_SUPPORT
 
-#ifdef RANGE_EXTEND
-#define SUPPORT_SHORT_GI_RA		/* Support switching to Short GI rates in RA */
-#endif /*  RANGE_EXTEND */
-
 /*
 	Rate switch tables for New Rate Adaptation
 
@@ -1170,60 +1166,6 @@ VOID APMlmeSetTxRate(
 	}
 #endif /* NEW_RATE_ADAPT_SUPPORT */
 
-
-#ifdef RANGE_EXTEND
-#ifdef NEW_RATE_ADAPT_SUPPORT
-	/* 20 MHz Fallback */
-	if ((tx_mode == MODE_HTMIX || tx_mode == MODE_HTGREENFIELD) &&
-	    pEntry->HTPhyMode.field.BW == BW_40 &&
-	    ADAPT_RATE_TABLE(pEntry->pTable))
-	{
-		if (pEntry->HTPhyMode.field.MCS == 32
-#ifdef DBG_CTRL_SUPPORT
-			&& (pAd->CommonCfg.DebugFlags & DBF_DISABLE_20MHZ_MCS0) == 0
-#endif /* DBG_CTRL_SUPPORT */
-		)
-		{
-			/* Map HT Duplicate to 20MHz MCS0 */
-			pEntry->HTPhyMode.field.BW = BW_20;
-			pEntry->HTPhyMode.field.MCS = 0;
-		}
-		else if (pEntry->HTPhyMode.field.MCS == 0 &&
-				(pAd->CommonCfg.DebugFlags & DBF_FORCE_20MHZ) == 0
-#ifdef DBG_CTRL_SUPPORT
-				&& (pAd->CommonCfg.DebugFlags & DBF_DISABLE_20MHZ_MCS1) == 0
-#endif /* DBG_CTRL_SUPPORT */
-		)
-		{
-			/* Map 40MHz MCS0 to 20MHz MCS1 */
-			pEntry->HTPhyMode.field.BW = BW_20;
-			pEntry->HTPhyMode.field.MCS = 1;
-		}
-		else if (pEntry->HTPhyMode.field.MCS == 8
-#ifdef DBG_CTRL_SUPPORT
-			&& (pAd->CommonCfg.DebugFlags & DBF_ENABLE_20MHZ_MCS8)
-#endif /* DBG_CTRL_SUPPORT */
-			)
-		{
-			/* Map 40MHz MCS8 to 20MHz MCS8 */
-			pEntry->HTPhyMode.field.BW = BW_20;
-		}
-	}
-#endif /* NEW_RATE_ADAPT_SUPPORT */
-
-#ifdef DBG_CTRL_SUPPORT
-	/* Debug Option: Force BW */
-	if (pAd->CommonCfg.DebugFlags & DBF_FORCE_40MHZ)
-	{
-		pEntry->HTPhyMode.field.BW = BW_40;
-	}
-	else if (pAd->CommonCfg.DebugFlags & DBF_FORCE_20MHZ)
-	{
-		pEntry->HTPhyMode.field.BW = BW_20;
-	}
-#endif /* DBG_CTRL_SUPPORT */
-#endif /* RANGE_EXTEND */
-
 	/* Reexam each bandwidth's SGI support. */
 	if ((pEntry->HTPhyMode.field.BW==BW_20 && !CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_SGI20_CAPABLE)) ||
 		(pEntry->HTPhyMode.field.BW==BW_40 && !CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_SGI40_CAPABLE)) )
@@ -1363,57 +1305,6 @@ VOID MlmeSetTxRate(
 			if ((pEntry->HTPhyMode.field.BW != BW_10) && (pEntry->HTPhyMode.field.BW >= bw_cap))
 				pEntry->HTPhyMode.field.BW = bw_cap;
 		}
-
-#ifdef RANGE_EXTEND
-#ifdef NEW_RATE_ADAPT_SUPPORT
-		/*  20 MHz Fallback */
-		if (tx_mode >=MODE_HTMIX && pEntry->HTPhyMode.field.BW==BW_40 &&
-			ADAPT_RATE_TABLE(pEntry->pTable)
-		)
-		{
-			if ((wdev->HTPhyMode.field.MCS==32)
-#ifdef DBG_CTRL_SUPPORT
-			&& (pAd->CommonCfg.DebugFlags & DBF_DISABLE_20MHZ_MCS0)==0
-#endif /* DBG_CTRL_SUPPORT */
-			)
-			{
-				/*  Map HT Duplicate to 20MHz MCS0 */
-				pEntry->HTPhyMode.field.BW = BW_20;
-				wdev->HTPhyMode.field.MCS = 0;
-				if (pTxRate->STBC && wdev->MaxHTPhyMode.field.STBC)
-					wdev->HTPhyMode.field.STBC = STBC_USE;
-			}
-			else if (wdev->HTPhyMode.field.MCS==0
-#ifdef DBG_CTRL_SUPPORT
-				&& (pAd->CommonCfg.DebugFlags & DBF_FORCE_20MHZ)==0
-				&& (pAd->CommonCfg.DebugFlags & DBF_DISABLE_20MHZ_MCS1)==0
-#endif /* DBG_CTRL_SUPPORT */
-			)
-			{
-				/*  Map 40MHz MCS0 to 20MHz MCS1 */
-				pEntry->HTPhyMode.field.BW = BW_20;
-				wdev->HTPhyMode.field.MCS = 1;
-			}
-			else if (wdev->HTPhyMode.field.MCS==8
-#ifdef DBG_CTRL_SUPPORT
-				&& (pAd->CommonCfg.DebugFlags & DBF_ENABLE_20MHZ_MCS8)
-#endif /* DBG_CTRL_SUPPORT */
-			)
-			{
-				/*  Map 40MHz MCS8 to 20MHz MCS8 */
-				pEntry->HTPhyMode.field.BW = BW_20;
-			}
-		}
-#endif /* NEW_RATE_ADAPT_SUPPORT */
-
-#ifdef DBG_CTRL_SUPPORT
-		/*  Debug Option: Force BW */
-		if (pAd->CommonCfg.DebugFlags & DBF_FORCE_40MHZ)
-			pEntry->HTPhyMode.field.BW = BW_40;
-		else if (pAd->CommonCfg.DebugFlags & DBF_FORCE_20MHZ)
-			pEntry->HTPhyMode.field.BW = BW_20;
-#endif /* DBG_CTRL_SUPPORT */
-#endif /*  RANGE_EXTEND */
 
 		/*  Reexam each bandwidth's SGI support. */
 		if ((pEntry->HTPhyMode.field.BW==BW_20 && !CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_SGI20_CAPABLE)) ||
