@@ -2264,13 +2264,6 @@ typedef struct _MAC_TABLE_ENTRY {
 	u8 	sndg0Mcs;
 	INT			sndg0Snr0, sndg0Snr1, sndg0Snr2;
 
-#ifdef ETXBF_EN_COND3_SUPPORT
-	u8 	bestMethod;
-	u8 	sndgRateIdx;
-	u8 	bf0Mcs, sndg0RateIdx, bf0RateIdx;
-	u8 	sndg1Mcs, bf1Mcs, sndg1RateIdx, bf1RateIdx;
-	INT			sndg1Snr0, sndg1Snr1, sndg1Snr2;
-#endif /* ETXBF_EN_COND3_SUPPORT */
 	u8 	noSndgCnt;
 	u8 	eTxBfEnCond;
 	u8 	noSndgCntThrd, ndpSndgStreams;
@@ -5933,14 +5926,6 @@ bool clientSupportsETxBF(struct rtmp_adapter *pAd, HT_BF_CAP *pTxBFCap);
 void setETxBFCap(struct rtmp_adapter *pAd, HT_BF_CAP *pTxBFCap);
 bool clientSupportsVHTETxBF(struct rtmp_adapter *pAd, VHT_CAP_INFO *pTxBFCapInfo);
 void setVHTETxBFCap(struct rtmp_adapter *pAd, VHT_CAP_INFO *pTxBFCap);
-
-#ifdef ETXBF_EN_COND3_SUPPORT
-VOID txSndgSameMcs(struct rtmp_adapter *pAd, MAC_TABLE_ENTRY * pEnt, u8 smoothMfb);
-VOID txSndgOtherGroup(struct rtmp_adapter *pAd, MAC_TABLE_ENTRY *pEntry);
-VOID txMrqInvTxBF(struct rtmp_adapter *pAd, MAC_TABLE_ENTRY *pEntry);
-VOID chooseBestMethod(struct rtmp_adapter *pAd, MAC_TABLE_ENTRY *pEntry, u8 mfb);
-VOID rxBestSndg(struct rtmp_adapter *pAd, MAC_TABLE_ENTRY *pEntry);
-#endif /* ETXBF_EN_COND3_SUPPORT */
 
 VOID handleBfFb(struct rtmp_adapter *pAd, RX_BLK *pRxBlk);
 

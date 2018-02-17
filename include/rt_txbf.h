@@ -67,12 +67,6 @@
 		matrix(ETXBF_EN_COND=1) or activate the whole bf evaluation process(not defined)
 */
 
-// Defines to include optional code.
-//	NOTE: Do not define these options. ETxBfEnCond==3 and
-//		MCS Feedback are not fully implemented
-//#define ETXBF_EN_COND3_SUPPORT	// Include ETxBfEnCond==3 code
-//#define MFB_SUPPORT				// Include MCS Feedback code
-
 // MCS FB definitions
 #define MSI_TOGGLE_BF		6
 #define TOGGLE_BF_PKTS		5// the number of packets with inverted BF status
