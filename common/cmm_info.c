@@ -3185,71 +3185,6 @@ INT Set_DebugQueue_Proc(
 #endif /* INCLUDE_DEBUG_QUEUE */
 #endif /* DBG_CTRL_SUPPORT */
 
-#ifdef PRE_ANT_SWITCH
-/*
-	Set_PreAntSwitch_Proc - enable/disable Preamble Antenna Switch
-		usage: iwpriv ra0 set PreAntSwitch=[0 | 1]
-*/
-INT Set_PreAntSwitch_Proc(
-    IN  struct rtmp_adapter *  pAd,
-    IN  char *        arg)
-{
-    pAd->CommonCfg.PreAntSwitch = simple_strtol(arg, 0, 10)!=0;
-    DBGPRINT(RT_DEBUG_TRACE, ("%s():(PreAntSwitch=%d)\n",
-				__FUNCTION__, pAd->CommonCfg.PreAntSwitch));
-	return true;
-}
-
-
-/*
-	Set_PreAntSwitchRSSI_Proc - set Preamble Antenna Switch RSSI threshold
-		usage: iwpriv ra0 set PreAntSwitchRSSI=<RSSI threshold in dBm>
-*/
-INT Set_PreAntSwitchRSSI_Proc(
-    IN  struct rtmp_adapter *  pAd,
-    IN  char *        arg)
-{
-    pAd->CommonCfg.PreAntSwitchRSSI = simple_strtol(arg, 0, 10);
-    DBGPRINT(RT_DEBUG_TRACE, ("%s():(PreAntSwitchRSSI=%d)\n",
-				__FUNCTION__, pAd->CommonCfg.PreAntSwitchRSSI));
-	return true;
-}
-
-/*
-	Set_PreAntSwitchTimeout_Proc - set Preamble Antenna Switch Timeout threshold
-		usage: iwpriv ra0 set PreAntSwitchTimeout=<timeout in seconds, 0=>disabled>
-*/
-INT Set_PreAntSwitchTimeout_Proc(
-    IN  struct rtmp_adapter *  pAd,
-    IN  char *        arg)
-{
-    pAd->CommonCfg.PreAntSwitchTimeout = simple_strtol(arg, 0, 10);
-    DBGPRINT(RT_DEBUG_TRACE, ("%s():(PreAntSwitchTimeout=%d)\n",
-				__FUNCTION__, pAd->CommonCfg.PreAntSwitchTimeout));
-	return true;
-}
-#endif /* PRE_ANT_SWITCH */
-
-
-
-
-#ifdef CFO_TRACK
-/*
-	Set_CFOTrack_Proc - enable/disable CFOTrack
-		usage: iwpriv ra0 set CFOTrack=[0..8]
-*/
-INT Set_CFOTrack_Proc(
-    IN  struct rtmp_adapter *  pAd,
-    IN  char *        arg)
-{
-    pAd->CommonCfg.CFOTrack = simple_strtol(arg, 0, 10);
-    DBGPRINT(RT_DEBUG_TRACE, ("%s():(CFOTrack=%d)\n",
-				__FUNCTION__, pAd->CommonCfg.CFOTrack));
-	return true;
-}
-#endif /* CFO_TRACK */
-
-
 #ifdef DBG_CTRL_SUPPORT
 INT Set_DebugFlags_Proc(
     IN  struct rtmp_adapter *  pAd,
@@ -3991,11 +3926,6 @@ INT	Show_STA_RAInfo_Proc(
 	IN	ULONG			BufLen)
 {
 	sprintf(pBuf, "\n");
-#ifdef PRE_ANT_SWITCH
-	sprintf(pBuf+strlen(pBuf), "PreAntSwitch: %d\n", pAd->CommonCfg.PreAntSwitch);
-	sprintf(pBuf+strlen(pBuf), "PreAntSwitchRSSI: %d\n", pAd->CommonCfg.PreAntSwitchRSSI);
-#endif /* PRE_ANT_SWITCH */
-
 
 #ifdef NEW_RATE_ADAPT_SUPPORT
 	sprintf(pBuf+strlen(pBuf), "LowTrafficThrd: %d\n", pAd->CommonCfg.lowTrafficThrd);

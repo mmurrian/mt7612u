@@ -515,9 +515,6 @@ VOID STAHandleRxDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 
 		}
 
-#ifdef PRE_ANT_SWITCH
-#endif /* PRE_ANT_SWITCH */
-
 		/* there's packet sent to me, keep awake for 1200ms */
 		if (pAd->CountDowntoPsm < 12)
 			pAd->CountDowntoPsm = 12;

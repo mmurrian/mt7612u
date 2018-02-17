@@ -645,9 +645,6 @@ VOID MacTableMaintenance(struct rtmp_adapter *pAd)
 	UINT fAnyStationPortSecured[HW_BEACON_MAX_NUM];
  	UINT bss_index;
 	struct mt7612u_mac_table *pMacTable;
-#if defined(PRE_ANT_SWITCH) || defined(CFO_TRACK)
-	int lastClient=0;
-#endif /* defined(PRE_ANT_SWITCH) || defined(CFO_TRACK) */
 	MULTISSID_STRUCT *pMbss;
 
 	CHAR rssiIndex = 0, overRssiThresCount = 0;
@@ -934,10 +931,6 @@ VOID MacTableMaintenance(struct rtmp_adapter *pAd)
 		{
 			SendNotifyBWActionFrame(pAd, pEntry->wcid, pEntry->apidx);
 		}
-
-#if defined(PRE_ANT_SWITCH) || defined(CFO_TRACK)
-		lastClient = i;
-#endif /* defined(PRE_ANT_SWITCH) || defined(CFO_TRACK) */
 
 		/* only apply burst when run in MCS0,1,8,9,16,17, not care about phymode */
 		if ((pEntry->HTPhyMode.field.MCS != 32) &&

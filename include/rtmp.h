@@ -1742,17 +1742,6 @@ typedef struct _COMMON_CONFIG {
 
 	bool HT_Disable;	/* 1: disable HT function; 0: enable HT function */
 
-
-#ifdef PRE_ANT_SWITCH
-	bool PreAntSwitch;	/* Preamble Antenna Switch */
-	short PreAntSwitchRSSI;	/* Preamble Antenna Switch RSSI threshold */
-	short PreAntSwitchTimeout; /* Preamble Antenna Switch timeout in seconds */
-#endif /* PRE_ANT_SWITCH */
-
-#ifdef CFO_TRACK
-	short CFOTrack;	/* CFO Tracking. 0=>use default, 1=>track, 2-7=> track 8-n times, 8=>done tracking */
-#endif /* CFO_TRACK */
-
 #ifdef NEW_RATE_ADAPT_SUPPORT
 	unsigned short lowTrafficThrd;		/* Threshold for reverting to default MCS when traffic is low */
 	short TrainUpRuleRSSI;	/* If TrainUpRule=2 then use Hybrid rule when RSSI < TrainUpRuleRSSI */
@@ -5790,26 +5779,6 @@ INT	Set_Trigger_Sounding_Proc(struct rtmp_adapter *pAd, char *arg);
 
 INT Set_RateAdaptInterval(struct rtmp_adapter *pAd, char *arg);
 
-
-#ifdef PRE_ANT_SWITCH
-INT Set_PreAntSwitch_Proc(struct rtmp_adapter *pAd, char *arg);
-INT Set_PreAntSwitchRSSI_Proc(struct rtmp_adapter *pAd, char *arg);
-INT Set_PreAntSwitchTimeout_Proc(struct rtmp_adapter *pAd, char *arg);
-
-#endif /* PRE_ANT_SWITCH */
-
-
-
-#ifdef CFO_TRACK
-INT Set_CFOTrack_Proc(struct rtmp_adapter *pAd, char *arg);
-
-#ifdef CFO_TRACK
-#ifdef CONFIG_AP_SUPPORT
-INT rtmp_cfo_track(struct rtmp_adapter *pAd, MAC_TABLE_ENTRY *pEntry, INT lastClient);
-#endif /* CONFIG_AP_SUPPORT */
-#endif /* CFO_TRACK */
-
-#endif // CFO_TRACK //
 
 #ifdef DBG_CTRL_SUPPORT
 INT Set_DebugFlags_Proc(struct rtmp_adapter *pAd, char *arg);

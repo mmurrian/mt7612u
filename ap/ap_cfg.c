@@ -2655,16 +2655,6 @@ INT	Show_BaTable_Proc(struct rtmp_adapter *pAd, char *arg)
 
 INT Show_RAInfo_Proc(struct rtmp_adapter *pAd, char *arg)
 {
-#ifdef PRE_ANT_SWITCH
-	DBGPRINT(RT_DEBUG_OFF, ("PreAntSwitch: %d\n", pAd->CommonCfg.PreAntSwitch));
-	DBGPRINT(RT_DEBUG_OFF, ("PreAntSwitchRSSI: %d\n", pAd->CommonCfg.PreAntSwitchRSSI));
-#endif /* PRE_ANT_SWITCH */
-
-#ifdef CFO_TRACK
-	DBGPRINT(RT_DEBUG_OFF, ("CFOTrack: %d\n", pAd->CommonCfg.CFOTrack));
-#endif /* CFO_TRACK */
-
-
 #ifdef NEW_RATE_ADAPT_SUPPORT
 	DBGPRINT(RT_DEBUG_OFF, ("LowTrafficThrd: %d\n", pAd->CommonCfg.lowTrafficThrd));
 	DBGPRINT(RT_DEBUG_OFF, ("TrainUpRule: %d\n", pAd->CommonCfg.TrainUpRule));

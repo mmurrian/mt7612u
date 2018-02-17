@@ -1761,11 +1761,6 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 	pAd->CommonCfg.TrainUpHighThrd = 110;
 #endif /* NEW_RATE_ADAPT_SUPPORT */
 
-
-
-#ifdef CFO_TRACK
-#endif /* CFO_TRACK */
-
 #ifdef DBG_CTRL_SUPPORT
 	pAd->CommonCfg.DebugFlags = 0;
 #endif /* DBG_CTRL_SUPPORT */
