@@ -985,14 +985,6 @@ VOID AP_AMPDU_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 
 	RtmpUSB_WriteSubTxResource(pAd, pTxBlk, true, &freeCnt);
 
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-	if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-		dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), (u8 *)pHeader_802_11);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
-
 	/*
 		Kick out Tx
 	*/
@@ -1110,13 +1102,6 @@ VOID AP_AMSDU_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 			FirstTx = RtmpUSB_WriteMultiTxResource(pAd, pTxBlk, frameNum, &freeCnt);
 		else
 			LastTxIdx = RtmpUSB_WriteMultiTxResource(pAd, pTxBlk, frameNum, &freeCnt);
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-			dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), NULL);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
 
 		frameNum++;
 
@@ -1389,14 +1374,6 @@ VOID AP_Legacy_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 
 	RtmpUSB_WriteSingleTxResource(pAd, pTxBlk, true, &freeCnt);
 
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-	if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-		dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), (u8 *)wifi_hdr);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
-
 	pAd->RalinkCounters.KickTxCount++;
 	pAd->RalinkCounters.OneSecTxDoneCount++;
 
@@ -1630,14 +1607,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 
 		RtmpUSB_WriteFragTxResource(pAd, pTxBlk, fragNum, &freeCnt);
 
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-			dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), (u8 *)pHeader_802_11);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
-
 		pAd->RalinkCounters.KickTxCount++;
 		pAd->RalinkCounters.OneSecTxDoneCount++;
 
@@ -1759,14 +1728,6 @@ VOID AP_ARalink_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 			FirstTx = RtmpUSB_WriteMultiTxResource(pAd, pTxBlk, frameNum, &freeCnt);
 		else
 			LastTxIdx = RtmpUSB_WriteMultiTxResource(pAd, pTxBlk, frameNum, &freeCnt);
-
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-			dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), NULL);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
 
 		frameNum++;
 

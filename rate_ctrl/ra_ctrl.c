@@ -1892,26 +1892,6 @@ VOID MlmeRALog(
 				TxErrorRatio, tp, bfRatio) );
 		}
 		else
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_RA_LOG)
-		{
-			struct {
-				unsigned short phyMode;
-				unsigned short per;
-				unsigned short tp;
-				unsigned short bfRatio;
-			} raLogInfo;
-
-			raLogInfo.phyMode = pEntry->HTPhyMode.word;
-			raLogInfo.per = TxErrorRatio;
-			raLogInfo.tp = tp;
-			raLogInfo.bfRatio = bfRatio;
-			dbQueueEnqueue(0x7e, (u8 *)&raLogInfo);
-		}
-		else
-#endif /*  INCLUDE_DEBUG_QUEUE */
-#endif /*  DBG_CTRL_SUPPORT */
 		{
 			DBGPRINT_RAW(RT_DEBUG_ERROR,("%s[%d]: M=%d %c%c%c%c- PER=%ld%% TP=%ld ",
 				raLogType==RAL_QUICK_DRS? " Q": (raLogType==RAL_NEW_DRS? "\nRA": "\nra"),

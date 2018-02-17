@@ -3026,13 +3026,6 @@ bool rtmp_rx_done_handle(struct rtmp_adapter *pAd)
 		RTMPWIEndianChange(pAd , (u8 *)pRxWI, TYPE_RXWI);
 #endif
 
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_RXWI)
-			dbQueueEnqueueRxFrame(pData, (u8 *)pHeader, pAd->CommonCfg.DebugFlags);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
-
 		/* build RX_BLK */
 		rxblk.pRxWI = pRxWI;
 		rxblk.pHeader = pHeader;

@@ -1781,12 +1781,6 @@ typedef struct _COMMON_CONFIG {
 #define DBF_DBQ_NO_BCN			0x0200	/* Disable logging of RX Beacon frames */
 #define DBF_LOG_VCO_CAL			0x0400	/* Log VCO cal */
 #define DBF_DISABLE_CAL			0x0800	/* Disable Divider Calibration at channel change */
-#ifdef INCLUDE_DEBUG_QUEUE
-#define DBF_DBQ_TXFIFO			0x1000	/* Enable logging of TX information from FIFO */
-#define DBF_DBQ_TXFRAME			0x2000	/* Enable logging of Frames queued for TX */
-#define DBF_DBQ_RXWI_FULL		0x4000	/* Enable logging of full RXWI */
-#define DBF_DBQ_RXWI			0x8000	/* Enable logging of partial RXWI */
-#endif /* INCLUDE_DEBUG_QUEUE */
 
 #define DBF_SHOW_RA_LOG			0x010000	/* Display concise Rate Adaptation information */
 #define DBF_SHOW_ZERO_RA_LOG	0x020000	/* Include RA Log entries when TxCount is 0 */
@@ -5776,12 +5770,6 @@ INT Set_RateAdaptInterval(struct rtmp_adapter *pAd, char *arg);
 #ifdef DBG_CTRL_SUPPORT
 INT Set_DebugFlags_Proc(struct rtmp_adapter *pAd, char *arg);
 
-#ifdef INCLUDE_DEBUG_QUEUE
-INT Set_DebugQueue_Proc(struct rtmp_adapter *pAd, char *arg);
-void dbQueueEnqueue(u8 type, u8 *data);
-void dbQueueEnqueueTxFrame(u8 *txwi, u8 *pDot11Hdr);
-void dbQueueEnqueueRxFrame(u8 *pRxWI, u8 *pDot11Hdr ULONG flags);
-#endif /* INCLUDE_DEBUG_QUEUE */
 #endif /* DBG_CTRL_SUPPORT */
 
 INT Show_DescInfo_Proc(struct rtmp_adapter *pAd, char *arg);

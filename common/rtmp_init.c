@@ -972,14 +972,6 @@ VOID NICUpdateFifoStaCounters(struct rtmp_adapter *pAd)
 
 		wcid = (u8)StaFifo.field.wcid;
 
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFIFO) {
-			dbQueueEnqueue(0x73, (u8 *)(&StaFifo.word));
-		}
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
-
 		/* ignore NoACK and MGMT frame use 0xFF as WCID */
 		if ((StaFifo.field.TxAckRequired == 0) ||
 		    (wcid >= MAX_LEN_OF_MAC_TABLE)) {
@@ -1000,10 +992,6 @@ VOID NICUpdateFifoStaCounters(struct rtmp_adapter *pAd)
 			pid = (u8)StaFifo.field.PidType;
 
 		pEntry = &pAd->MacTab.Content[wcid];
-
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 		if (IS_MT76x2U(pAd)) {
 			if(pEntry->LowPacket == false)

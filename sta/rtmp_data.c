@@ -1458,13 +1458,6 @@ VOID STA_AMPDU_Frame_Tx(
 
 		RtmpUSB_WriteSingleTxResource(pAd, pTxBlk, true, &FreeNumber);
 
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-			dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), (u8 *)pHeader_802_11);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
-
 		/* Kick out Tx */
 			HAL_KickOutTx(pAd, pTxBlk, pTxBlk->QueIdx);
 
@@ -1576,13 +1569,6 @@ VOID STA_AMSDU_Frame_Tx(
 			LastTxIdx =
 			    RtmpUSB_WriteMultiTxResource(pAd, pTxBlk, frameNum,
 						     &FreeNumber);
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-			dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), NULL);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
 
 		frameNum++;
 
@@ -1701,13 +1687,6 @@ VOID STA_Legacy_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 	RTMPWriteTxWI_Data(pAd, (struct mt7612u_txwi *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), pTxBlk);
 	RtmpUSB_WriteSingleTxResource(pAd, pTxBlk, true, &FreeNumber);
 
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-	if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-		dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), (u8 *)wifi_hdr);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
-
 	pAd->RalinkCounters.KickTxCount++;
 	pAd->RalinkCounters.OneSecTxDoneCount++;
 
@@ -1815,13 +1794,6 @@ VOID STA_ARalink_Frame_Tx(
 			LastTxIdx =
 			    RtmpUSB_WriteMultiTxResource(pAd, pTxBlk, frameNum,
 						     &freeCnt);
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-			dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), NULL);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
 
 		frameNum++;
 
@@ -2040,13 +2012,6 @@ VOID STA_Fragment_Frame_Tx(
 
 		RTMPWriteTxWI_Data(pAd, (struct mt7612u_txwi *) (&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), pTxBlk);
 		RtmpUSB_WriteFragTxResource(pAd, pTxBlk, fragNum, &freeCnt);
-
-#ifdef DBG_CTRL_SUPPORT
-#ifdef INCLUDE_DEBUG_QUEUE
-		if (pAd->CommonCfg.DebugFlags & DBF_DBQ_TXFRAME)
-			dbQueueEnqueueTxFrame((u8 *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), (u8 *)pHeader_802_11);
-#endif /* INCLUDE_DEBUG_QUEUE */
-#endif /* DBG_CTRL_SUPPORT */
 
 		pAd->RalinkCounters.KickTxCount++;
 		pAd->RalinkCounters.OneSecTxDoneCount++;
