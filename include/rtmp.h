@@ -545,9 +545,6 @@ typedef struct _RTMP_DMACB {
 	struct sk_buff *pNextNdisPacket;
 
 	RTMP_DMABUF DmaBuf;	/* Associated DMA buffer structure */
-#ifdef CACHE_LINE_32B
-	RXD_STRUC LastBDInfo;
-#endif /* CACHE_LINE_32B */
 } RTMP_DMACB, *PRTMP_DMACB;
 
 typedef struct _RTMP_TX_RING {
