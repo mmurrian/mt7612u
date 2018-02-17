@@ -251,9 +251,6 @@ void AP_QueuePsActionPacket(
 	{
 		/* DuplicatePkt = DuplicatePacket(get_netdev_from_bssid(pAd, pMacEntry->apidx), pPacket, pMacEntry->apidx);*/
 
-#ifdef UAPSD_CC_FUNC_PS_MGMT_TO_LEGACY
-Label_Legacy_PS:
-#endif /* UAPSD_CC_FUNC_PS_MGMT_TO_LEGACY */
 		if (pMacEntry->PsQueue.Number >= MAX_PACKETS_IN_PS_QUEUE)
 		{
 			dev_kfree_skb_any(pPacket);
