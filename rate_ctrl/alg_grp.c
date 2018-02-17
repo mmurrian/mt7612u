@@ -1019,9 +1019,6 @@ VOID MlmeNewRateAdapt(
 {
 	unsigned short 	phyRateLimit20 = 0;
 	bool		bTrainUp = false;
-#ifdef TXBF_AWARE
-	bool 	invertTxBf = false;
-#endif
 	u8 *pTable = pEntry->pTable;
 	u8 CurrRateIdx = pEntry->CurrTxRateIndex;
 	RTMP_RA_GRP_TB *pCurrTxRate = PTX_RA_GRP_ENTRY(pTable, CurrRateIdx);
@@ -1035,35 +1032,9 @@ VOID MlmeNewRateAdapt(
 
 	if (TxErrorRatio >= TrainDown)
 	{
-#ifdef TXBF_AWARE
-		RTMP_RA_GRP_TB *pDownRate, *pLastNonBfRate;
-#endif
-
 		/*  Downgrade TX quality if PER >= Rate-Down threshold */
 		MlmeSetTxQuality(pEntry, CurrRateIdx, DRS_TX_QUALITY_WORST_BOUND);
 
-#ifdef TXBF_AWARE
-		/*
-			Need to train down. If BF and last Non-BF is no worse than the down rate then
-			go to last Non-BF rate. Otherwise just go to the down rate
-		*/
-
-		pDownRate = PTX_RA_GRP_ENTRY(pTable, DownRateIdx);
-		pLastNonBfRate = PTX_RA_GRP_ENTRY(pTable, pEntry->lastNonBfRate);
-
-		if ((pEntry->phyETxBf || pEntry->phyITxBf) &&
-			(pLastNonBfRate->dataRate >= pDownRate->dataRate)
-#ifdef DBG_CTRL_SUPPORT
-			&& ((pAd->CommonCfg.DebugFlags & DBF_NO_BF_AWARE_RA)==0)
-#endif /* DBG_CTRL_SUPPORT */
-		)
-		{
-			invertTxBf = true;
-			pEntry->CurrTxRateIndex = pEntry->lastNonBfRate;
-			pEntry->LastSecTxRateChangeAction = RATE_DOWN;
-		}
-		else
-#endif /*  TXBF_AWARE */
 		if (CurrRateIdx != DownRateIdx)
 		{
 			pEntry->CurrTxRateIndex = DownRateIdx;
@@ -1128,63 +1099,6 @@ VOID MlmeNewRateAdapt(
 			pEntry->CurrTxRateIndex = UpRateIdx;
 			pEntry->LastSecTxRateChangeAction = RATE_UP;
 		}
-#ifdef TXBF_AWARE
-		else
-#ifdef DBG_CTRL_SUPPORT
-		if ((pAd->CommonCfg.DebugFlags & DBF_NO_BF_AWARE_RA)==0)
-#endif /* DBG_CTRL_SUPPORT */
-		{
-			/*  If not at the highest rate then try inverting BF state */
-			if (pEntry->phyETxBf || pEntry->phyITxBf)
-			{
-				/*  If BF then try the same MCS non-BF unless PER is good */
-				if (TxErrorRatio > TrainUp)
-				{
-					if (pEntry->TxQuality[CurrRateIdx])
-						pEntry->TxQuality[CurrRateIdx]--;
-
-					if (pEntry->TxQuality[CurrRateIdx]==0)
-					{
-						invertTxBf = true;
-						pEntry->CurrTxRateIndex = CurrRateIdx;
-						pEntry->LastSecTxRateChangeAction = RATE_UP;
-					}
-				}
-			}
-			else if (pEntry->eTxBfEnCond>0 || pEntry->iTxBfEn)
-			{
-				/*  First try Up Rate with BF */
-				if ((CurrRateIdx != UpRateIdx) &&
-					 MlmeTxBfAllowed(pAd, pEntry, (RTMP_RA_LEGACY_TB *)pUpRate))
-				{
-					if (pEntry->BfTxQuality[UpRateIdx])
-						pEntry->BfTxQuality[UpRateIdx]--;
-
-					if (pEntry->BfTxQuality[UpRateIdx]==0)
-					{
-						invertTxBf = true;
-						pEntry->CurrTxRateIndex = UpRateIdx;
-						pEntry->LastSecTxRateChangeAction = RATE_UP;
-					}
-				}
-
-				/*  Try Same Rate if Up Rate failed */
-				if (pEntry->LastSecTxRateChangeAction==RATE_NO_CHANGE &&
-					MlmeTxBfAllowed(pAd, pEntry, (RTMP_RA_LEGACY_TB *)pCurrTxRate))
-				{
-					if (pEntry->BfTxQuality[CurrRateIdx])
-						pEntry->BfTxQuality[CurrRateIdx]--;
-
-					if (pEntry->BfTxQuality[CurrRateIdx]==0)
-					{
-						invertTxBf = true;
-						pEntry->CurrTxRateIndex = CurrRateIdx;
-						pEntry->LastSecTxRateChangeAction = RATE_UP;
-					}
-				}
-			}
-		}
-#endif /*  TXBF_AWARE*/
 	}
 
 	/*  Handle the rate change */
@@ -1205,63 +1119,50 @@ VOID MlmeNewRateAdapt(
 
 		/*  Save last rate information */
 		pEntry->lastRateIdx = CurrRateIdx;
-#ifdef TXBF_AWARE
-		if (pEntry->eTxBfEnCond > 0)
+		pCurrTxRate = PTX_RA_GRP_ENTRY(pTable, CurrRateIdx);
+		//For VHT Mode
+		if((pCurrTxRate->Mode == 4) && (pCurrTxRate->dataRate == 1))
 		{
-			pEntry->lastRatePhyTxBf = pEntry->phyETxBf;
-			pEntry->phyETxBf ^= invertTxBf;
+			if (pEntry->eTxBfEnCond > 0)
+			{
+				pEntry->phyETxBf = true;
+				pEntry->lastRatePhyTxBf = pEntry->phyETxBf;
+			}
+			else
+			{
+				pEntry->phyITxBf = true;
+				pEntry->lastRatePhyTxBf = pEntry->phyITxBf;
+				}
 		}
+		//For HT Mode
+		else if((pCurrTxRate->Mode == 3 || pCurrTxRate->Mode == 2)
+			&& (pCurrTxRate->CurrMCS < 8))
+			{
+				if (pEntry->eTxBfEnCond > 0)
+				{
+					pEntry->phyETxBf = true;
+					pEntry->lastRatePhyTxBf = pEntry->phyETxBf;
+				}
+				else
+				{
+					pEntry->phyITxBf = true;
+					pEntry->lastRatePhyTxBf = pEntry->phyITxBf;
+				}
+			}
+		// Other OFDM and CCK
 		else
 		{
-			pEntry->lastRatePhyTxBf = pEntry->phyITxBf;
-			pEntry->phyITxBf ^= invertTxBf;
+			if (pEntry->eTxBfEnCond > 0)
+			{
+				pEntry->phyETxBf = false;
+				pEntry->lastRatePhyTxBf = pEntry->phyETxBf;
+			}
+			else
+			{
+				pEntry->phyITxBf = false;
+				pEntry->lastRatePhyTxBf = pEntry->phyITxBf;
+			}
 		}
-#else
-    pCurrTxRate = PTX_RA_GRP_ENTRY(pTable, CurrRateIdx);
-    //For VHT Mode
-    if((pCurrTxRate->Mode == 4) && (pCurrTxRate->dataRate == 1))
-    {
-		    if (pEntry->eTxBfEnCond > 0)
-		    {
-		        pEntry->phyETxBf = true;
-		        pEntry->lastRatePhyTxBf = pEntry->phyETxBf;
-	      }
-		    else
-		    {
-			      pEntry->phyITxBf = true;
-	          pEntry->lastRatePhyTxBf = pEntry->phyITxBf;
-			  }
-    }
-    //For HT Mode
-    else if((pCurrTxRate->Mode == 3 || pCurrTxRate->Mode == 2)
-        && (pCurrTxRate->CurrMCS < 8))
-    {
-		    if (pEntry->eTxBfEnCond > 0)
-		    {
-		        pEntry->phyETxBf = true;
-		        pEntry->lastRatePhyTxBf = pEntry->phyETxBf;
-	      }
-		    else
-		    {
-			      pEntry->phyITxBf = true;
-	          pEntry->lastRatePhyTxBf = pEntry->phyITxBf;
-			  }
-    }
-    // Other OFDM and CCK
-    else
-    {
-		    if (pEntry->eTxBfEnCond > 0)
-		    {
-		        pEntry->phyETxBf = false;
-		        pEntry->lastRatePhyTxBf = pEntry->phyETxBf;
-	      }
-		    else
-		    {
-			      pEntry->phyITxBf = false;
-	          pEntry->lastRatePhyTxBf = pEntry->phyITxBf;
-			  }
-    }
-#endif /* TXBF_AWARE */
 
 		/*  Update TxQuality */
 		if (pEntry->LastSecTxRateChangeAction == RATE_DOWN)
