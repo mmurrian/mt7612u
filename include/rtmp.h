@@ -6302,13 +6302,6 @@ VOID RTUSBInitRxDesc(struct rtmp_adapter *pAd, RX_CONTEXT *pRxContext);
 VOID RTUSBBulkRxHandle(ULONG data);
 VOID InitUSBDevice(RT_CMD_USB_INIT *pConfig, VOID *pAd);
 
-
-#ifdef SOFT_ENCRYPT
-bool RTMPExpandPacketForSwEncrypt(struct rtmp_adapter *pAd, TX_BLK *pTxBlk);
-VOID RTMPUpdateSwCacheCipherInfo(struct rtmp_adapter *pAd, TX_BLK *pTxBlk, u8 *pHdr);
-#endif /* SOFT_ENCRYPT */
-
-
 /*
 	OS Related funciton prototype definitions.
 	TODO: Maybe we need to move these function prototypes to other proper place.

@@ -432,20 +432,6 @@ static inline VOID APFindCipherAlgorithm(struct rtmp_adapter *pAd, TX_BLK *pTxBl
 			if (CipherAlg)
 				pKey = &pAd->MacTab.Content[RAWcid].PairwiseKey;
 
-#ifdef SOFT_ENCRYPT
-			if (CLIENT_STATUS_TEST_FLAG(pMacEntry, fCLIENT_STATUS_SOFTWARE_ENCRYPT))
-			{
-				TX_BLK_SET_FLAG(pTxBlk, fTX_bSwEncrypt);
-
-				/* TSC increment pre encryption transmittion */
-				if (pKey == NULL)
-					DBGPRINT(RT_DEBUG_ERROR, ("%s pKey == NULL!\n", __FUNCTION__));
-				else
-				{
-					INC_TX_TSC(pKey->TxTsc, LEN_WPA_TSC);
-				}
-			}
-#endif /* SOFT_ENCRYPT */
 		}
 	}
 	else if (wdev->WepStatus == Ndis802_11WEPEnabled) /* WEP always uses shared key table */
@@ -766,10 +752,6 @@ VOID AP_AMPDU_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 		memmove(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN], &pMacEntry->CachedBuf[0], TXWISize + sizeof(HEADER_802_11));
 		pHeaderBufPtr = (u8 *)(&pTxBlk->HeaderBuf[hdr_offset]);
 		APBuildCache802_11Header(pAd, pTxBlk, pHeaderBufPtr);
-
-#ifdef SOFT_ENCRYPT
-		RTMPUpdateSwCacheCipherInfo(pAd, pTxBlk, pHeaderBufPtr);
-#endif /* SOFT_ENCRYPT */
 	}
 	else
 	{
@@ -779,22 +761,8 @@ VOID AP_AMPDU_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 		pHeaderBufPtr = &pTxBlk->HeaderBuf[hdr_offset];
 	}
 
-#ifdef SOFT_ENCRYPT
-	if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-	{
-		if (RTMPExpandPacketForSwEncrypt(pAd, pTxBlk) == false)
-		{
-			dev_kfree_skb_any(pTxBlk->pPacket);
-			return;
-		}
-	}
-#endif /* SOFT_ENCRYPT */
-
 	if(pMacEntry->isCached
 		&& (pMacEntry->Protocol == (RTMP_GET_PACKET_PROTOCOL(pTxBlk->pPacket)))
-#ifdef SOFT_ENCRYPT
-		&& !TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt)
-#endif /* SOFT_ENCRYPT */
 		&& (pMacEntry->TxSndgType == SNDG_TYPE_DISABLE)
 	)
 	{
@@ -927,51 +895,6 @@ VOID AP_AMPDU_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 
 		pMacEntry->HdrPadLen = pTxBlk->HdrPadLen;
 
-#ifdef SOFT_ENCRYPT
-		if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-		{
-			u8 iv_offset = 0, ext_offset = 0;
-
-			/*
-				If original Ethernet frame contains no LLC/SNAP,
-				then an extra LLC/SNAP encap is required
-			*/
-			EXTRA_LLCSNAP_ENCAP_FROM_PKT_OFFSET(pTxBlk->pSrcBufData - 2, pTxBlk->pExtraLlcSnapEncap);
-
-			/* Insert LLC-SNAP encapsulation (8 octets) to MPDU data buffer */
-			if (pTxBlk->pExtraLlcSnapEncap)
-			{
-				/* Reserve the front 8 bytes of data for LLC header */
-				pTxBlk->pSrcBufData -= LENGTH_802_1_H;
-				pTxBlk->SrcBufLen += LENGTH_802_1_H;
-
-				memmove(pTxBlk->pSrcBufData, pTxBlk->pExtraLlcSnapEncap, 6);
-			}
-
-			/* Construct and insert specific IV header to MPDU header */
-			RTMPSoftConstructIVHdr(pTxBlk->CipherAlg,
-								   pTxBlk->KeyIdx,
-								   pTxBlk->pKey->TxTsc,
-								   pHeaderBufPtr,
-								   &iv_offset);
-			pHeaderBufPtr += iv_offset;
-			pTxBlk->MpduHeaderLen += iv_offset;
-
-			/* Encrypt the MPDU data by software */
-			RTMPSoftEncryptionAction(pAd,
-									 pTxBlk->CipherAlg,
-									 (u8 *)pHeader_802_11,
-									pTxBlk->pSrcBufData,
-									pTxBlk->SrcBufLen,
-									pTxBlk->KeyIdx,
-									   pTxBlk->pKey,
-									 &ext_offset);
-			pTxBlk->SrcBufLen += ext_offset;
-			pTxBlk->TotalFrameLen += ext_offset;
-
-		}
-		else
-#endif /* SOFT_ENCRYPT */
 		{
 
 
@@ -1286,17 +1209,6 @@ VOID AP_Legacy_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 	APFindCipherAlgorithm(pAd, pTxBlk);
 	APBuildCommon802_11Header(pAd, pTxBlk);
 
-#ifdef SOFT_ENCRYPT
-	if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-	{
-		if (RTMPExpandPacketForSwEncrypt(pAd, pTxBlk) == false)
-		{
-			dev_kfree_skb_any(pTxBlk->pPacket);
-			return;
-		}
-	}
-#endif /* SOFT_ENCRYPT */
-
 	/* skip 802.3 header */
 	pTxBlk->pSrcBufData = pTxBlk->pSrcBufHeader + LENGTH_802_3;
 	pTxBlk->SrcBufLen -= LENGTH_802_3;
@@ -1406,53 +1318,7 @@ VOID AP_Legacy_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 	pHeaderBufPtr = (u8 *) ROUND_UP(pHeaderBufPtr, 4);
 	pTxBlk->HdrPadLen = (ULONG)(pHeaderBufPtr - pTxBlk->HdrPadLen);
 
-#ifdef SOFT_ENCRYPT
-	if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
 	{
-		u8 iv_offset = 0, ext_offset = 0;
-
-		/*
-			If original Ethernet frame contains no LLC/SNAP,
-			then an extra LLC/SNAP encap is required
-		*/
-		EXTRA_LLCSNAP_ENCAP_FROM_PKT_OFFSET(pTxBlk->pSrcBufData - 2, pTxBlk->pExtraLlcSnapEncap);
-
-		/* Insert LLC-SNAP encapsulation (8 octets) to MPDU data buffer */
-		if (pTxBlk->pExtraLlcSnapEncap)
-		{
-			/* Reserve the front 8 bytes of data for LLC header */
-			pTxBlk->pSrcBufData -= LENGTH_802_1_H;
-			pTxBlk->SrcBufLen  += LENGTH_802_1_H;
-
-			memmove(pTxBlk->pSrcBufData, pTxBlk->pExtraLlcSnapEncap, 6);
-		}
-
-		/* Construct and insert specific IV header to MPDU header */
-		RTMPSoftConstructIVHdr(pTxBlk->CipherAlg,
-							   pTxBlk->KeyIdx,
-							   pTxBlk->pKey->TxTsc,
-							   pHeaderBufPtr,
-							   &iv_offset);
-		pHeaderBufPtr += iv_offset;
-		pTxBlk->MpduHeaderLen += iv_offset;
-
-		/* Encrypt the MPDU data by software */
-		RTMPSoftEncryptionAction(pAd,
-								 pTxBlk->CipherAlg,
-								 (u8 *)wifi_hdr,
-								pTxBlk->pSrcBufData,
-								pTxBlk->SrcBufLen,
-								pTxBlk->KeyIdx,
-								   pTxBlk->pKey,
-								 &ext_offset);
-		pTxBlk->SrcBufLen += ext_offset;
-		pTxBlk->TotalFrameLen += ext_offset;
-
-	}
-	else
-#endif /* SOFT_ENCRYPT */
-	{
-
 		/*
 			Insert LLC-SNAP encapsulation - 8 octets
 			if original Ethernet frame contains no LLC/SNAP,
@@ -1554,10 +1420,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 	bool bVLANPkt;
 	PQUEUE_ENTRY pQEntry;
 	PACKET_INFO PacketInfo;
-#ifdef SOFT_ENCRYPT
-	u8 *tmp_ptr = NULL;
-	uint32_t buf_offset = 0;
-#endif /* SOFT_ENCRYPT */
 	HTTRANSMIT_SETTING	*pTransmit;
 	UINT8 TXWISize = pAd->chipCap.TXWISize;
 
@@ -1584,21 +1446,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 
 	APFindCipherAlgorithm(pAd, pTxBlk);
 	APBuildCommon802_11Header(pAd, pTxBlk);
-
-#ifdef SOFT_ENCRYPT
-	/*
-		Check if the original data has enough buffer
-		to insert or append extended field.
-	*/
-	if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-	{
-		if (RTMPExpandPacketForSwEncrypt(pAd, pTxBlk) == false)
-		{
-			dev_kfree_skb_any(pTxBlk->pPacket);
-			return;
-		}
-	}
-#endif /* SOFT_ENCRYPT */
 
 	if (pTxBlk->CipherAlg == CIPHER_TKIP)
 	{
@@ -1640,39 +1487,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 	pHeaderBufPtr = (u8 *) ROUND_UP(pHeaderBufPtr, 4);
 	pTxBlk->HdrPadLen = (ULONG)(pHeaderBufPtr - pTxBlk->HdrPadLen);
 
-#ifdef SOFT_ENCRYPT
-	if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-	{
-		u8 iv_offset = 0;
-
-		/*
-			If original Ethernet frame contains no LLC/SNAP,
-			then an extra LLC/SNAP encap is required
-		*/
-		EXTRA_LLCSNAP_ENCAP_FROM_PKT_OFFSET(pTxBlk->pSrcBufData - 2, pTxBlk->pExtraLlcSnapEncap);
-
-		/* Insert LLC-SNAP encapsulation (8 octets) to MPDU data buffer */
-		if (pTxBlk->pExtraLlcSnapEncap)
-		{
-			/* Reserve the front 8 bytes of data for LLC header */
-			pTxBlk->pSrcBufData -= LENGTH_802_1_H;
-			pTxBlk->SrcBufLen  += LENGTH_802_1_H;
-
-			memmove(pTxBlk->pSrcBufData, pTxBlk->pExtraLlcSnapEncap, 6);
-		}
-
-		/* Construct and insert specific IV header to MPDU header */
-		RTMPSoftConstructIVHdr(pTxBlk->CipherAlg,
-							   pTxBlk->KeyIdx,
-							   pTxBlk->pKey->TxTsc,
-							   pHeaderBufPtr,
-							   &iv_offset);
-		pHeaderBufPtr += iv_offset;
-		pTxBlk->MpduHeaderLen += iv_offset;
-
-	}
-	else
-#endif /* SOFT_ENCRYPT */
 	{
 
 		/*
@@ -1779,22 +1593,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 
 	pTxBlk->TotalFragNum = 0xff;
 
-#ifdef SOFT_ENCRYPT
-	if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-	{
-		/* store the outgoing frame for calculating MIC per fragmented frame */
-		tmp_ptr = kmalloc(pTxBlk->SrcBufLen, GFP_ATOMIC);
-		if (tmp_ptr == NULL)
-		{
-			DBGPRINT(RT_DEBUG_ERROR, ("!!!%s : no memory for SW MIC calculation !!!\n",
-										__FUNCTION__));
-			dev_kfree_skb_any(pTxBlk->pPacket);
-			return;
-		}
-		memmove(tmp_ptr, pTxBlk->pSrcBufData, pTxBlk->SrcBufLen);
-	}
-#endif /* SOFT_ENCRYPT */
-
 	do {
 
 		FreeMpduSize = pAd->CommonCfg.FragmentThreshold - LENGTH_CRC;
@@ -1828,28 +1626,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 		else
 			pTxBlk->FrameGap = IFS_SIFS;
 
-#ifdef SOFT_ENCRYPT
-		if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-		{
-			u8 ext_offset = 0;
-
-			memmove(pTxBlk->pSrcBufData, tmp_ptr + buf_offset, pTxBlk->SrcBufLen);
-			buf_offset += pTxBlk->SrcBufLen;
-
-			/* Encrypt the MPDU data by software */
-			RTMPSoftEncryptionAction(pAd,
-									 pTxBlk->CipherAlg,
-									 (u8 *)pHeader_802_11,
-									pTxBlk->pSrcBufData,
-									pTxBlk->SrcBufLen,
-									pTxBlk->KeyIdx,
-									   pTxBlk->pKey,
-									 &ext_offset);
-			pTxBlk->SrcBufLen += ext_offset;
-			pTxBlk->TotalFrameLen += ext_offset;
-		}
-#endif /* SOFT_ENCRYPT */
-
 		RTMPWriteTxWI_Data(pAd, (struct mt7612u_txwi *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), pTxBlk);
 
 		RtmpUSB_WriteFragTxResource(pAd, pTxBlk, fragNum, &freeCnt);
@@ -1865,28 +1641,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 		pAd->RalinkCounters.KickTxCount++;
 		pAd->RalinkCounters.OneSecTxDoneCount++;
 
-#ifdef SOFT_ENCRYPT
-		if (TX_BLK_TEST_FLAG(pTxBlk, fTX_bSwEncrypt))
-		{
-			if ((pTxBlk->CipherAlg == CIPHER_WEP64) || (pTxBlk->CipherAlg == CIPHER_WEP128))
-			{
-				inc_iv_byte(pTxBlk->pKey->TxTsc, LEN_WEP_TSC, 1);
-				/* Construct and insert 4-bytes WEP IV header to MPDU header */
-				RTMPConstructWEPIVHdr(pTxBlk->KeyIdx, pTxBlk->pKey->TxTsc,
-										pHeaderBufPtr - (LEN_WEP_IV_HDR));
-			}
-			else if (pTxBlk->CipherAlg == CIPHER_TKIP)
-				;
-			else if (pTxBlk->CipherAlg == CIPHER_AES)
-			{
-				inc_iv_byte(pTxBlk->pKey->TxTsc, LEN_WPA_TSC, 1);
-				/* Construct and insert 8-bytes CCMP header to MPDU header */
-				RTMPConstructCCMPHdr(pTxBlk->KeyIdx, pTxBlk->pKey->TxTsc,
-										pHeaderBufPtr - (LEN_CCMP_HDR));
-			}
-		}
-		else
-#endif /* SOFT_ENCRYPT */
 		{
 			/* Update the frame number, remaining size of the NDIS packet payload. */
 			if (fragNum == 0 && pTxBlk->pExtraLlcSnapEncap)
@@ -1900,11 +1654,6 @@ VOID AP_Fragment_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 		pHeader_802_11->Frag++;	 /* increase Frag # */
 
 	}while(SrcRemainingBytes > 0);
-
-#ifdef SOFT_ENCRYPT
-	if (tmp_ptr != NULL)
-		kfree(tmp_ptr);
-#endif /* SOFT_ENCRYPT */
 
 	/*
 		Kick out Tx
@@ -3146,27 +2895,6 @@ VOID APHandleRxDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 		/* received in the A-MPDU when an A-MPDU is received. */
 		pCounter->MPDUInReceivedAMPDUCount.u.LowPart ++;
 	}
-
-#ifdef SOFT_ENCRYPT
-	/* Use software to decrypt the encrypted frame if necessary.
-	   If a received "encrypted" unicast packet(its WEP bit as 1)
-	   and it's passed to driver with "Decrypted" marked as 0 in RxD. */
-	if ((pHeader->FC.Wep == 1) && (pRxInfo->Decrypted == 0))
-	{
-		if (RTMPSoftDecryptionAction(pAd,
-								 	(u8 *)pHeader,
-									 UserPriority,
-									 &pEntry->PairwiseKey,
-								 	 pRxBlk->pData,
-									 &(pRxBlk->DataSize)) != NDIS_STATUS_SUCCESS)
-		{
-			dev_kfree_skb_any(pRxPacket);
-			return;
-		}
-		/* Record the Decrypted bit as 1 */
-		pRxInfo->Decrypted = 1;
-	}
-#endif /* SOFT_ENCRYPT */
 
 	if (!((pHeader->Frag == 0) && (pFmeCtrl->MoreFrag == 0)))
 	{
