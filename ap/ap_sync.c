@@ -565,8 +565,8 @@ VOID APPeerProbeReqAction(
 		if (pAd->CommonCfg.bRdg)
 			RalinkSpecificIe[5] |= 0x4;
 
-	if (pAd->CommonCfg.b256QAM_2G && WMODE_2G_ONLY(pAd->CommonCfg.PhyMode))
-		RalinkSpecificIe[5] |= 0x8;
+		if (pAd->CommonCfg.b256QAM_2G && WMODE_2G_ONLY(pAd->CommonCfg.PhyMode))
+			RalinkSpecificIe[5] |= 0x8;
 
 		MakeOutgoingFrame(pOutBuffer+FrameLen, &TmpLen,
 							9, RalinkSpecificIe,

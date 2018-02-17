@@ -301,67 +301,34 @@ u8 RateSwitchTableAdapt11N1S[] = {
 	11, 0x21, 32, 30,  50,  10,    0,     8,    0,  7, /* mcs32 or 20M/mcs0 */
 };
 
-#ifdef SUPPORT_SHORT_GI_RA
-/*  Indices for Short GI rates in 11N2S table */
-  #define sg07	18		/*  mcs7+shortGI index */
-  #define sg14	17		/*  mcs14+shortGI index */
-  #define sg15	16		/*  mcs15+shortGI index */
-#endif
-
 u8 RateSwitchTableAdapt11N2S[] = {
 /* item no.   mcs   highPERThrd  upMcs3    upMcs1
         mode   lowPERThrd  downMcs    upMcs2
 */
 	22,   15,  0,  0,   0,   0,    0,   0,   0,   0,
-     0, 0x21,  0, 30,  50,  21,    1,   8,   1,   7,/* mcs0 */
+	 0, 0x21,  0, 30,  50,  21,    1,   8,   1,   7,/* mcs0 */
 	 1, 0x21,  1, 20,  50,   0,   16,   9,   2,  13,/* mcs1 */
 	 2, 0x21,  2, 20,  50,   1,   17,   9,   3,  20,/* mcs2 */
 	 3, 0x21,  3, 15,  50,   2,   17,  10,   4,  26,/* mcs3 */
 	 4, 0x21,  4, 15,  30,   3,   18,  11,   5,  39,/* mcs4 */
 	 5, 0x21,  5, 10,  25,   4,   18,  12,   6,  52,/* mcs5 */
 	 6, 0x21,  6,  8,  14,   5,   19,  12,   7,  59,/* mcs6 */
-#ifdef SUPPORT_SHORT_GI_RA
-	 7, 0x21,  7,  8,  14,   6,   19,  12, sg07,  65,/* mcs7 */
-#else
 	 7, 0x21,  7,  8,  14,   6,   19,  12,   7,  65,/* mcs7 */
-#endif
 	 8, 0x20,  8, 30,  50,   0,   16,   9,   2,  13,/* mcs8 */
 	 9, 0x20,  9, 20,  50,   8,   17,  10,   4,  26,/* mcs9 */
 	10, 0x20, 10, 20,  40,   9,   18,  11,   5,  39,/* mcs10 */
 	11, 0x20, 11, 15,  30,  10,   18,  12,   6,  52,/* mcs11 */
 	12, 0x20, 12, 15,  30,  11,   20,  13,  12,  78,/* mcs12 */
 	13, 0x20, 13,  8,  20,  12,   20,  14,  13, 104,/* mcs13 */
-#ifdef SUPPORT_SHORT_GI_RA
-	14, 0x20, 14,  8,  18,  13,   21,  15,sg14, 117,/* mcs14 */
-	15, 0x20, 15,  8,  25,  14,   21,sg15,sg14, 130,/* mcs15 */
-	16, 0x22, 15,  8,  25,  15,   21,sg15,sg15, 144,/* mcs15+shortGI */
-
-    17, 0x22, 14,  8,  14,  14,   21,sg15,  15, 130, /* mcs14+shortGI */
-    18, 0x23,  7,  8,  14,   7,   19,  12,sg07,  72, /* mcs7+shortGI */
-#else
 	14, 0x20, 14,  8,  18,  13,   21,  15,  14, 117,/* mcs14 */
 	15, 0x20, 15,  8,  25,  14,   21,  16,  15, 130,/* mcs15 */
 	16, 0x22, 15,  8,  25,  15,   21,  16,  16, 144,/* mcs15+shortGI */
-    17,    0,  0,  0,   0,   0,   0,    0,   0,   0,
-    18,    0,  0,  0,   0,   0,   0,    0,   0,   0,
-#endif
-    19, 0x00,  0, 40,  101, 19 ,  19,    19,   20,  1, /* cck-1M */
-    20, 0x00,  1, 40,  50,  19,   20,    20,   21,  2, /* cck-2M */
-    21, 0x21, 32, 30,  50,  20,   0,     8,    0,   7, /* mcs32 or 20M/mcs0 */
+	17,    0,  0,  0,   0,   0,   0,    0,   0,   0,
+	18,    0,  0,  0,   0,   0,   0,    0,   0,   0,
+	19, 0x00,  0, 40,  101, 19 ,  19,    19,   20,  1, /* cck-1M */
+	20, 0x00,  1, 40,  50,  19,   20,    20,   21,  2, /* cck-2M */
+	21, 0x21, 32, 30,  50,  20,   0,     8,    0,   7, /* mcs32 or 20M/mcs0 */
 };
-
-#ifdef SUPPORT_SHORT_GI_RA
-/*  Indices for Short GI rates in 11N3S table */
-  #undef sg07
-  #undef sg14
-  #undef sg15
-  #define sg07	29		/*  mcs7+shortGI index */
-  #define sg14	27		/*  mcs14+shortGI index */
-  #define sg15	28		/*  mcs15+shortGI index */
-  #define sg21	25		/*  mcs21+shortGI index */
-  #define sg22	26		/*  mcs22+shortGI index */
-  #define sg23	24		/*  mcs23+shortGI index */
-#endif
 
 u8 RateSwitchTableAdapt11N3S[] = {
 /* item no   mcs   highPERThrd   upMcs3     upMcs1
@@ -369,60 +336,38 @@ u8 RateSwitchTableAdapt11N3S[] = {
 */
 	33,   23,  0,  0,   0,   0,    0,    0,    0,   0,
 	 0, 0x21,  0, 30,  50,  32,    1,    8,    1,   7, /* mcs0 */
-     1, 0x21,  1, 20,  50,   0,   16,    9,    2,  13, /* mcs1 */
-     2, 0x21,  2, 20,  50,   1,   17,    9,    3,  20, /* mcs2 */
-     3, 0x21,  3, 15,  50,   2,   17,   10,    4,  26, /* mcs3 */
-     4, 0x21,  4, 15,  30,   3,   18,   11,    5,  39, /* mcs4 */
-     5, 0x21,  5, 10,  25,   4,   18,   12,    6,  52, /* mcs5 */
-     6, 0x21,  6,  8,  14,   5,   19,   12,    7,  59, /* mcs6 */
-#ifdef SUPPORT_SHORT_GI_RA
-	 7, 0x21,  7,  8,  14,   6,   19,   12, sg07,  65, /* mcs7 */
-#else
+	 1, 0x21,  1, 20,  50,   0,   16,    9,    2,  13, /* mcs1 */
+	 2, 0x21,  2, 20,  50,   1,   17,    9,    3,  20, /* mcs2 */
+	 3, 0x21,  3, 15,  50,   2,   17,   10,    4,  26, /* mcs3 */
+	 4, 0x21,  4, 15,  30,   3,   18,   11,    5,  39, /* mcs4 */
+	 5, 0x21,  5, 10,  25,   4,   18,   12,    6,  52, /* mcs5 */
+	 6, 0x21,  6,  8,  14,   5,   19,   12,    7,  59, /* mcs6 */
 	 7, 0x21,  7,  8,  14,   6,   19,   12,    7,  65, /* mcs7 */
-#endif /* SUPPORT_SHORT_GI_RA */
-     8, 0x20,  8, 30,  50,   0,   16,    9,    2,  13, /* mcs8 */
-     9, 0x20,  9, 20,  50,   8,   17,   10,    4,  26, /* mcs9 */
-    10, 0x20, 10, 20,  40,   9,   18,   11,    5,  39, /* mcs10 */
-    11, 0x20, 11, 15,  30,  10,   18,   12,    6,  52, /* mcs11 */
-    12, 0x20, 12, 15,  30,  11,   20,   13,   12,  78, /* mcs12 */
-    13, 0x20, 13,  8,  20,  12,   20,   14,   13, 104, /* mcs13 */
-#ifdef SUPPORT_SHORT_GI_RA
-    14, 0x20, 14,  8,  18,  13,   21,   15, sg14, 117, /* mcs14 */
-    15, 0x20, 15,  8,  14,  14,   21, sg15, sg14, 130, /* mcs15 */
-#else
-    14, 0x20, 14,  8,  18,  13,   21,   15,   14, 117, /* mcs14 */
-    15, 0x20, 15,  8,  14,  14,   21,   15,   15, 130, /* mcs15 */
-#endif /* SUPPORT_SHORT_GI_RA */
-    16, 0x20, 16, 30,  50,   8,   17,    9,    3,  20, /* mcs16 */
-    17, 0x20, 17, 20,  50,  16,   18,   11,    5,  39, /* mcs17 */
-    18, 0x20, 18, 20,  40,  17,   19,   12,    7,  59, /* mcs18 */
-    19, 0x20, 19, 15,  30,  18,   20,   13,   19,  78, /* mcs19 */
-    20, 0x20, 20, 15,  30,  19,   21,   15,   20, 117, /* mcs20 */
-#ifdef SUPPORT_SHORT_GI_RA
-    21, 0x20, 21,  8,  20,  20,   22, sg21,   21, 156, /* mcs21 */
-    22, 0x20, 22,  8,  20,  21,   23, sg22, sg21, 176, /* mcs22 */
-    23, 0x20, 23,  6,  18,  22, sg23,   23, sg22, 195, /* mcs23 */
-    24, 0x22, 23,  6,  14,  23, sg23, sg23, sg23, 217, /* mcs23+shortGI */
-
-    25, 0x22, 21,  6,  18,  21, sg22,   22, sg21, 173, /* mcs21+shortGI */
-    26, 0x22, 22,  6,  18,  22, sg23,   23, sg22, 195, /* mcs22+shortGI */
-    27, 0x22, 14,  8,  14,  14,   21, sg15,   15, 130, /* mcs14+shortGI */
-    28, 0x22, 15,  8,  14,  15,   21, sg15, sg15, 144, /* mcs15+shortGI */
-    29, 0x23,  7,  8,  14,   7,   19,   12,   29,  72, /* mcs7+shortGI */
-#else
-    21, 0x20, 21,  8,  20,  20,   22,   21,   21, 156, /* mcs21 */
-    22, 0x20, 22,  8,  20,  21,   23,   22,   22, 176, /* mcs22 */
-    23, 0x20, 23,  6,  18,  22,   24,   23,   23, 195, /* mcs23 */
-    24, 0x22, 23,  6,  14,  23,   24,   24,   24, 217, /* mcs23+shortGI */
-    25,    0,  0,  0,   0,   0,   0,     0,    0,   0,
-    26,    0,  0,  0,   0,   0,   0,     0,    0,   0,
-    27,    0,  0,  0,   0,   0,   0,     0,    0,   0,
-    28,    0,  0,  0,   0,   0,   0,     0,    0,   0,
-    29,    0,  0,  0,   0,   0,   0,     0,    0,   0,
-#endif /* SUPPORT_SHORT_GI_RA */
-    30, 0x00,  0, 40,  101, 30 ,  30,    30,   31,  1, /* cck-1M */
-    31, 0x00,  1, 40,  50,  30,   31,    31,   32,  2, /* cck-2M */
-    32, 0x21, 32, 30,  50,  31,   0,     8,    0,   7, /* mcs32 or 20M/mcs0 */
+	 8, 0x20,  8, 30,  50,   0,   16,    9,    2,  13, /* mcs8 */
+	 9, 0x20,  9, 20,  50,   8,   17,   10,    4,  26, /* mcs9 */
+	10, 0x20, 10, 20,  40,   9,   18,   11,    5,  39, /* mcs10 */
+	11, 0x20, 11, 15,  30,  10,   18,   12,    6,  52, /* mcs11 */
+	12, 0x20, 12, 15,  30,  11,   20,   13,   12,  78, /* mcs12 */
+	13, 0x20, 13,  8,  20,  12,   20,   14,   13, 104, /* mcs13 */
+	14, 0x20, 14,  8,  18,  13,   21,   15,   14, 117, /* mcs14 */
+	15, 0x20, 15,  8,  14,  14,   21,   15,   15, 130, /* mcs15 */
+	16, 0x20, 16, 30,  50,   8,   17,    9,    3,  20, /* mcs16 */
+	17, 0x20, 17, 20,  50,  16,   18,   11,    5,  39, /* mcs17 */
+	18, 0x20, 18, 20,  40,  17,   19,   12,    7,  59, /* mcs18 */
+	19, 0x20, 19, 15,  30,  18,   20,   13,   19,  78, /* mcs19 */
+	20, 0x20, 20, 15,  30,  19,   21,   15,   20, 117, /* mcs20 */
+	21, 0x20, 21,  8,  20,  20,   22,   21,   21, 156, /* mcs21 */
+	22, 0x20, 22,  8,  20,  21,   23,   22,   22, 176, /* mcs22 */
+	23, 0x20, 23,  6,  18,  22,   24,   23,   23, 195, /* mcs23 */
+	24, 0x22, 23,  6,  14,  23,   24,   24,   24, 217, /* mcs23+shortGI */
+	25,    0,  0,  0,   0,   0,   0,     0,    0,   0,
+	26,    0,  0,  0,   0,   0,   0,     0,    0,   0,
+	27,    0,  0,  0,   0,   0,   0,     0,    0,   0,
+	28,    0,  0,  0,   0,   0,   0,     0,    0,   0,
+	29,    0,  0,  0,   0,   0,   0,     0,    0,   0,
+	30, 0x00,  0, 40,  101, 30 ,  30,    30,   31,  1, /* cck-1M */
+	31, 0x00,  1, 40,  50,  30,   31,    31,   32,  2, /* cck-2M */
+	32, 0x21, 32, 30,  50,  31,   0,     8,    0,   7, /* mcs32 or 20M/mcs0 */
 };
 
 
@@ -927,13 +872,7 @@ VOID MlmeGetSupportedMcs(
 /*  MlmeClearTxQuality - Clear TxQuality history only for the active BF state */
 VOID MlmeClearTxQuality(MAC_TABLE_ENTRY *pEntry)
 {
-#ifdef TXBF_AWARE
-	if (pEntry->phyETxBf || pEntry->phyITxBf)
-		memset(pEntry->BfTxQuality, 0, sizeof(pEntry->BfTxQuality));
-	else
-#endif /*  TXBF_AWARD */
-		memset(pEntry->TxQuality, 0, sizeof(pEntry->TxQuality));
-
+	memset(pEntry->TxQuality, 0, sizeof(pEntry->TxQuality));
 	memset(pEntry->PER, 0, sizeof(pEntry->PER));
 }
 
@@ -941,11 +880,7 @@ VOID MlmeClearTxQuality(MAC_TABLE_ENTRY *pEntry)
 /*  MlmeClearAllTxQuality - Clear both BF and non-BF TxQuality history */
 VOID MlmeClearAllTxQuality(MAC_TABLE_ENTRY *pEntry)
 {
-#ifdef TXBF_AWARE
-	memset(pEntry->BfTxQuality, 0, sizeof(pEntry->BfTxQuality));
-#endif /*  TXBF_AWARD */
 	memset(pEntry->TxQuality, 0, sizeof(pEntry->TxQuality));
-
 	memset(pEntry->PER, 0, sizeof(pEntry->PER));
 }
 
@@ -953,13 +888,6 @@ VOID MlmeClearAllTxQuality(MAC_TABLE_ENTRY *pEntry)
 /*  MlmeDecTxQuality - Decrement TxQuality of specified rate table entry */
 VOID MlmeDecTxQuality(MAC_TABLE_ENTRY *pEntry, u8 rateIndex)
 {
-#ifdef TXBF_AWARE
-	if (pEntry->phyETxBf || pEntry->phyITxBf) {
-		if (pEntry->BfTxQuality[rateIndex])
-			pEntry->BfTxQuality[rateIndex]--;
-	}
-	else
-#endif /*  TXBF_AWARD */
 	if (pEntry->TxQuality[rateIndex])
 		pEntry->TxQuality[rateIndex]--;
 }
@@ -967,25 +895,13 @@ VOID MlmeDecTxQuality(MAC_TABLE_ENTRY *pEntry, u8 rateIndex)
 
 VOID MlmeSetTxQuality(MAC_TABLE_ENTRY *pEntry, u8 rate_idx, unsigned short quality)
 {
-#ifdef TXBF_AWARE
-	if (pEntry->phyETxBf || pEntry->phyITxBf)
-		pEntry->BfTxQuality[rate_idx] = quality;
-	else
-#endif /*  TXBF_AWARD */
-		pEntry->TxQuality[rate_idx] = quality;
+	pEntry->TxQuality[rate_idx] = quality;
 }
-
 
 unsigned short MlmeGetTxQuality(MAC_TABLE_ENTRY *pEntry, u8 rateIndex)
 {
-#ifdef TXBF_AWARE
-	if (pEntry->phyETxBf || pEntry->phyITxBf)
-		return pEntry->BfTxQuality[rateIndex];
-#endif /*  TXBF_AWARD */
 	return pEntry->TxQuality[rateIndex];
 }
-
-
 
 #ifdef CONFIG_AP_SUPPORT
 VOID APMlmeSetTxRate(
