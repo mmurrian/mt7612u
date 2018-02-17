@@ -3522,12 +3522,6 @@ struct rtmp_adapter {
 	struct mt7612u_txwi NullTxWI;
 	unsigned short NullBufOffset[2];
 
-#ifdef MULTI_MAC_ADDR_EXT_SUPPORT
-	bool bUseMultiMacAddrExt;
-#endif /* MULTI_MAC_ADDR_EXT_SUPPORT */
-
-
-
 	struct mt7612u_mcu_ctrl MCUCtrl;
 
 #ifdef WLAN_SKB_RECYCLE
@@ -5518,16 +5512,6 @@ INT RT_CfgSetWPAPSKKey(
 INT	RT_CfgSetFixedTxPhyMode(char *arg);
 INT	RT_CfgSetTxMCSProc(char *arg, bool *pAutoRate);
 INT	RT_CfgSetAutoFallBack(struct rtmp_adapter *pAd, char *arg);
-
-#ifdef MULTI_MAC_ADDR_EXT_SUPPORT
-INT Set_EnMultiMacAddrExt_Proc(
-	IN struct rtmp_adapter *pAd,
-	IN char *arg);
-
-INT	Set_MultiMacAddrExt_Proc(
-	IN	struct rtmp_adapter *pAd,
-	IN	char *arg);
-#endif /* MULTI_MAC_ADDR_EXT_SUPPORT */
 
 int RTMPWPARemoveKeyProc(
 	IN  struct rtmp_adapter *pAd,
