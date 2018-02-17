@@ -1630,13 +1630,6 @@ typedef struct _COMMON_CONFIG {
 	bool bWmmCapable;	/* 0:disable WMM, 1:enable WMM */
 	QOS_CAPABILITY_PARM APQosCapability;	/* QOS capability of the current associated AP */
 	EDCA_PARM APEdcaParm;	/* EDCA parameters of the current associated AP */
-#ifdef MULTI_CLIENT_SUPPORT
-	bool bWmm;		/* have BSS enable/disable WMM */
-	u8 APCwmin;		/* record ap cwmin */
-	u8 APCwmax;	/* record ap cwmax */
-	u8 BSSCwmin;	/* record BSS cwmin */
-	uint32_t txRetryCfg;
-#endif /* MULTI_CLIENT_SUPPORT */
 	QBSS_LOAD_PARM APQbssLoad;	/* QBSS load of the current associated AP */
 	u8 AckPolicy[4];	/* ACK policy of the specified AC. see ACK_xxx */
 #ifdef CONFIG_STA_SUPPORT
@@ -6511,20 +6504,6 @@ VOID PeerDelBATxAdaptTimeOut(
 	IN PVOID SystemSpecific2,
 	IN PVOID SystemSpecific3);
 #endif /* PEER_DELBA_TX_ADAPT */
-
-#ifdef MULTI_CLIENT_SUPPORT
-VOID asic_change_tx_retry(
-	IN struct rtmp_adapter *pAd,
-	IN unsigned short num);
-
-VOID pkt_aggr_num_change(
-	IN struct rtmp_adapter *pAd,
-	IN unsigned short num);
-
-VOID asic_tune_be_wmm(
-	IN struct rtmp_adapter *pAd,
-	IN unsigned short num);
-#endif /* MULTI_CLIENT_SUPPORT */
 
 #ifdef DBG_DIAGNOSE
 INT Show_Diag_Proc(struct rtmp_adapter *pAd, char *arg);

@@ -428,19 +428,6 @@ VOID RTMPDrvOpen(struct rtmp_adapter *pAdSrc)
 	DBGPRINT(RT_DEBUG_OFF, ("%s(2):Check if PDMA is idle!\n", __FUNCTION__));
 	mt7612u_wait_pdma_usecs(pAd, 5, 10);
 //---Add by shiang for debug
-
-#ifdef CONFIG_AP_SUPPORT
-#ifdef MULTI_CLIENT_SUPPORT
-	pAd->CommonCfg.txRetryCfg = 0;
-
-	{
-		uint32_t TxRtyCfg;
-
-		mt76u_reg_read(pAd, TX_RTY_CFG, &TxRtyCfg);
-		pAd->CommonCfg.txRetryCfg = TxRtyCfg;
-	}
-#endif /* MULTI_CLIENT_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
 }
 
 

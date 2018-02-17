@@ -1084,22 +1084,11 @@ VOID NICUpdateFifoStaCounters(struct rtmp_adapter *pAd)
 				if(pEntry->PsMode == PWR_ACTIVE) {
 					int tid;
 
-#ifdef CONFIG_AP_SUPPORT
-#ifdef MULTI_CLIENT_SUPPORT
-					if ((pAd->ApCfg.EntryClientCount > 2) &&
-					    (pEntry->HTPhyMode.field.MODE >= MODE_HTMIX) &&
-					    (pEntry->lowTrafficCount >= 4 /* 2 sec */))
-						pEntry->NoBADataCountDown = 10;
-#endif /* MULTI_CLIENT_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
-
 					for (tid=0; tid<NUM_OF_TID; tid++)
 						BAOriSessionTearDown(pAd, pEntry->wcid,  tid, false, false);
 
 				}
 			}
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
 		} else {
 			if ((pEntry->PsMode != PWR_SAVE) &&
 			    (pEntry->NoBADataCountDown > 0)) {
@@ -1115,9 +1104,6 @@ VOID NICUpdateFifoStaCounters(struct rtmp_adapter *pAd)
 			/* update NoDataIdleCount when sucessful send packet to STA.*/
 			pEntry->NoDataIdleCount = 0;
 			pEntry->ContinueTxFailCnt = 0;
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 		}
 
 		if (IS_MT76x2U(pAd)) {

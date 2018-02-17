@@ -556,24 +556,6 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 		}
 	}
 
-#ifdef CONFIG_AP_SUPPORT
-#ifdef MULTI_CLIENT_SUPPORT
-	if (pAd->MacTab.Size < MAX_LEN_OF_MAC_TABLE) {
-		unsigned short size;
-
-		size = pAd->ApCfg.EntryClientCount;
-		asic_change_tx_retry(pAd, size);
-
-		if (IS_RT6352(pAd)) {
-			pkt_aggr_num_change(pAd, size);
-
-			if (pAd->CommonCfg.bWmm)
-				asic_tune_be_wmm(pAd, size);
-		}
-	}
-#endif /* MULTI_CLIENT_SUPPORT */
-#endif // CONFIG_AP_SUPPORT //
-
 	spin_unlock_bh(&pAd->MacTabLock);
 	return pEntry;
 }
