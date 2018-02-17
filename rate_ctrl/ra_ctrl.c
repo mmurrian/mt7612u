@@ -1815,8 +1815,6 @@ VOID MlmeRAInit(struct rtmp_adapter *pAd, MAC_TABLE_ENTRY *pEntry)
 }
 
 
-/* #define TIMESTAMP_RA_LOG	*/ /* Include timestamp in RA Log */
-
 /*
 	MlmeRALog - Prints concise Rate Adaptation log entry
 		The BF percentage counters are also updated
@@ -1832,14 +1830,6 @@ VOID MlmeRALog(
 	UINT ITxCount = pEntry->TxBFCounters.ITxSuccessCount + pEntry->TxBFCounters.ITxFailCount;
 	UINT TxCount = pEntry->TxBFCounters.TxSuccessCount + pEntry->TxBFCounters.TxFailCount + ETxCount + ITxCount;
 	ULONG bfRatio = 0;
-#ifdef TIMESTAMP_RA_LOG
-	ULONG newTime;
-	static ULONG saveRATime;
-	struct timeval tval;
-
-	do_gettimeofday(&tval);
-	newTime = (tval.tv_sec*1000000L + tval.tv_usec);
-#endif
 
 	if (TxTotalCnt !=0 || raLogType==RAL_QUICK_DRS
 #ifdef DBG_CTRL_SUPPORT
@@ -1908,9 +1898,6 @@ VOID MlmeRALog(
 	pEntry->LastETxCount = ETxCount;
 	pEntry->LastITxCount = ITxCount;
 	pEntry->LastTxCount = TxCount;
-#ifdef TIMESTAMP_RA_LOG
-	saveRATime = newTime;
-#endif
 }
 
 
