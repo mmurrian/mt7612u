@@ -1230,9 +1230,6 @@ VOID MlmePeriodicExec(
 	pAd->Mlme.PeriodicRound ++;
 	pAd->Mlme.GPIORound++;
 
-#ifndef WFA_VHT_PF
-#endif /* WFA_VHT_PF */
-
 	if (IS_MT76x2U(pAd)) {
 		update_rssi_for_channel_model(pAd);
 		/* dynamic_cck_mrc(pAd); */

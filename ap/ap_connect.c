@@ -631,26 +631,6 @@ VOID APUpdateBeaconFrame(struct rtmp_adapter *pAd, INT apidx)
 		}
 	}
 
-#ifdef WFA_VHT_PF
-	if (pAd->force_vht_op_mode == true)
-	{
-		ULONG TmpLen;
-		u8 operating_ie = IE_OPERATING_MODE_NOTIFY, operating_len = 1;
-		OPERATING_MODE operating_mode;
-
-		operating_mode.rx_nss_type = 0;
-		operating_mode.rx_nss = (pAd->vht_pf_op_ss - 1);
-		operating_mode.ch_width = pAd->vht_pf_op_bw;
-
-		MakeOutgoingFrame(pBeaconFrame+FrameLen, &TmpLen,
-						  1,	&operating_ie,
-						  1,	&operating_len,
-						  1,	&operating_mode,
-						  END_OF_ARGS);
-		FrameLen += TmpLen;
-	}
-#endif /* WFA_VHT_PF */
-
 	/* add WMM IE here */
 	if (pMbss->wdev.bWmmCapable)
 	{

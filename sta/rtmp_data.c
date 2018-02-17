@@ -356,18 +356,6 @@ VOID STAHandleRxDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 				pRxBlk->wcid, PRINT_MAC(pHeader->Addr1), PRINT_MAC(pHeader->Addr2), PRINT_MAC(pHeader->Addr3));
 			}
 		}
-
-#ifndef WFA_VHT_PF
-		// TODO: shiang@PF#2, is this atheros protection still necessary here???
-		/* check Atheros Client */
-		if ((pEntry->bIAmBadAtheros == false) && (pRxInfo->AMPDU == 1)
-		    && (pHeader->FC.Retry)) {
-			pEntry->bIAmBadAtheros = true;
-			pAd->CommonCfg.IOTestParm.bLastAtheros = true;
-			if (!STA_AES_ON(pAd))
-				RTMP_UPDATE_PROTECT(pAd, 8 , ALLN_SETPROTECT, true, false);
-		}
-#endif /* WFA_VHT_PF */
 	}
 
 	pRxBlk->pData = (u8 *) pHeader;

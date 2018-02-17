@@ -823,10 +823,6 @@ static u8 TxPktClassification(struct rtmp_adapter *pAd, struct sk_buff * pPacket
 
 		if (RTMP_GET_PACKET_MOREDATA(pPacket) || (pMacEntry->PsMode == PWR_SAVE))
 			TxFrameType |= TX_LEGACY_FRAME;
-#ifdef WFA_VHT_PF
-		else if (pAd->force_amsdu == true)
-			return (TxFrameType | TX_AMSDU_FRAME);
-#endif /* WFA_VHT_PF */
 		else if ((pMacEntry->TXBAbitmap & (1<<(RTMP_GET_PACKET_UP(pPacket)))) != 0)
 			return (TxFrameType | TX_AMPDU_FRAME);
 		else if(CLIENT_STATUS_TEST_FLAG(pMacEntry, fCLIENT_STATUS_AMSDU_INUSED))
@@ -3024,27 +3020,6 @@ VOID dev_rx_ctrl_frm(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 			}
 			break;
 #endif /* CONFIG_AP_SUPPORT */
-
-#ifdef WFA_VHT_PF
-		case SUBTYPE_RTS:
-			if (pAd->CommonCfg.vht_bw_signal && pRxBlk->wcid <= MAX_LEN_OF_MAC_TABLE)
-			{
-				PLCP_SERVICE_FIELD *srv_field;
-				RTS_FRAME *rts = (RTS_FRAME *)pRxBlk->pHeader;
-
-				if ((rts->Addr1[0] & 0x1) == 0x1) {
-					srv_field = (PLCP_SERVICE_FIELD *)&pRxBlk->pRxWI->RXWI_N.bbp_rxinfo[15];
-					if (srv_field->dyn_bw == 1) {
-						DBGPRINT(RT_DEBUG_TRACE, ("%02x:%02x:%02x:%02x:%02x:%02x, WCID:%d, DYN,BW=%d\n",
-									PRINT_MAC(rts->Addr1), pRxBlk->wcid, srv_field->cbw_in_non_ht));
-					}
-				}
-			}
-			break;
-
-		case SUBTYPE_CTS:
-			break;
-#endif /* WFA_VHT_PF */
 
 		case SUBTYPE_BLOCK_ACK:
 		case SUBTYPE_ACK:

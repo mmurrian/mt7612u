@@ -1355,35 +1355,6 @@ static void VHTParametersHook(
 			pAd->CommonCfg.vht_ldpc = true;
 		DBGPRINT(RT_DEBUG_TRACE, ("VHT: VHT_LDPC = %d\n", pAd->CommonCfg.vht_ldpc));
 	}
-
-#ifdef WFA_VHT_PF
-	/* VHT highest Tx Rate with LGI */
-	if (RTMPGetKeyParameter("VHT_TX_HRATE", pValueStr, 25, pInput, true))
-	{
-		Value = simple_strtol(pValueStr, 0, 10);
-
-		if (Value >= 0 && Value <= 2)
-			pAd->CommonCfg.vht_tx_hrate = Value;
-		else
-			pAd->CommonCfg.vht_tx_hrate = 0;
-		DBGPRINT(RT_DEBUG_TRACE, ("VHT: TX HighestRate = %d\n", pAd->CommonCfg.vht_tx_hrate));
-	}
-
-	if (RTMPGetKeyParameter("VHT_RX_HRATE", pValueStr, 25, pInput, true))
-	{
-		Value = simple_strtol(pValueStr, 0, 10);
-
-		if (Value >= 0 && Value <= 2)
-			pAd->CommonCfg.vht_rx_hrate = Value;
-		else
-			pAd->CommonCfg.vht_rx_hrate = 0;
-		DBGPRINT(RT_DEBUG_TRACE, ("VHT: RX HighestRate = %d\n", pAd->CommonCfg.vht_rx_hrate));
-	}
-
-	if (RTMPGetKeyParameter("VHT_MCS_CAP", pValueStr, 25, pInput, true))
-		set_vht_nss_mcs_cap(pAd, pValueStr);
-#endif /* WFA_VHT_PF */
-
 }
 
 
@@ -1505,15 +1476,6 @@ static void HTParametersHook(
 		pAd->CommonCfg.BACapability.field.AmsduEnable = (Value == 0) ? false : true;
 		DBGPRINT(RT_DEBUG_TRACE, ("HT: Tx A-MSDU = %s\n", (Value==0) ? "Disable" : "Enable"));
 	}
-
-#ifdef WFA_VHT_PF
-	if (RTMPGetKeyParameter("FORCE_AMSDU", pValueStr, 25, pInput, true))
-	{
-		Value = simple_strtol(pValueStr, 0, 10);
-		pAd->force_amsdu = (Value == 0) ? false : true;
-		DBGPRINT(RT_DEBUG_TRACE, ("HT: FORCE A-MSDU = %s\n", (Value==0) ? "Disable" : "Enable"));
-	}
-#endif /* WFA_VHT_PF */
 
 	/* MPDU Density*/
     if (RTMPGetKeyParameter("HT_MpduDensity", pValueStr, 25, pInput, true))

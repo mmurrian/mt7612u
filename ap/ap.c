@@ -656,11 +656,6 @@ VOID MacTableMaintenance(struct rtmp_adapter *pAd)
 	int lastClient=0;
 #endif /* defined(PRE_ANT_SWITCH) || defined(CFO_TRACK) */
 	MULTISSID_STRUCT *pMbss;
-#ifdef WFA_VHT_PF
-	RSSI_SAMPLE *worst_rssi = NULL;
-	int worst_rssi_sta_idx = 0;
-#endif /* WFA_VHT_PF */
-
 
 	CHAR rssiIndex = 0, overRssiThresCount = 0;
 
@@ -957,44 +952,7 @@ VOID MacTableMaintenance(struct rtmp_adapter *pAd)
 		{
 			pMacTable->fAllStationGainGoodMCS = false;
 		}
-
-#ifdef WFA_VHT_PF
-		if (worst_rssi == NULL) {
-			worst_rssi = &pEntry->RssiSample;
-			worst_rssi_sta_idx = i;
-		} else {
-			if (worst_rssi->AvgRssi0 > pEntry->RssiSample.AvgRssi0) {
-				worst_rssi = &pEntry->RssiSample;
-				worst_rssi_sta_idx = i;
-			}
-		}
-#endif /* WFA_VHT_PF */
 	}
-
-#ifdef WFA_VHT_PF
-	if (worst_rssi != NULL &&
-		((pAd->Mlme.OneSecPeriodicRound % 10) == 5) &&
-		(worst_rssi_sta_idx >= 1))
-	{
-		CHAR gain = 2;
-		if (worst_rssi->AvgRssi0 >= -40)
-			gain = 1;
-		else if (worst_rssi->AvgRssi0 <= -50)
-			gain = 2;
-		rt85592_lna_gain_adjust(pAd, gain);
-		DBGPRINT(RT_DEBUG_TRACE, ("%s():WorstRSSI for STA(%02x:%02x:%02x:%02x:%02x:%02x):%d,%d,%d, Set Gain as %s\n",
-					__FUNCTION__,
-					PRINT_MAC(pMacTable->Content[worst_rssi_sta_idx].Addr),
-					worst_rssi->AvgRssi0, worst_rssi->AvgRssi1, worst_rssi->AvgRssi2,
-					(gain == 2 ? "Mid" : "Low")));
-	}
-#endif /* WFA_VHT_PF */
-
-#ifdef PRE_ANT_SWITCH
-#endif /* PRE_ANT_SWITCH */
-
-#ifdef CFO_TRACK
-#endif /* CFO_TRACK */
 
 	/* Update the state of port per MBSS */
 	for (bss_index = BSS0; bss_index < MAX_MBSSID_NUM(pAd); bss_index++)

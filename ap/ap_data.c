@@ -1138,19 +1138,6 @@ VOID AP_AMSDU_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 			pHeaderBufPtr = AP_Build_AMSDU_Frame_Header(pAd, pTxBlk);
 
 			/* NOTE: TxWI->TxWIMPDUByteCnt will be updated after final frame was handled. */
-#ifdef WFA_VHT_PF
-			if (pAd->force_amsdu)
-			{
-				u8 RABAOriIdx;
-
-				if (pMacEntry) {
-					 RABAOriIdx = pMacEntry->BAOriWcidArray[pTxBlk->UserPriority];
-					if (((pMacEntry->TXBAbitmap & (1<<pTxBlk->UserPriority)) != 0) &&
-						(pAd->BATable.BAOriEntry[RABAOriIdx].amsdu_cap == true))
-						TX_BLK_SET_FLAG (pTxBlk, fTX_AmsduInAmpdu);
-				}
-			}
-#endif /* WFA_VHT_PF */
 			RTMPWriteTxWI_Data(pAd, (struct mt7612u_txwi *)(&pTxBlk->HeaderBuf[MT_DMA_HDR_LEN]), pTxBlk);
 
 			if (RTMP_GET_PACKET_LOWRATE(pTxBlk->pPacket))
@@ -1356,11 +1343,6 @@ VOID AP_Legacy_Frame_Tx(struct rtmp_adapter *pAd, TX_BLK *pTxBlk)
 	{
 		/* build QOS Control bytes */
 		*pHeaderBufPtr = ((pTxBlk->UserPriority & 0x0F) | (pAd->CommonCfg.AckPolicy[pTxBlk->QueIdx]<<5));
-#ifdef WFA_VHT_PF
-		if (pAd->force_noack)
-			*pHeaderBufPtr |= (1 << 5);
-#endif /* WFA_VHT_PF */
-
 
 		*(pHeaderBufPtr+1) = 0;
 		pHeaderBufPtr +=2;

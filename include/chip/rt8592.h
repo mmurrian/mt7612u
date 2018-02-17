@@ -54,9 +54,6 @@ INT RT85592_ReadChannelPwr(struct rtmp_adapter *pAd);
 INT bw_filter_cal(struct rtmp_adapter *pAd);
 
 INT rt85592_lna_gain_adjust(struct rtmp_adapter *pAd, CHAR gain);
-#ifndef WFA_VHT_PF
-INT rt85592_cca_adjust(struct rtmp_adapter *pAd);
-#endif /* WFA_VHT_PF */
 
 #endif /* RT8592 */
 
