@@ -856,11 +856,9 @@ VOID CFG80211OS_ScanEnd(
 	IN VOID *pCB,
 	IN bool FlgIsAborted)
 {
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,8,0))
 	struct cfg80211_scan_info info = {
 		.aborted = FlgIsAborted,
 	};
-#endif
 
 #ifdef CONFIG_STA_SUPPORT
 	struct mt7612u_cfg80211_cb *pCfg80211_CB = (struct mt7612u_cfg80211_cb *)pCB;
@@ -868,11 +866,7 @@ VOID CFG80211OS_ScanEnd(
 	if (pCfg80211_CB->pCfg80211_ScanReq)
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("80211> cfg80211_scan_done\n"));
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,8,0))
 		cfg80211_scan_done(pCfg80211_CB->pCfg80211_ScanReq, &info);
-#else
-		cfg80211_scan_done(pCfg80211_CB->pCfg80211_ScanReq, FlgIsAborted);
-#endif
 		pCfg80211_CB->pCfg80211_ScanReq = NULL;
 	}
 	else
@@ -1028,7 +1022,6 @@ VOID CFG80211OS_Roamed(
 	IN u8 *pReqIe, IN uint32_t ReqIeLen,
 	IN u8 *pRspIe, IN uint32_t RspIeLen)
 {
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,12,0))
 	struct cfg80211_roam_info roam_info = {
 		.bssid = pBSSID,
 		.req_ie = pReqIe,
@@ -1038,26 +1031,6 @@ VOID CFG80211OS_Roamed(
 	};
 
 	cfg80211_roamed(pNetDev, &roam_info, GFP_KERNEL);
-#else
-	cfg80211_roamed(pNetDev,
-		NULL,
-		pBSSID,
-		pReqIe, ReqIeLen,
-		pRspIe, RspIeLen,
-		GFP_KERNEL);
-
-#endif
 }
-
-
-#if 0  /* ULLI : disabled, not used ?? */
-VOID CFG80211OS_RecvObssBeacon(VOID *pCB, const u8 *pFrame, INT frameLen, INT freq)
-{
-	struct mt7612u_cfg80211_cb *pCfg80211_CB = (struct mt7612u_cfg80211_cb *)pCB;
-	struct wiphy *pWiphy = pCfg80211_CB->pCfg80211_Wdev->wiphy;
-
-        cfg80211_report_obss_beacon(pWiphy, pFrame,frameLen, freq, 50, GFP_ATOMIC);
-}
-#endif
 
 #endif /* RT_CFG80211_SUPPORT */

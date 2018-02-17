@@ -26,11 +26,6 @@
 
 #include <linux/ieee80211.h>
 
-/* ULLI : hack NUM_NL80211_BANDS is defined only in >= v4.7 */
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,7,0))
-#define NUM_NL80211_BANDS		IEEE80211_NUM_BANDS
-#endif
-
 typedef enum _NDIS_HOSTAPD_STATUS {
 	Hostapd_Diable = 0,
 	Hostapd_EXT,
