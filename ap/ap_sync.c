@@ -831,11 +831,7 @@ VOID APScanTimeout(
  */
 VOID APScanTimeoutAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 {
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-	pAd->MlmeAux.Channel = RTMPFindScanChannel(pAd, pAd->MlmeAux.Channel);
-#else
 	pAd->MlmeAux.Channel = NextChannel(pAd, pAd->MlmeAux.Channel);
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
 #ifdef CONFIG_AP_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
 	{
@@ -928,11 +924,7 @@ VOID APMlmeScanReqAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 		memmove(pAd->MlmeAux.Ssid, Ssid, SsidLen);
 
 		/* start from the first channel */
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-		pAd->MlmeAux.Channel = RTMPFindScanChannel(pAd, 0);
-#else
 		pAd->MlmeAux.Channel = FirstChannel(pAd);
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
 
 		/* Let BBP register at 20MHz to do scan */
 		mt7612u_bbp_set_bw(pAd, BW_20);
@@ -1123,13 +1115,7 @@ VOID ApSiteSurvey(
 
 	AsicDisableSync(pAd);
 
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-	if (((pAd->ApCfg.bPartialScanning == true) && (pAd->ApCfg.LastPartialScanChannel == 0)) ||
-		(pAd->ApCfg.bPartialScanning == false))
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
-	{
-		BssTableInit(&pAd->ScanTab);
-	}
+	BssTableInit(&pAd->ScanTab);
 	pAd->Mlme.ApSyncMachine.CurrState = AP_SYNC_IDLE;
 
 	memset(ScanReq.Ssid, 0, MAX_LEN_OF_SSID);
@@ -1139,12 +1125,12 @@ VOID ApSiteSurvey(
 	    ScanReq.SsidLen = pSsid->SsidLength;
 	    memmove(ScanReq.Ssid, pSsid->Ssid, pSsid->SsidLength);
 	}
-    ScanReq.BssType = BSS_ANY;
-    ScanReq.ScanType = ScanType;
-    pAd->ApCfg.bAutoChannelAtBootup = ChannelSel;
+	ScanReq.BssType = BSS_ANY;
+	ScanReq.ScanType = ScanType;
+	pAd->ApCfg.bAutoChannelAtBootup = ChannelSel;
 
-    MlmeEnqueue(pAd, AP_SYNC_STATE_MACHINE, APMT2_MLME_SCAN_REQ, sizeof(MLME_SCAN_REQ_STRUCT), &ScanReq, 0);
-    RTMP_MLME_HANDLER(pAd);
+	MlmeEnqueue(pAd, AP_SYNC_STATE_MACHINE, APMT2_MLME_SCAN_REQ, sizeof(MLME_SCAN_REQ_STRUCT), &ScanReq, 0);
+	RTMP_MLME_HANDLER(pAd);
 }
 
 
@@ -1153,53 +1139,6 @@ bool ApScanRunning(struct rtmp_adapter *pAd)
 	return (pAd->Mlme.ApSyncMachine.CurrState == AP_SCAN_LISTEN) ? true : false;
 }
 
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-/*
-	==========================================================================
-	Description:
-
-	Return:
-		scan_channel - channel to scan.
-	Note:
-		return 0 if no more next channel
-	==========================================================================
- */
-u8 FindPartialScanChannel(
-	IN struct rtmp_adapter *pAd)
-{
-	u8 scan_channel = 0;
-	if (pAd->ApCfg.PartialScanChannelNum > 0)
-	{
-		pAd->ApCfg.PartialScanChannelNum--;
-
-		if (pAd->ApCfg.LastPartialScanChannel == 0)
-			scan_channel = FirstChannel(pAd);
-		else
-			scan_channel = NextChannel(pAd, pAd->ApCfg.LastPartialScanChannel);
-
-		/* update last scanned channel */
-		pAd->ApCfg.LastPartialScanChannel = scan_channel;
-		if (scan_channel == 0)
-		{
-			pAd->ApCfg.bPartialScanning = false;
-			pAd->ApCfg.PartialScanChannelNum = DEFLAUT_PARTIAL_SCAN_CH_NUM;
-		}
-	}
-	else
-	{
-		/* Pending for next partial scan */
-		scan_channel = 0;
-		pAd->ApCfg.PartialScanChannelNum = DEFLAUT_PARTIAL_SCAN_CH_NUM;
-	}
-	DBGPRINT(RT_DEBUG_TRACE, ("%s, %u, scan_channel = %u, PartialScanChannelNum = %u, LastPartialScanChannel = %u, bPartialScanning = %u\n",
-			__FUNCTION__, __LINE__,
-			scan_channel,
-			pAd->ApCfg.PartialScanChannelNum,
-			pAd->ApCfg.LastPartialScanChannel,
-			pAd->ApCfg.bPartialScanning));
-	return scan_channel;
-}
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
 #endif /* AP_SCAN_SUPPORT */
 
 

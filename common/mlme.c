@@ -1508,24 +1508,6 @@ VOID MlmePeriodicExec(
 		RTMP_MLME_HANDLER(pAd);
 	}
 
-#ifdef CONFIG_AP_SUPPORT
-#ifdef AP_PARTIAL_SCAN_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-		if ((pAd->ApCfg.bPartialScanning == true)  &&
-			(pAd->ApCfg.PartialScanChannelNum == DEFLAUT_PARTIAL_SCAN_CH_NUM))/* pAd->ApCfg.PartialScanChannelNum == DEFLAUT_PARTIAL_SCAN_CH_NUM means that one partial scan is finished */
-		{
-			if (((pAd->ApCfg.PartialScanBreakTime++)%DEFLAUT_PARTIAL_SCAN_BREAK_TIME) == 0)
-				ApSiteSurvey(pAd, NULL, SCAN_ACTIVE, false); /* To check: when EXT_BUILD_CHANNEL_LIST, is the ScanType switched to SCAN_PASSIVE for DFS channels?*/
-		}
-	}
-#endif /* AP_PARTIAL_SCAN_SUPPORT */
-#endif /* CONFIG_AP_SUPPORT */
-
-
-
-
-
 	pAd->bUpdateBcnCntDone = false;
 }
 
