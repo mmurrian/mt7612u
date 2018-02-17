@@ -2232,9 +2232,5 @@ INT AsicSetChannel(struct rtmp_adapter *pAd, u8 ch, UINT8 bw, UINT8 ext_ch, bool
 	AsicSwitchChannel(pAd, ch, bScan);
 	AsicLockChannel(pAd, ch);
 
-#ifdef RT28xx
-	RT28xx_ch_tunning(pAd, bw);
-#endif /* RT28xx */
-
 	return 0;
 }
