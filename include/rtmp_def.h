@@ -106,10 +106,6 @@
 
 #define MAX_RX_PROCESS_CNT	(RX_RING_SIZE)
 
-#ifdef WLAN_SKB_RECYCLE
-#define NUM_RX_DESC     128
-#endif /* WLAN_SKB_RECYCLE */
-
 /*
 	WMM Note: If memory of your system is not much, please reduce the definition;
 	or when you do WMM test, the queue for low priority AC will be full, i.e.
