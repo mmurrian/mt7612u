@@ -1095,20 +1095,12 @@ enum WIFI_MODE{
 #define APMT2_MLME_SCAN_REQ		3
 #define APMT2_SCAN_TIMEOUT		4
 #define APMT2_MLME_SCAN_CNCL		5
-#ifdef CON_WPS
-#define APMT2_MLME_SCAN_COMPLETE        6
-#define AP_MAX_SYNC_MSG                 7
-#else
 #define AP_MAX_SYNC_MSG			6
-#endif /* CON_WPS */
 #else
 #define AP_MAX_SYNC_MSG			3
 #endif
 
 #define AP_SYNC_FUNC_SIZE               (AP_MAX_SYNC_STATE * AP_MAX_SYNC_MSG)
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 
 /* ============================================================================= */
 

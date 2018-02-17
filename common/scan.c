@@ -138,14 +138,6 @@ static INT scan_ch_restore(struct rtmp_adapter *pAd, u8 OpMode)
 		pAd->Mlme.ApSyncMachine.CurrState = AP_SYNC_IDLE;
 		RTMPResumeMsduTransmission(pAd);
 
-#ifdef CON_WPS
-		if (pAd->conWscStatus != CON_WPS_STATUS_DISABLED)
-		{
-			MlmeEnqueue(pAd, AP_SYNC_STATE_MACHINE, APMT2_MLME_SCAN_COMPLETE, 0, NULL,0 );
-			RTMP_MLME_HANDLER(pAd);
-		}
-#endif /* CON_WPS*/
-
 		/* iwpriv set auto channel selection*/
 		/* scanned all channels*/
 		if (pAd->ApCfg.bAutoChannelAtBootup==true)

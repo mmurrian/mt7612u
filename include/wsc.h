@@ -43,16 +43,6 @@
 #define EAP_TYPE_NOTIFY		0x02
 #define	EAP_TYPE_WSC		0xfe
 
-#ifdef CON_WPS
-typedef struct GNU_PACKED _WSC_UPNP_CTRL_WSC_BAND_STOP
-{
-	char    ifName[IFNAMSIZ];
-	CHAR    is2gBand;
-	CHAR    isApCli;
-	INT 	status;
-} WSC_UPNP_CTRL_WSC_BAND_STOP, *PWSC_UPNP_CTRL_WSC_BAND_STOP;
-#endif /* CON_WPS */
-
 /* structure to store Simple Config Attributes Info */
 typedef struct GNU_PACKED _WSC_LV_INFO {
     unsigned short  ValueLen;
