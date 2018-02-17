@@ -483,12 +483,10 @@ VOID MlmeAssocReqAction(
 				We will not see the definition in MODULE.
 				The definition can be saw in UTIL and NETIF.
 			*/
-/* #ifdef SIOCSIWGENIE */
 			if ((pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP & WPA_SUPPLICANT_ENABLE)
 			    && (pAd->StaCfg.wpa_supplicant_info.bRSN_IE_FromWpaSupplicant == true)) {
 				;
 			} else
-/* #endif */
 #endif /* WPA_SUPPLICANT_SUPPORT */
 			{
 				MakeOutgoingFrame(pOutBuffer + FrameLen, &tmp,
@@ -506,11 +504,9 @@ VOID MlmeAssocReqAction(
 				We will not see the definition in MODULE.
 				The definition can be saw in UTIL and NETIF.
 			*/
-/* #ifdef SIOCSIWGENIE */
 			if (((pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP & 0x7F) !=
 			     WPA_SUPPLICANT_ENABLE)
 			    || (pAd->StaCfg.wpa_supplicant_info.bRSN_IE_FromWpaSupplicant == false))
-/* #endif */
 #endif /* WPA_SUPPLICANT_SUPPORT */
 			{
 				/* Append Variable IE */
@@ -532,7 +528,6 @@ VOID MlmeAssocReqAction(
 			We will not see the definition in MODULE.
 			The definition can be saw in UTIL and NETIF.
 		*/
-/* #ifdef SIOCSIWGENIE */
 		if ((pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP & WPA_SUPPLICANT_ENABLE) &&
 		    (pAd->StaCfg.wpa_supplicant_info.bRSN_IE_FromWpaSupplicant == true)) {
 			ULONG TmpWpaAssocIeLen = 0;
@@ -551,7 +546,6 @@ VOID MlmeAssocReqAction(
 			/* Set Variable IEs Length */
 			pAd->StaCfg.ReqVarIELen = VarIesOffset;
 		}
-/* #endif */
 #endif /* WPA_SUPPLICANT_SUPPORT */
 
 

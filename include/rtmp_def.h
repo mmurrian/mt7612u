@@ -45,14 +45,6 @@
 #define BAND_24G	2
 #define BAND_BOTH	(BAND_5G | BAND_24G)
 
-
-#ifdef SNMP_SUPPORT
-/* for snmp, to get manufacturer OUI, 2008_0220 */
-#define ManufacturerOUI_LEN			3
-#define ManufacturerNAME			("Ralink Technology Company.")
-#define	ResourceTypeIdName			("Ralink_ID")
-#endif
-
 #define RALINK_2883_VERSION		((uint32_t)0x28830300)
 #define RALINK_2880E_VERSION	((uint32_t)0x28720200)
 #define RALINK_3883_VERSION		((uint32_t)0x38830400)

@@ -6064,17 +6064,6 @@ typedef struct CountryCodeToCountryRegion {
 } COUNTRY_CODE_TO_COUNTRY_REGION;
 #endif /* CONFIG_AP_SUPPORT */
 
-#ifdef SNMP_SUPPORT
-/*for snmp */
-typedef struct _DefaultKeyIdxValue
-{
-	u8 KeyIdx;
-	u8 Value[16];
-} DefaultKeyIdxValue, *PDefaultKeyIdxValue;
-#endif
-
-
-
 void STA_MonPktSend(struct rtmp_adapter *pAd, RX_BLK *pRxBlk);
 #ifdef CONFIG_STA_SUPPORT
 VOID RTMPSetDesiredRates(struct rtmp_adapter *pAd, LONG Rates);

@@ -838,28 +838,6 @@ typedef struct _NDIS_802_11_CAPABILITY {
 #define RTPRIV_IOCTL_FLAG_NOSPACE		0x0004	/* Notify driver didn't need copy msg to caller due to the caller didn't reserve space for this cmd */
 #endif /* DBG */
 
-
-#ifdef SNMP_SUPPORT
-/*SNMP ieee 802dot11 , 2008_0220 */
-/* dot11res(3) */
-#define RT_OID_802_11_MANUFACTUREROUI			0x0700
-#define RT_OID_802_11_MANUFACTURERNAME			0x0701
-#define RT_OID_802_11_RESOURCETYPEIDNAME		0x0702
-
-/* dot11smt(1) */
-#define RT_OID_802_11_PRIVACYOPTIONIMPLEMENTED	0x0703
-#define RT_OID_802_11_POWERMANAGEMENTMODE		0x0704
-#define OID_802_11_WEPDEFAULTKEYVALUE			0x0705	/* read , write */
-#define OID_802_11_WEPDEFAULTKEYID				0x0706
-#define RT_OID_802_11_WEPKEYMAPPINGLENGTH		0x0707
-#define OID_802_11_SHORTRETRYLIMIT				0x0708
-#define OID_802_11_LONGRETRYLIMIT				0x0709
-#define RT_OID_802_11_PRODUCTID					0x0710
-#define RT_OID_802_11_MANUFACTUREID				0x0711
-
-/* //dot11Phy(4) */
-#endif /* SNMP_SUPPORT */
-
 #define OID_802_11_CURRENTCHANNEL				0x0712
 
 /*dot11mac */

@@ -3057,7 +3057,6 @@ RtmpIoctl_rt_ioctl_giwgenie(struct rtmp_adapter *pAd, VOID *pData, ULONG Data)
 		We will not see the definition in MODULE.
 		The definition can be saw in UTIL and NETIF.
 	*/
-/* #ifdef SIOCSIWGENIE */
 	if ((pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP & 0x7F) == WPA_SUPPLICANT_ENABLE &&
 		(pAd->StaCfg.wpa_supplicant_info.WpaAssocIeLen > 0))
 	{
@@ -3068,7 +3067,6 @@ RtmpIoctl_rt_ioctl_giwgenie(struct rtmp_adapter *pAd, VOID *pData, ULONG Data)
 		memcpy(IoctlRsnIe->pRsnIe, pAd->StaCfg.wpa_supplicant_info.pWpaAssocIe, pAd->StaCfg.wpa_supplicant_info.WpaAssocIeLen);
 	}
 	else
-/* #endif */ /* SIOCSIWGENIE */
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
 	{
 		u8 RSNIe = IE_WPA;
