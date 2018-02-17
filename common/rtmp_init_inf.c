@@ -259,11 +259,7 @@ int rt28xx_init(struct rtmp_adapter *pAd)
 
 				/* Now Enable RxTx*/
 				RTMPEnableRxTx(pAd);
-#ifdef MT762x
-				// TODO: shiang-usw, check why MT76x2 don't need to set this flag here!
-				if (!IS_MT762x(pAd))
-#endif /* MT762x */
-					RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_START_UP);
+				RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_START_UP);
 
 				/* Let BBP register at 20MHz to do scan */
 				mt7612u_bbp_set_bw(pAd, BW_20);
