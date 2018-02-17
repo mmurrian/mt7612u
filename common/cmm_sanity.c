@@ -792,7 +792,7 @@ bool PeerBeaconAndProbeRspSanity_Old(
                     break;
 
                 /* Get cell power limit in dBm*/
-                if (!memcmp(pEid->Octet, CISCO_OUI, 3) == 1)
+                if (!memcmp(pEid->Octet, CISCO_OUI, 3))
                     *pAironetCellPowerLimit = *(pEid->Octet + 4);
                 break;
 
@@ -1393,7 +1393,7 @@ bool PeerBeaconAndProbeRspSanity(
 				break;
 
 			/* Get cell power limit in dBm*/
-			if (!memcmp(pEid->Octet, CISCO_OUI, 3) == 1)
+			if (!memcmp(pEid->Octet, CISCO_OUI, 3))
 				ie_list->AironetCellPowerLimit = *(pEid->Octet + 4);
 			break;
 

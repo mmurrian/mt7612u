@@ -3885,7 +3885,7 @@ VOID BssCipherParse(BSS_ENTRY *pBss)
 					pBss->bSES = true;
 					break;
 				}
-				else if (!memcmp(pEid->Octet, WPA_OUI, 4) != 1)
+				else if (memcmp(pEid->Octet, WPA_OUI, 4))
 				{
 					/* if unsupported vendor specific IE*/
 					break;
