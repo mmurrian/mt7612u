@@ -1540,11 +1540,6 @@ void convert_reordering_packet_to_preAMSDU_or_802_3_packet(
 			/* VLAN related */
 			MBSS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
 
-#ifdef WDS_VLAN_SUPPORT
-			if (VLAN_VID == 0) /* maybe WDS packet */
-				WDS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-#endif /* WDS_VLAN_SUPPORT */
-
 			if (VLAN_VID != 0)
 				VLAN_Size = LENGTH_802_1Q;
 

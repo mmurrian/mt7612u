@@ -1483,13 +1483,6 @@ UINT deaggregate_AMSDU_announce(
 	if ((FromWhichBSSID < pAd->ApCfg.BssidNum)
 		)
 		VLAN_Size = (pAd->ApCfg.MBSSID[FromWhichBSSID].wdev.VLAN_VID != 0) ? LENGTH_802_1Q : 0;
-#ifdef WDS_VLAN_SUPPORT
-	else if ((FromWhichBSSID >= MIN_NET_DEVICE_FOR_WDS) &&
-			(FromWhichBSSID < (MIN_NET_DEVICE_FOR_WDS + MAX_WDS_ENTRY)))
-	{
-		VLAN_Size = (pAd->WdsTab.WdsEntry[FromWhichBSSID - MIN_NET_DEVICE_FOR_WDS].wdev.VLAN_VID != 0) ? LENGTH_802_1Q : 0;
-	}
-#endif /* WDS_VLAN_SUPPORT */
 	else /* only MBssid support VLAN.*/
 		VLAN_Size = 0;
 #endif /* CONFIG_AP_SUPPORT */
@@ -1552,11 +1545,6 @@ UINT deaggregate_AMSDU_announce(
 			}
 
 			MBSS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, WhichBSSID);
-
-#ifdef WDS_VLAN_SUPPORT
-			if (VLAN_VID == 0) /* maybe WDS packet */
-				WDS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-#endif /* WDS_VLAN_SUPPORT */
 
 			RT_VLAN_8023_HEADER_COPY(pAd, VLAN_VID, VLAN_Priority,
 									Header802_3, LENGTH_802_3, pPayload,
@@ -2138,11 +2126,6 @@ if (0) {
 
 #ifdef CONFIG_AP_SUPPORT
 	MBSS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-
-#ifdef WDS_VLAN_SUPPORT
-	if (VLAN_VID == 0) /* maybe WDS packet */
-		WDS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-#endif /* WDS_VLAN_SUPPORT */
 #endif /* CONFIG_AP_SUPPORT */
 
 //+++Add by shiang for debug
@@ -2258,10 +2241,6 @@ VOID CmmRxRalinkFrameIndicate(
 		unsigned short VLAN_VID = 0, VLAN_Priority = 0;
 
 		MBSS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-#ifdef WDS_VLAN_SUPPORT
-	if (VLAN_VID == 0) /* maybe WDS packet */
-		WDS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-#endif /* WDS_VLAN_SUPPORT */
 
 		RT_VLAN_PKT_DUPLICATE(pPacket2, pAd, VLAN_VID, VLAN_Priority,
 							(pData2-LENGTH_802_3), LENGTH_802_3, pData2,
@@ -2288,11 +2267,6 @@ VOID CmmRxRalinkFrameIndicate(
 	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
 	{
 		MBSS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-
-#ifdef WDS_VLAN_SUPPORT
-		if (VLAN_VID == 0) /* maybe WDS packet */
-			WDS_VLAN_INFO_GET(pAd, VLAN_VID, VLAN_Priority, FromWhichBSSID);
-#endif /* WDS_VLAN_SUPPORT */
 	}
 #endif /* CONFIG_AP_SUPPORT */
 	RT_80211_TO_8023_PACKET(pAd, VLAN_VID, VLAN_Priority,
