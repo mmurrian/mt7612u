@@ -742,7 +742,7 @@ INT RTMP_AP_IoctlPrepare(struct rtmp_adapter *pAd, VOID *pCB)
     else if (pConfig->priv_flags == INT_MBSSID)
     {
 		pObj->ioctl_if_type = INT_MBSSID;
-/*    	if (!RTMPEqualMemory(net_dev->name, pAd->net_dev->name, 3))  // for multi-physical card, no MBSSID */
+/*    	if (memcmp(net_dev->name, pAd->net_dev->name, 3))  // for multi-physical card, no MBSSID */
 		if (strcmp(pConfig->name, RtmpOsGetNetDevName(pAd->net_dev)) != 0) /* sample */
     	{
 	        for (index = 1; index < pAd->ApCfg.BssidNum; index++)

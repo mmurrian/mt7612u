@@ -78,7 +78,7 @@ VOID APPeerProbeReqAction(
 		PhyMode = wdev->PhyMode;
 
 		if ( ((((ProbeReqParam.SsidLen == 0) && (!mbss->bHideSsid)) ||
-			   ((ProbeReqParam.SsidLen == mbss->SsidLen) && NdisEqualMemory(ProbeReqParam.Ssid, mbss->Ssid, (ULONG) ProbeReqParam.SsidLen)))
+			   ((ProbeReqParam.SsidLen == mbss->SsidLen) && !memcmp(ProbeReqParam.Ssid, mbss->Ssid, (ULONG) ProbeReqParam.SsidLen)))
 			 )
 		)
 			;
@@ -1102,7 +1102,7 @@ VOID APPeerBeaconAtScanAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 		}
 
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
-		if (RTMPEqualMemory(ie_list->Ssid, "DIRECT-", 7))
+		if (!memcmp(ie_list->Ssid, "DIRECT-", 7))
 			DBGPRINT(RT_DEBUG_OFF, ("%s P2P_SCANNING: %s [%d], channel =%u\n", __FUNCTION__, ie_list->Ssid, Idx,Elem->Channel));
 
         DBGPRINT(RT_DEBUG_TRACE, ("APPeerBeaconAtScanAction : Update the SSID %s in Kernel Table, Elem->Channel=%u\n", ie_list->Ssid,Elem->Channel));

@@ -294,7 +294,7 @@ VOID CFG80211DRV_OpsMgmtFrameProbeRegister(
 	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	while (pDevEntry != NULL)
 	{
-		if (RTMPEqualMemory(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
+		if (!memcmp(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
 			break;
 
 		pListEntry = pListEntry->pNext;
@@ -356,7 +356,7 @@ VOID CFG80211DRV_OpsMgmtFrameActionRegister(
 	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	while (pDevEntry != NULL)
 	{
-		if (RTMPEqualMemory(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
+		if (!memcmp(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
 			break;
 
 		pListEntry = pListEntry->pNext;

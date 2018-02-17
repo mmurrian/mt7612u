@@ -158,7 +158,7 @@ bool CFG80211_CheckActionFrameType(
 											isP2pFrame = true;
 			}
 			else if	((pFrame->Category == CATEGORY_VENDOR_SPECIFIC_WFD) &&
-				  RTMPEqualMemory(&pFrame->Octet[1], CFG_P2POUIBYTE, 4))
+				  !memcmp(&pFrame->Octet[1], CFG_P2POUIBYTE, 4))
 			{
 				isP2pFrame = true;
 				switch (pFrame->Subtype)

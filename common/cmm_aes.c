@@ -630,7 +630,7 @@ bool RTMPSoftDecryptAES(
 	/* 8 bytes to generate 64 bit MIC*/
 	for (i = 0 ; i < 8; i++) MIC[i] = aes_out[i];
 
-	if (!NdisEqualMemory(MIC, TrailMIC, 8))
+	if (memcmp(MIC, TrailMIC, 8))
 	{
 		DBGPRINT(RT_DEBUG_ERROR, ("RTMPSoftDecryptAES, MIC Error !\n"));	 /* MIC error. */
 		return false;
@@ -1070,7 +1070,7 @@ VOID CCMP_test_vector(
 	memset(res_buf, 0, 100);
 	res_len = 0;
 	RTMPConstructCCMPAAD(HDR, true, 0, 0, res_buf, &res_len);
-	if (res_len == 22 && NdisEqualMemory(res_buf, AAD, res_len))
+	if (res_len == 22 && !memcmp(res_buf, AAD, res_len))
 		printk("Construct AAD is OK!!!\n");
 	else
 	{
@@ -1081,7 +1081,7 @@ VOID CCMP_test_vector(
 	memset(res_buf, 0, 100);
 	res_len = 0;
 	RTMPConstructCCMPNonce(HDR, 0, 0, false, PN, res_buf, &res_len);
-	if (res_len == 13 && NdisEqualMemory(res_buf, CCM_NONCE, res_len))
+	if (res_len == 13 && !memcmp(res_buf, CCM_NONCE, res_len))
 		printk("Construct NONCE is OK!!!\n");
 	else
 	{
@@ -1092,7 +1092,7 @@ VOID CCMP_test_vector(
 	memset(res_buf, 0, 100);
 	res_len = 0;
 	RTMPConstructCCMPHdr(Key_ID, PN, res_buf);
-	if (NdisEqualMemory(res_buf, CCMP_HDR, 8))
+	if (!memcmp(res_buf, CCMP_HDR, 8))
 		printk("Construct CCMP_HDR is OK!!!\n");
 	else
 	{
@@ -1111,7 +1111,7 @@ VOID CCMP_test_vector(
 					res_buf, &res_len) == 0)
 	{
 		if (res_len == sizeof(C_TEXT_DATA) &&
-				NdisEqualMemory(res_buf, C_TEXT_DATA, res_len))
+				!memcmp(res_buf, C_TEXT_DATA, res_len))
 			printk("CCM_Encrypt is OK!!!\n");
 		else
 		{
@@ -1130,7 +1130,7 @@ VOID CCMP_test_vector(
 					res_buf, &res_len) == 0)
 	{
 		if (res_len == sizeof(P_TEXT_DATA) &&
-				NdisEqualMemory(res_buf, P_TEXT_DATA, res_len))
+				!memcmp(res_buf, P_TEXT_DATA, res_len))
 			printk("CCM_Decrypt is OK!!!\n");
 		else
 		{

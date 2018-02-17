@@ -451,7 +451,7 @@ VOID MlmeAssocReqAction(
 					bool FoundPMK = false;
 					/* Search chched PMKID, append it if existed */
 					for (idx = 0; idx < PMKID_NO; idx++) {
-						if (NdisEqualMemory(ApAddr, &pAd->StaCfg.SavedPMK[idx].BSSID, 6)) {
+						if (!memcmp(ApAddr, &pAd->StaCfg.SavedPMK[idx].BSSID, 6)) {
 							FoundPMK = true;
 							break;
 						}
@@ -464,7 +464,7 @@ VOID MlmeAssocReqAction(
 					   In this case, driver doesn't need to send PMKID to AP and WpaSupplicant.
 					 */
 					if ((wdev->AuthMode == Ndis802_11AuthModeWPA2)
-					    && (NdisEqualMemory(pAd->MlmeAux.Bssid, pAd->CommonCfg.LastBssid, MAC_ADDR_LEN))) {
+					    && (!memcmp(pAd->MlmeAux.Bssid, pAd->CommonCfg.LastBssid, MAC_ADDR_LEN))) {
 						FoundPMK = false;
 					}
 #endif /* WPA_SUPPLICANT_SUPPORT */
@@ -1279,7 +1279,7 @@ VOID AssocPostProc(
 				pEid = (PEID_STRUCT) pVIE;
 				/* For WPA/WPAPSK */
 				if ((pEid->Eid == IE_WPA)
-				    && (NdisEqualMemory(pEid->Octet, WPA_OUI, 4))
+				    && (!memcmp(pEid->Octet, WPA_OUI, 4))
 				    && (wdev->AuthMode == Ndis802_11AuthModeWPA
 					|| wdev->AuthMode == Ndis802_11AuthModeWPAPSK)) {
 					memmove(pEntry->RSN_IE, pVIE, (pEid->Len + 2));
@@ -1289,7 +1289,7 @@ VOID AssocPostProc(
 				}
 				/* For WPA2/WPA2PSK */
 				else if ((pEid->Eid == IE_RSN)
-					 && (NdisEqualMemory(pEid->Octet + 2, RSN_OUI, 3))
+					 && (!memcmp(pEid->Octet + 2, RSN_OUI, 3))
 					 && (wdev->AuthMode == Ndis802_11AuthModeWPA2
 					     || wdev->AuthMode == Ndis802_11AuthModeWPA2PSK)) {
 					memmove(pEntry->RSN_IE, pVIE, (pEid->Len + 2));

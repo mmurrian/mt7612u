@@ -682,7 +682,7 @@ VOID ap_cmm_peer_assoc_req_action(
 
     /* for hidden SSID sake, SSID in AssociateRequest should be fully verified */
 	if ((ie_list->SsidLen != pMbss->SsidLen) ||
-		(NdisEqualMemory(ie_list->Ssid, pMbss->Ssid, ie_list->SsidLen)==0))
+		(!memcmp(ie_list->Ssid, pMbss->Ssid, ie_list->SsidLen)==0))
         goto LabelOK;
 
 	/* set a flag for sending Assoc-Fail response to unwanted STA later. */
@@ -1178,7 +1178,7 @@ VOID ap_cmm_peer_assoc_req_action(
 			INT	CacheIdx;
 
 			if (((CacheIdx = RTMPSearchPMKIDCache(pAd, pEntry->apidx, pEntry->Addr)) != -1)
-				&& (RTMPEqualMemory(pPmkid, &pMbss->PMKIDCache.BSSIDInfo[CacheIdx].PMKID, LEN_PMKID)))
+				&& (!memcmp(pPmkid, &pMbss->PMKIDCache.BSSIDInfo[CacheIdx].PMKID, LEN_PMKID)))
 			{
 				/* Enqueue a EAPOL-start message with the pEntry for WPAPSK State Machine */
 				if ((pEntry->EnqueueEapolStartTimerRunning == EAPOL_START_DISABLE

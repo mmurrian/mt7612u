@@ -71,8 +71,8 @@ ULONG AutoChBssSearchWithSSID(
 			((pBssInfoTab->BssEntry[i].Channel > 14) && (Channel > 14))) &&
 			MAC_ADDR_EQUAL(&(pBssInfoTab->BssEntry[i].Bssid), Bssid) &&
 			(SSID_EQUAL(pSsid, SsidLen, pBssInfoTab->BssEntry[i].Ssid, pBssInfoTab->BssEntry[i].SsidLen) ||
-			(NdisEqualMemory(pSsid, ZeroSsid, SsidLen)) ||
-			(NdisEqualMemory(pBssInfoTab->BssEntry[i].Ssid, ZeroSsid, pBssInfoTab->BssEntry[i].SsidLen))))
+			(!memcmp(pSsid, ZeroSsid, SsidLen)) ||
+			(!memcmp(pBssInfoTab->BssEntry[i].Ssid, ZeroSsid, pBssInfoTab->BssEntry[i].SsidLen))))
 		{
 			return i;
 		}
@@ -98,7 +98,7 @@ static inline VOID AutoChBssEntrySet(
 			but SSID is all zero. such as "00-00-00-00" with length 4.
 			We have to prevent this case overwrite correct table
 		*/
-		if (NdisEqualMemory(Ssid, ZeroSsid, SsidLen) == 0)
+		if (!memcmp(Ssid, ZeroSsid, SsidLen) == 0)
 		{
 			memmove(pBss->Ssid, Ssid, SsidLen);
 			pBss->SsidLen = SsidLen;

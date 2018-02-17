@@ -191,8 +191,8 @@ bool ProbeReqforHSAP(
 	{
 		if (ProbeReqParam->IsHessid && pHSCtrl->IsHessid)
 		{
-			if(NdisEqualMemory(ProbeReqParam->Hessid, pHSCtrl->Hessid, MAC_ADDR_LEN) ||
-		   	  NdisEqualMemory(ProbeReqParam->Hessid, BROADCAST_ADDR, MAC_ADDR_LEN))
+			if(!memcmp(ProbeReqParam->Hessid, pHSCtrl->Hessid, MAC_ADDR_LEN) ||
+		   	  !memcmp(ProbeReqParam->Hessid, BROADCAST_ADDR, MAC_ADDR_LEN))
 				;
 			else
 				return false;

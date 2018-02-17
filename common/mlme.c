@@ -3169,8 +3169,8 @@ ULONG BssTableSearchWithSSID(
 			((Tab->BssEntry[i].Channel > 14) && (Channel > 14))) &&
 			MAC_ADDR_EQUAL(&(Tab->BssEntry[i].Bssid), Bssid) &&
 			(SSID_EQUAL(pSsid, SsidLen, Tab->BssEntry[i].Ssid, Tab->BssEntry[i].SsidLen) ||
-			(NdisEqualMemory(pSsid, ZeroSsid, SsidLen)) ||
-			(NdisEqualMemory(Tab->BssEntry[i].Ssid, ZeroSsid, Tab->BssEntry[i].SsidLen))))
+			(!memcmp(pSsid, ZeroSsid, SsidLen)) ||
+			(!memcmp(Tab->BssEntry[i].Ssid, ZeroSsid, Tab->BssEntry[i].SsidLen))))
 		{
 			return i;
 		}
@@ -3257,7 +3257,7 @@ VOID BssEntrySet(
 		/* Or send beacon /probe response with SSID len matching real SSID length,*/
 		/* but SSID is all zero. such as "00-00-00-00" with length 4.*/
 		/* We have to prevent this case overwrite correct table*/
-		if (NdisEqualMemory(ie_list->Ssid, ZeroSsid, ie_list->SsidLen) == 0)
+		if (!memcmp(ie_list->Ssid, ZeroSsid, ie_list->SsidLen) == 0)
 		{
 			memset(pBss->Ssid, 0, MAX_LEN_OF_SSID);
 			memmove(pBss->Ssid, ie_list->Ssid, ie_list->SsidLen);
@@ -3268,7 +3268,7 @@ VOID BssEntrySet(
 	else
 	{
 		/* avoid  Hidden SSID form beacon to overwirite correct SSID from probe response */
-		if (NdisEqualMemory(pBss->Ssid, ZeroSsid, pBss->SsidLen))
+		if (!memcmp(pBss->Ssid, ZeroSsid, pBss->SsidLen))
 		{
 			memset(pBss->Ssid, 0, MAX_LEN_OF_SSID);
 			pBss->SsidLen = 0;
@@ -3408,7 +3408,7 @@ VOID BssEntrySet(
 			switch(pEid->Eid)
 			{
 				case IE_WPA:
-					if (NdisEqualMemory(pEid->Octet, WPS_OUI, 4)
+					if (!memcmp(pEid->Octet, WPS_OUI, 4)
 						)
 					{
 #ifdef CONFIG_STA_SUPPORT
@@ -3423,7 +3423,7 @@ VOID BssEntrySet(
 						break;
 					}
 #ifdef CONFIG_STA_SUPPORT
-					if (NdisEqualMemory(pEid->Octet, WPA_OUI, 4))
+					if (!memcmp(pEid->Octet, WPA_OUI, 4))
 					{
 						if ((pEid->Len + 2) > MAX_CUSTOM_LEN)
 						{
@@ -3438,7 +3438,7 @@ VOID BssEntrySet(
 
 #ifdef CONFIG_STA_SUPPORT
 				case IE_RSN:
-					if (NdisEqualMemory(pEid->Octet + 2, RSN_OUI, 3))
+					if (!memcmp(pEid->Octet + 2, RSN_OUI, 3))
 					{
 						if ((pEid->Len + 2) > MAX_CUSTOM_LEN)
 						{
@@ -3931,12 +3931,12 @@ VOID BssCipherParse(BSS_ENTRY *pBss)
 		switch (pEid->Eid)
 		{
 			case IE_WPA:
-				if (NdisEqualMemory(pEid->Octet, SES_OUI, 3) && (pEid->Len == 7))
+				if (!memcmp(pEid->Octet, SES_OUI, 3) && (pEid->Len == 7))
 				{
 					pBss->bSES = true;
 					break;
 				}
-				else if (NdisEqualMemory(pEid->Octet, WPA_OUI, 4) != 1)
+				else if (memcmp(pEid->Octet, WPA_OUI, 4))
 				{
 					/* if unsupported vendor specific IE*/
 					break;
@@ -4076,7 +4076,7 @@ VOID BssCipherParse(BSS_ENTRY *pBss)
 
 				/* 1. Check group cipher*/
 				pCipher = (PCIPHER_SUITE_STRUCT) pTmp;
-				if (!RTMPEqualMemory(pTmp, RSN_OUI, 3))
+				if (memcmp(pTmp, RSN_OUI, 3))
 					break;
 
 				/* Parse group cipher*/
@@ -4151,7 +4151,7 @@ VOID BssCipherParse(BSS_ENTRY *pBss)
 				while (Count > 0)
 				{
 					pAKM = (PAKM_SUITE_STRUCT) pTmp;
-					if (!RTMPEqualMemory(pTmp, RSN_OUI, 3))
+					if (memcmp(pTmp, RSN_OUI, 3))
 						break;
 
 					switch (pAKM->Type)

@@ -450,7 +450,7 @@ bool	RTMPTkipCompareMICValue(
 
 	/* Move MIC value from MSDU, this steps should move to data path.*/
 	/* Since the MIC value might cross MPDUs.*/
-	if(!NdisEqualMemory(pAd->PrivateInfo.Rx.MIC, OldMic, 8))
+	if(memcmp(pAd->PrivateInfo.Rx.MIC, OldMic, 8))
 	{
 		DBGPRINT_RAW(RT_DEBUG_ERROR, ("RTMPTkipCompareMICValue(): TKIP MIC Error !\n"));  /*MIC error.*/
 
@@ -821,7 +821,7 @@ bool RTMPSoftDecryptTKIP(
 	RTMPTkipGetMIC(&pAd->PrivateInfo.Tx);
 	memmove(MIC, pAd->PrivateInfo.Tx.MIC, LEN_TKIP_MIC);
 
-	if (!NdisEqualMemory(MIC, TrailMIC, LEN_TKIP_MIC))
+	if (memcmp(MIC, TrailMIC, LEN_TKIP_MIC))
 	{
 		DBGPRINT(RT_DEBUG_ERROR, ("! TKIP MIC Error !\n"));	 /*MIC error.*/
 #ifdef CONFIG_STA_SUPPORT
