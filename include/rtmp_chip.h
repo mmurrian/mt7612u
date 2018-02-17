@@ -455,10 +455,6 @@ struct rtmp_chip_cap {
 	UINT8 FreqCalibrationSupport;
 #endif /* CONFIG_STA_SUPPORT */
 
-#ifdef RT5592EP_SUPPORT
-	uint32_t Priv; /* Flag for RT5592 EP */
-#endif /* RT5592EP_SUPPORT */
-
 	UINT8 PAType; /* b'00: 2.4G+5G external PA, b'01: 5G external PA, b'10: 2.4G external PA, b'11: Internal PA */
 	UINT8 LNA_type; /* b'00: 2.4G+5G external LNA, b'01: 5G external LNA, b'10: 2.4G external LNA, b'11: Internal LNA */
 
