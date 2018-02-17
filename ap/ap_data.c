@@ -288,9 +288,6 @@ INT APSendPacket(struct rtmp_adapter *pAd, struct sk_buff *pPacket)
 
 	/* detect AC Category of tx packets to tune AC0(BE) TX_OP (MAC reg 0x1300) */
 	// TODO: shiang-usw, check this for REG access
-#ifdef APCLI_CERT_SUPPORT
-	if (pApCliEntry->wdev.bWmmCapable == false)
-#endif /* APCLI_CERT_SUPPORT */
 	detect_wmm_traffic(pAd, UserPriority, 1);
 
 	RTMP_SET_PACKET_UP(pPacket, UserPriority);
@@ -379,9 +376,6 @@ INT APSendPacket(struct rtmp_adapter *pAd, struct sk_buff *pPacket)
 	}
 
 	RTMP_BASetup(pAd, pMacEntry, UserPriority);
-#ifdef APCLI_CERT_SUPPORT
-	pAd->RalinkCounters.OneSecOsTxCount[QueIdx]++;
-#endif /* APCLI_CERT_SUPPORT */
 	return NDIS_STATUS_SUCCESS;
 }
 
@@ -3102,10 +3096,6 @@ VOID APHandleRxDataFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 
 
 		/* count packets priroity more than BE */
-#ifdef APCLI_CERT_SUPPORT
-		//if (pAd->bApCliCertTest == false)
-		if (pApCliEntry->wdev.bWmmCapable == false)
-#endif /* APCLI_CERT_SUPPORT */
 		detect_wmm_traffic(pAd, UserPriority, 0);
 		/* bit 7 in QoS Control field signals the HT A-MSDU format */
 		if ((*pRxBlk->pData) & 0x80)

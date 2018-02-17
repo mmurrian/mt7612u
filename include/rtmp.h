@@ -3522,9 +3522,6 @@ struct rtmp_adapter {
 	struct mt7612u_txwi NullTxWI;
 	unsigned short NullBufOffset[2];
 
-#ifdef APCLI_CERT_SUPPORT
-	bool bApCliCertTest;
-#endif /* APCLI_CERT_SUPPORT */
 #ifdef MULTI_MAC_ADDR_EXT_SUPPORT
 	bool bUseMultiMacAddrExt;
 #endif /* MULTI_MAC_ADDR_EXT_SUPPORT */
