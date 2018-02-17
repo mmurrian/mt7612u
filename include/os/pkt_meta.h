@@ -286,9 +286,4 @@
 #define RTMP_GET_PACKET_RTS(_p)				(PACKET_CB(_p, 32))
 /* see RTMP_S(G)ET_PACKET_EMACTAB */
 
-/* [CB_OFF + 33]  */
-#ifdef CONFIG_5VT_ENHANCE
-#define RTMP_SET_PACKET_5VT(_p, _flg)   (PACKET_CB(_p, 33) = _flg)
-#define RTMP_GET_PACKET_5VT(_p)         (PACKET_CB(_p, 33))
-#endif /* CONFIG_5VT_ENHANCE */
 

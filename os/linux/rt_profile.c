@@ -420,20 +420,8 @@ int RTMPSendPackets(
 	}
 #endif /* CONFIG_STA_SUPPORT */
 
-#ifdef CONFIG_5VT_ENHANCE
-	RTMP_SET_PACKET_5VT(pPacket, 0);
-	if (*(int*)(GET_OS_PKT_CB(pPacket)) == BRIDGE_TAG) {
-		RTMP_SET_PACKET_5VT(pPacket, 1);
-	}
-#endif /* CONFIG_5VT_ENHANCE */
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
 	wdev_tx_pkts((NDIS_HANDLE)pAd, &pPacket, 1, wdev);
 
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
 	return 0;
 }
 
