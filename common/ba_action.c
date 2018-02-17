@@ -1227,17 +1227,7 @@ VOID PeerAddBAReqAction(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 		ADDframe.BaParm.BufSize = 64;
 	ADDframe.TimeOutValue = 0; /* pAddreqFrame->TimeOutValue; */
 
-#ifdef UNALIGNMENT_SUPPORT
-	{
-		BA_PARM tmpBaParm;
-
-		memmove(&tmpBaParm, &ADDframe.BaParm, sizeof(BA_PARM));
-		*(unsigned short *)(&tmpBaParm) = cpu2le16(*(unsigned short *)(&tmpBaParm));
-		memmove(&ADDframe.BaParm, &tmpBaParm, sizeof(BA_PARM));
-	}
-#else
 	*(unsigned short *)(&ADDframe.BaParm) = cpu2le16(*(unsigned short *)(&ADDframe.BaParm));
-#endif /* UNALIGNMENT_SUPPORT */
 
 	ADDframe.StatusCode = cpu2le16(ADDframe.StatusCode);
 	ADDframe.TimeOutValue = cpu2le16(ADDframe.TimeOutValue);

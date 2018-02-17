@@ -283,17 +283,7 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 #ifdef __BIG_ENDIAN
 			memmove(&HtCapabilityTmp, &pAd->MlmeAux.HtCapability, SIZE_HT_CAP_IE);
 			*(unsigned short *)(&HtCapabilityTmp.HtCapInfo) = SWAP16(*(unsigned short *)(&HtCapabilityTmp.HtCapInfo));
-#ifdef UNALIGNMENT_SUPPORT
-			{
-				EXT_HT_CAP_INFO extHtCapInfo;
-
-				memmove((u8 *)(&extHtCapInfo), (u8 *)(&HtCapabilityTmp.ExtHtCapInfo), sizeof(EXT_HT_CAP_INFO));
-				*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-				memmove((u8 *)(&HtCapabilityTmp.ExtHtCapInfo), (u8 *)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));
-			}
-#else
 			*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
 
 			MakeOutgoingFrame(frm_buf + FrameLen,          &Tmp,
 							1,                                &WpaIe,
@@ -316,17 +306,7 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 #ifdef __BIG_ENDIAN
 			memmove(&HtCapabilityTmp, &pAd->CommonCfg.HtCapability, SIZE_HT_CAP_IE);
 			*(unsigned short *)(&HtCapabilityTmp.HtCapInfo) = SWAP16(*(unsigned short *)(&HtCapabilityTmp.HtCapInfo));
-#ifdef UNALIGNMENT_SUPPORT
-			{
-				EXT_HT_CAP_INFO extHtCapInfo;
-
-				memmove((u8 *)(&extHtCapInfo), (u8 *)(&HtCapabilityTmp.ExtHtCapInfo), sizeof(EXT_HT_CAP_INFO));
-				*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-				memmove((u8 *)(&HtCapabilityTmp.ExtHtCapInfo), (u8 *)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));
-			}
-#else
 			*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&HtCapabilityTmp.ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
 
 			MakeOutgoingFrame(frm_buf + FrameLen,          &Tmp,
 							1,                                &HtCapIe,

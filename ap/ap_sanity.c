@@ -168,17 +168,7 @@ bool PeerAssocReqCmmSanity(
 
 				*(unsigned short *)(&pHtCapability->HtCapInfo) = cpu2le16(*(unsigned short *)(&pHtCapability->HtCapInfo));
 
-#ifdef UNALIGNMENT_SUPPORT
-				{
-					EXT_HT_CAP_INFO extHtCapInfo;
-
-					memmove((&extHtCapInfo, &pHtCapability->ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-					*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-					memmove(&pHtCapability->ExtHtCapInfo, &extHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-				}
-#else
 				*(unsigned short *)(&pHtCapability->ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&pHtCapability->ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
 
 				ie_lists->ht_cap_len = SIZE_HT_CAP_IE;
 				Sanity |= 0x10;
@@ -222,17 +212,7 @@ bool PeerAssocReqCmmSanity(
 								memmove(pHtCapability, &eid_ptr->Octet[4], SIZE_HT_CAP_IE);
 
 								*(unsigned short *)(&pHtCapability->HtCapInfo) = cpu2le16(*(unsigned short *)(&pHtCapability->HtCapInfo));
-#ifdef UNALIGNMENT_SUPPORT
-								{
-									EXT_HT_CAP_INFO extHtCapInfo;
-
-									memmove(&extHtCapInfo, &pHtCapability->ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-									*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
-									memmove(&pHtCapability->ExtHtCapInfo, &extHtCapInfo, sizeof(EXT_HT_CAP_INFO));
-								}
-#else
 								*(unsigned short *)(&pHtCapability->ExtHtCapInfo) = cpu2le16(*(unsigned short *)(&pHtCapability->ExtHtCapInfo));
-#endif /* UNALIGNMENT_SUPPORT */
 
 								ie_lists->ht_cap_len = SIZE_HT_CAP_IE;
 							}
