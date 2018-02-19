@@ -327,6 +327,8 @@ static int rtusb_probe(struct usb_interface *intf, const USB_DEVICE_ID *id)
 	rv = rt2870_probe(intf, dev, id, &pAd);
 	if (rv != 0)
 		usb_put_dev(dev);
+	else
+		usb_set_intfdata(intf, pAd);
 	return rv;
 }
 
