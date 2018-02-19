@@ -172,14 +172,14 @@ static const uint32_t CipherSuites[] = {
 /* get RALINK pAd control block in 80211 Ops */
 struct rtmp_adapter *MAC80211_PAD_GET(struct wiphy *pWiphy)
 {
-	struct rtmp_adapter *pAd = wiphy_priv(pWiphy);
+	struct rtmp_adapter **pAd = wiphy_priv(pWiphy);
 
 	if (pAd == NULL)
-		DBGPRINT(RT_DEBUG_ERROR,								\
-			("80211> %s but pAd = NULL!", __FUNCTION__));	\
+		DBGPRINT(RT_DEBUG_ERROR,
+			("80211> %s but pAd = NULL!", __FUNCTION__));
 
-	return pAd;
-}							\
+	return *pAd;
+}
 
 /*
 ========================================================================
