@@ -2041,12 +2041,6 @@ static int CFG80211_OpsBitrateSet(
 	return 0;
 }
 
-#ifdef CONFIG_NL80211_TESTMODE
-static int CFG80211_OpsTestModeCmd(IN struct wiphy *pWiphy, void *Data, int len)
-{
-}
-#endif /* CONFIG_NL80211_TESTMODE */
-
 static int CFG80211_start_p2p_device(
 	struct wiphy *pWiphy,
 	struct wireless_dev *wdev)
@@ -2250,9 +2244,6 @@ struct cfg80211_ops CFG80211_Ops = {
 	.add_station            = CFG80211_OpsStaAdd,
 	.change_station         = CFG80211_OpsStaChg,
 //	.set_bitrate_mask                       = CFG80211_OpsBitrateSet,
-#ifdef CONFIG_NL80211_TESTMODE
-        .testmode_cmd           = CFG80211_OpsTestModeCmd,
-#endif /* CONFIG_NL80211_TESTMODE */
 };
 
 /* =========================== Global Function ============================== */
