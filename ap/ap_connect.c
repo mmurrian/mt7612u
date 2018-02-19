@@ -256,9 +256,9 @@ VOID APMakeBssBeacon(struct rtmp_adapter *pAd, INT apidx)
 	for (i = 0; i < TXWISize; i += 4) {
 		u32 dword;
 
-		dword =  *ptr +
-			(*(ptr + 1) << 8);
-			(*(ptr + 2) << 16);
+		dword =  *ptr |
+			(*(ptr + 1) << 8) |
+			(*(ptr + 2) << 16) |
 			(*(ptr + 3) << 24);
 
 		mt76u_reg_write(pAd, reg_base + i, dword);
@@ -275,9 +275,9 @@ VOID APMakeBssBeacon(struct rtmp_adapter *pAd, INT apidx)
 	for ( i= 0; i< FrameLen; i+=4) {
 		u32 dword;
 
-		dword =  *ptr +
-			(*(ptr + 1) << 8);
-			(*(ptr + 2) << 16);
+		dword =  *ptr |
+			(*(ptr + 1) << 8) |
+			(*(ptr + 2) << 16) |
 			(*(ptr + 3) << 24);
 
 		mt76u_reg_write(pAd, reg_base + i, dword);

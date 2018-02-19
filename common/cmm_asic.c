@@ -1211,9 +1211,9 @@ VOID AsicEnableIbssSync(struct rtmp_adapter *pAd)
 	for (i = 0; i < TXWISize; i += 4) {
 		u32 dword;
 
-		dword =  *ptr +
-			(*(ptr + 1) << 8);
-			(*(ptr + 2) << 16);
+		dword =  *ptr |
+			(*(ptr + 1) << 8) |
+			(*(ptr + 2) << 16) |
 			(*(ptr + 3) << 24);
 
 		mt76u_reg_write(pAd, HW_BEACON_BASE0(pAd) + i, dword);
@@ -1225,9 +1225,9 @@ VOID AsicEnableIbssSync(struct rtmp_adapter *pAd)
 	for (i = 0; i< beaconLen; i += 4) {
 		u32 dword;
 
-		dword =  *ptr +
-			(*(ptr + 1) << 8);
-			(*(ptr + 2) << 16);
+		dword =  *ptr |
+			(*(ptr + 1) << 8) |
+			(*(ptr + 2) << 16) |
 			(*(ptr + 3) << 24);
 
 		mt76u_reg_write(pAd, HW_BEACON_BASE0(pAd) + TXWISize + i,

@@ -785,8 +785,8 @@ VOID RT28xx_UpdateBeaconToAsic(struct rtmp_adapter *pAd,
 				u32 dword;
 
 				dword =  *ptr +
-					(*(ptr + 1) << 8);
-					(*(ptr + 2) << 16);
+					(*(ptr + 1) << 8) +
+					(*(ptr + 2) << 16) +
 					(*(ptr + 3) << 24);
 
 				mt76u_reg_write(pAd,
@@ -810,8 +810,8 @@ VOID RT28xx_UpdateBeaconToAsic(struct rtmp_adapter *pAd,
 				memmove(ptr, pBeaconFrame, 4);
 
 				dword =  *ptr +
-					(*(ptr + 1) << 8);
-					(*(ptr + 2) << 16);
+					(*(ptr + 1) << 8) +
+					(*(ptr + 2) << 16) +
 					(*(ptr + 3) << 24);
 
 				mt76u_reg_write(pAd,
