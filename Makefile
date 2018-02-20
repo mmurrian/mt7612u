@@ -257,8 +257,6 @@ EXTRA_CFLAGS := $(WFLAGS)
 #RT28xx_DIR = home directory of RT28xx source code
 RT28xx_DIR = $(shell pwd)
 
-PLATFORM = PC
-
 #APSOC
 
 #RELEASE Package
@@ -597,15 +595,18 @@ endif
 
 MAKE = make
 
-ifeq ($(PLATFORM),PC)
 # Linux 2.6
 KSRC = /lib/modules/$(shell uname -r)/build
 CROSS_COMPILE =
-EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
 EXTRA_CFLAGS += -Wno-unused
-SUBARCH := $(shell uname -m | sed -e s/i.86/i386/)
+SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
+				  -e s/sun4u/sparc64/ \
+				  -e s/arm.*/arm/ -e s/sa110/arm/ \
+				  -e s/s390x/s390/ -e s/parisc64/parisc/ \
+				  -e s/ppc.*/powerpc/ -e s/mips.*/mips/ \
+				  -e s/sh[234].*/sh/ -e s/aarch64.*/arm64/ \
+				  -e s/riscv.*/riscv/)
 ARCH ?= $(SUBARCH)
-endif
 
 export RT28xx_DIR RT28xx_MODE KSRC CROSS_COMPILE CROSS_COMPILE_INCLUDE PLATFORM RELEASE CHIPSET MODULE  KSRC
 
