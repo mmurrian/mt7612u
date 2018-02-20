@@ -642,7 +642,7 @@ int MlmeHardTransmitMgmtRing(
 		return NDIS_STATUS_FAILURE;
 	}
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, (u8 *)pHeader_802_11, DIR_WRITE, false);
 #endif
 
@@ -727,7 +727,7 @@ int MlmeHardTransmitMgmtRing(
 //+++Add by shiang for debug
 //---Add by shiang for debug
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPWIEndianChange(pAd, (u8 *)pFirstTxWI, TYPE_TXWI);
 #endif
 
@@ -2777,9 +2777,9 @@ VOID RtmpPrepareHwNullFrame(
 	}
 
 	ptr = (u8 *)&pAd->NullTxWI;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPWIEndianChange(pAd, ptr, TYPE_TXWI);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	for (i=0; i < TXWISize; i+=4) 	{
 		longValue =  *ptr + (*(ptr + 1) << 8) + (*(ptr + 2) << 16) + (*(ptr + 3) << 24);
 		if (Index == 0)
@@ -2791,9 +2791,9 @@ VOID RtmpPrepareHwNullFrame(
 	}
 
 	ptr = pNullFrame;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, ptr, DIR_WRITE, false);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	for (i= 0; i< Length; i+=4) {
 		longValue =  *ptr + (*(ptr + 1) << 8) + (*(ptr + 2) << 16) + (*(ptr + 3) << 24);
 		if (Index == 0) //for ra0
@@ -2888,7 +2888,7 @@ VOID dev_rx_mgmt_frm(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 				DBGPRINT(RT_DEBUG_ERROR, ("ERROR: SW decrypt WEP data fails.\n"));
 				goto done;
 			}
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			/* swap 16 bit fields - Auth Alg No. field */
 			*(unsigned short *)pMgmt = SWAP16(*(unsigned short *)pMgmt);
 
@@ -2897,7 +2897,7 @@ VOID dev_rx_mgmt_frm(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 
 			/* swap 16 bit fields - Status Code field */
 			*(unsigned short *)(pMgmt + 4) = SWAP16(*(unsigned short *)(pMgmt + 4));
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 			DBGPRINT(RT_DEBUG_TRACE, ("Decrypt AUTH seq#3 successfully\n"));
 
@@ -3173,7 +3173,7 @@ bool rtmp_rx_done_handle(struct rtmp_adapter *pAd)
 
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		RTMPFrameEndianChange(pAd, (u8 *)pHeader, DIR_READ, true);
 		RTMPWIEndianChange(pAd , (u8 *)pRxWI, TYPE_RXWI);
 #endif

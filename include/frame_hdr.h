@@ -3,7 +3,7 @@
 
 #define HDR_TRANS_LEN	50
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef struct GNU_PACKED _WIFI_INFO_STRUCT{
 	uint32_t more_data:1;
 	uint32_t wep:1;
@@ -32,7 +32,7 @@ typedef struct GNU_PACKED _WIFI_INFO_STRUCT{
 	uint32_t wep:1;
 	uint32_t more_data:1;
 }WIFI_INFO_STRUCT;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 WIFI_INFO_STRUCT wifi_info[] = {
 	/* mode 1 -> AP, mode 2 --> STA */

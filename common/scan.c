@@ -282,13 +282,13 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 		ULONG	Tmp;
 		u8 HtLen;
 		u8 BROADCOM[4] = {0x0, 0x90, 0x4c, 0x33};
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		HT_CAPABILITY_IE HtCapabilityTmp;
 #endif
 		if (pAd->bBroadComHT == true)
 		{
 			HtLen = pAd->MlmeAux.HtCapabilityLen + 4;
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			memmove(&HtCapabilityTmp, &pAd->MlmeAux.HtCapability, SIZE_HT_CAP_IE);
 			*(unsigned short *)(&HtCapabilityTmp.HtCapInfo) = SWAP16(*(unsigned short *)(&HtCapabilityTmp.HtCapInfo));
 #ifdef UNALIGNMENT_SUPPORT
@@ -316,12 +316,12 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 							4,                                &BROADCOM[0],
 							pAd->MlmeAux.HtCapabilityLen,     &pAd->MlmeAux.HtCapability,
 							END_OF_ARGS);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 		}
 		else
 		{
 			HtLen = sizeof(HT_CAPABILITY_IE);
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 			memmove(&HtCapabilityTmp, &pAd->CommonCfg.HtCapability, SIZE_HT_CAP_IE);
 			*(unsigned short *)(&HtCapabilityTmp.HtCapInfo) = SWAP16(*(unsigned short *)(&HtCapabilityTmp.HtCapInfo));
 #ifdef UNALIGNMENT_SUPPORT
@@ -347,7 +347,7 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 							1,                                &HtLen,
 							HtLen,                            &pAd->CommonCfg.HtCapability,
 							END_OF_ARGS);
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 		}
 		FrameLen += Tmp;
 

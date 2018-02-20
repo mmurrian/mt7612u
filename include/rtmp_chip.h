@@ -272,7 +272,7 @@ enum FREQ_CAL_MODE {
 #define EEPROM_COUNTRY_REG_OFFSET	3
 #define EEPROM_BBP_ARRAY_OFFSET		4
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _EEPROM_ANTENNA_STRUC {
 	struct {
 		unsigned short RssiIndicationMode:1; 	/* RSSI indication mode */

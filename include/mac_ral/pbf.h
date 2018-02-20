@@ -38,7 +38,7 @@
 
 
 #define WPDMA_GLO_CFG 	0x208
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _WPDMA_GLO_CFG_STRUC	{
 	struct	{
 		uint32_t rx_2b_offset:1;

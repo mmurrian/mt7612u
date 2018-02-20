@@ -29,7 +29,7 @@
 
 // TODO: shiang, for RT3290, make sure following definition is correct to put as here
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _CMB_CTRL_STRUC{
 	struct{
 		uint32_t       	LDO0_EN:1;
@@ -97,7 +97,7 @@ typedef union _CMB_CTRL_STRUC{
 
 
 #define OSCCTL				0x38
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _OSCCTL_STRUC{
 	struct{
 		uint32_t       	ROSC_EN:1;
@@ -125,7 +125,7 @@ typedef union _OSCCTL_STRUC{
 }OSCCTL_STRUC, *POSCCTL_STRUC;
 #endif
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _COEXCFG0_STRUC{
 	struct{
 		uint32_t       	COEX_CFG1:8;
@@ -160,7 +160,7 @@ typedef union _COEXCFG0_STRUC{
 }COEXCFG0_STRUC, *PCOEXCFG0_STRUC;
 #endif
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _COEXCFG1_STRUC{
 	struct{
 		uint32_t       	Rsv:8;
@@ -182,7 +182,7 @@ typedef union _COEXCFG1_STRUC{
 }COEXCFG1_STRUC, *PCOEXCFG1_STRUC;
 #endif
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _COEXCFG2_STRUC{
 	struct{
 		uint32_t 	BT_COEX_CFG1_Bit31_Rsv:1;
@@ -268,7 +268,7 @@ typedef union _COEXCFG2_STRUC{
 
 
 #define PLL_CTRL		0x50
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union	_PLL_CTRL_STRUC	{
 	struct	{
 		ULONG		VBGBK_EN:1;
@@ -300,11 +300,11 @@ typedef	union	_PLL_CTRL_STRUC	{
 	}	field;
 	ULONG			word;
 } PLL_CTRL_STRUC, *PPLL_CTRL_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 #define WPDMA_RST_IDX 	0x20c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _WPDMA_RST_IDX_STRUC {
 	struct	{
 		uint32_t       	:14;
@@ -346,7 +346,7 @@ typedef	union _WPDMA_RST_IDX_STRUC {
 } WPDMA_RST_IDX_STRUC, *PWPDMA_RST_IDX_STRUC;
 #endif
 #define DELAY_INT_CFG  0x0210
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _DELAY_INT_CFG_STRUC {
 	struct	{
 		uint32_t       	TXDLY_INT_EN:1;

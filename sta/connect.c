@@ -2584,7 +2584,7 @@ ULONG MakeIbssBeacon(
 		ULONG TmpLen;
 		u8 HtLen, HtLen1;
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 		HT_CAPABILITY_IE HtCapabilityTmp;
 		ADD_HT_INFO_IE addHTInfoTmp;
 		unsigned short b2lTmp, b2lTmp2;
@@ -2593,7 +2593,7 @@ ULONG MakeIbssBeacon(
 		/* add HT Capability IE */
 		HtLen = sizeof (pAd->CommonCfg.HtCapability);
 		HtLen1 = sizeof (pAd->CommonCfg.AddHTInfo);
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
 		MakeOutgoingFrame(pBeaconFrame + FrameLen, &TmpLen,
 				  1, &HtCapIe,
 				  1, &HtLen,
@@ -2643,7 +2643,7 @@ ULONG MakeIbssBeacon(
 			      RATE_1, IFS_HTTXOP, &Transmit);
 	}
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	RTMPFrameEndianChange(pAd, pBeaconFrame, DIR_WRITE, false);
 	RTMPWIEndianChange(pAd, (u8 *) txwi, TYPE_TXWI);
 #endif

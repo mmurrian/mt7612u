@@ -156,7 +156,7 @@ typedef enum{
 /* */
 /* BBP R49 TSSI (Transmit Signal Strength Indicator) */
 /* */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _BBP_R49_STRUC {
 	struct
 	{

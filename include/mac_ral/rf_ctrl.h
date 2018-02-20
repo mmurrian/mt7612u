@@ -36,7 +36,7 @@
 #define	RF_CSR_CFG	0x500
 
 typedef	union _RF_CSR_CFG_STRUC {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	struct {
 		uint32_t Rsvd18:14;				/* Reserved */
 		uint32_t RF_CSR_KICK:1;			/* kick RF register read/write */
@@ -52,7 +52,7 @@ typedef	union _RF_CSR_CFG_STRUC {
 		uint32_t RF_CSR_KICK:1;
 		uint32_t Rsvd18:14;
 	} non_bank;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 	uint32_t word;
 }RF_CSR_CFG_STRUC;
 

@@ -69,7 +69,7 @@ typedef	union GNU_PACKED _HW_RATE_CTRL_STRUCT_ {
 
 */
 #define RXINFO_SIZE			4
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 struct __attribute__ ((packed))  mt7612u_rxinfo {
 	uint32_t 	hdr_trans_ip_sum_err:1;		/* IP checksum error */
 	uint32_t 	vlan_taged_tcp_sum_err:1;	/* TCP checksum error */
@@ -147,7 +147,7 @@ struct __attribute__ ((packed))  mt7612u_rxinfo {
 	SCH/DMA registers - base address 0x0200
 */
 #define WMM_AIFSN_CFG   0x0214
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _AIFSN_CSR_STRUC{
 	struct {
 	    uint32_t   Aifsn7:4;       /* for AC_VO */
@@ -179,7 +179,7 @@ typedef union _AIFSN_CSR_STRUC {
 
 /* CWMIN_CSR: CWmin for each EDCA AC */
 #define WMM_CWMIN_CFG   0x0218
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _CWMIN_CSR_STRUC	{
 	struct {
 		uint32_t   Cwmin7:4;       /* for AC_VO */
@@ -212,7 +212,7 @@ typedef	union _CWMIN_CSR_STRUC	{
 
 /* CWMAX_CSR: CWmin for each EDCA AC */
 #define WMM_CWMAX_CFG   0x021c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _CWMAX_CSR_STRUC {
 	struct {
 		uint32_t   Cwmax7:4;       /* for AC_VO */
@@ -245,7 +245,7 @@ typedef	union _CWMAX_CSR_STRUC {
 
 /* AC_TXOP_CSR0: AC_BK/AC_BE TXOP register */
 #define WMM_TXOP0_CFG    0x0220
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _AC_TXOP_CSR0_STRUC {
 	struct {
 	    uint16_t  Ac1Txop; /* for AC_BE, in unit of 32us */
@@ -266,7 +266,7 @@ typedef	union _AC_TXOP_CSR0_STRUC {
 
 /* AC_TXOP_CSR1: AC_VO/AC_VI TXOP register */
 #define WMM_TXOP1_CFG    0x0224
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _AC_TXOP_CSR1_STRUC {
 	struct {
 	    uint16_t  Ac3Txop; /* for AC_VO, in unit of 32us */
@@ -296,7 +296,7 @@ typedef	union _AC_TXOP_CSR1_STRUC {
 /*================================================================================= */
 /*  4.1 MAC SYSTEM  configuration registers (offset:0x1000) */
 #define MT_MAC_CSR0            0x1000
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _ASIC_VER_ID_STRUC {
 	struct {
 	    uint16_t  ASICVer;        /* version */
@@ -320,7 +320,7 @@ typedef	union _ASIC_VER_ID_STRUC {
 #define MAC_ADDR_DW1		0x100c
 
 /* MAC_CSR2: STA MAC register 0 */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _MAC_DW0_STRUC {
 	struct {
 		UINT8 Byte3;		/* MAC address byte 3 */
@@ -344,7 +344,7 @@ typedef	union _MAC_DW0_STRUC {
 
 
 /* MAC_CSR3: STA MAC register 1 */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _MAC_DW1_STRUC {
 	struct {
 		UINT8		Rsvd1;
@@ -369,7 +369,7 @@ typedef	union _MAC_DW1_STRUC {
 #define MAC_BSSID_DW0		0x1010
 #define MAC_BSSID_DW1		0x1014
 /* MAC_CSR5: BSSID register 1 */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union	_MAC_BSSID_DW1_STRUC {
 	struct {
 		uint32_t NMBssMode3:1;
@@ -403,7 +403,7 @@ typedef	union	_MAC_BSSID_DW1_STRUC {
 
 /* BBP_CSR_CFG: BBP serial control register */
 #define BBP_CSR_CFG            	0x101c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _BBP_CSR_CFG_STRUC {
 	struct {
 		uint32_t 	:12;
@@ -434,7 +434,7 @@ typedef	union _BBP_CSR_CFG_STRUC {
 
 /* RF_CSR_CFG: RF control register */
 #define RF_CSR_CFG0            		0x1020
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _RF_CSR_CFG0_STRUC {
 	struct {
 		uint32_t Busy:1;		    /* 0: idle 1: 8busy */
@@ -460,7 +460,7 @@ typedef	union _RF_CSR_CFG0_STRUC {
 
 
 #define RF_CSR_CFG1           		0x1024
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _RF_CSR_CFG1_STRUC {
 	struct {
 		uint32_t rsv:7;	/* 0: idle 1: 8busy */
@@ -482,7 +482,7 @@ typedef	union _RF_CSR_CFG1_STRUC {
 
 
 #define RF_CSR_CFG2           		0x1028
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _RF_CSR_CFG2_STRUC {
 	struct {
 		uint32_t rsv:8;		    /* 0: idle 1: 8busy */
@@ -502,7 +502,7 @@ typedef	union _RF_CSR_CFG2_STRUC {
 
 
 #define LED_CFG           		0x102c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _LED_CFG_STRUC {
 	struct {
 		uint32_t 	:1;
@@ -558,7 +558,7 @@ typedef	union _LED_CFG_STRUC {
 
 #define TX_WCID_DROP_MASK0	0x106C
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR0_L_STRUC {
 	struct {
 		UINT8 TxChainAddr0L_Byte3; /* Destination MAC address of Tx chain0 (byte 3) */
@@ -581,7 +581,7 @@ typedef union _TX_CHAIN_ADDR0_L_STRUC {
 #endif
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR0_H_STRUC {
 	struct {
 		uint16_t Reserved:12; /* Reserved */
@@ -604,7 +604,7 @@ typedef union _TX_CHAIN_ADDR0_H_STRUC {
 #endif
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR1_L_STRUC {
 	struct {
 		UINT8	TxChainAddr1L_Byte3; /* Destination MAC address of Tx chain1 (byte 3) */
@@ -627,7 +627,7 @@ typedef union _TX_CHAIN_ADDR1_L_STRUC {
 #endif
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR1_H_STRUC {
 	struct {
 		uint16_t Reserved:12; /* Reserved */
@@ -650,7 +650,7 @@ typedef union _TX_CHAIN_ADDR1_H_STRUC {
 #endif
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR2_L_STRUC {
 	struct {
 		UINT8	TxChainAddr2L_Byte3; /* Destination MAC address of Tx chain2 (byte 3) */
@@ -673,7 +673,7 @@ typedef union _TX_CHAIN_ADDR2_L_STRUC {
 #endif
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR2_H_STRUC {
 	struct {
 		uint16_t Reserved:12; /* Reserved */
@@ -696,7 +696,7 @@ typedef union _TX_CHAIN_ADDR2_H_STRUC {
 #endif
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR3_L_STRUC {
 	struct {
 		UINT8	TxChainAddr3L_Byte3; /* Destination MAC address of Tx chain3 (byte 3) */
@@ -719,7 +719,7 @@ typedef union _TX_CHAIN_ADDR3_L_STRUC {
 #endif
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TX_CHAIN_ADDR3_H_STRUC {
 	struct {
 		uint16_t Reserved:12; /* Reserved */
@@ -753,7 +753,7 @@ typedef union _BCN_BYPASS_MASK_STRUC {
 #define XIFS_TIME_CFG             0x1100
 #define XIFS_TIME_OFDM_SIFS_MASK (0xff << 8)
 #define XIFS_TIME_OFDM_SIFS(p) (((p) & 0xff) << 8)
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _IFS_SLOT_CFG_STRUC {
 	struct {
 	    uint32_t  rsv:2;
@@ -790,7 +790,7 @@ typedef	union _IFS_SLOT_CFG_STRUC {
 
 /* BCN_TIME_CFG : Synchronization control register */
 #define BCN_TIME_CFG             0x1114
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _BCN_TIME_CFG_STRUC {
 	struct {
 		uint32_t TxTimestampCompensate:8;
@@ -840,7 +840,7 @@ typedef union _BCN_TIME_CFG_STRUC {
 
 /* AUTO_WAKEUP_CFG: Manual power control / status register */
 #define AUTO_WAKEUP_CFG	0x1208
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _AUTO_WAKEUP_STRUC {
 	struct {
 		uint32_t :16;
@@ -1005,7 +1005,7 @@ typedef	union _AUTO_WAKEUP_STRUC {
 #define TX_PWR_VHT_STBC_MCS_9_MASK (0x3f << 24)
 #define TX_PWR_VHT_STBC_MCS_9(p) (((p) & 0x3f) << 24)
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_PWR_CFG_STRUC {
 	struct {
 	    uint32_t Byte3:8;
@@ -1036,7 +1036,7 @@ typedef	union _TX_PWR_CFG_STRUC {
 
 
 #define TXOP_THRES_CFG	0x133c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _TXOP_THRESHOLD_CFG_STRUC {
 	struct {
 		uint32_t TXOP_REM_THRES:8; /* Remaining TXOP threshold (unit: 32us) */
@@ -1062,7 +1062,7 @@ typedef union _TXOP_THRESHOLD_CFG_STRUC {
 
 
 #define TX_RTS_CFG 0x1344
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_RTS_CFG_STRUC {
 	struct {
 	    uint32_t rsv:7;
@@ -1092,7 +1092,7 @@ typedef	union _TX_RTS_CFG_STRUC	 {
 #define TX_TXBF_CFG_3 			0x1630
 typedef	union _TX_TXBF_CFG_0_STRUC {
 	struct {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	    uint32_t       EtxbfFbkRate:16;
 	    uint32_t       EtxbfFbkEn:1;
 	    uint32_t       EtxbfFbkSeqEn:1;
@@ -1125,7 +1125,7 @@ typedef	union _TX_TXBF_CFG_0_STRUC {
 
 
 #define TX_TIMEOUT_CFG	0x1348
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_TIMEOUT_CFG_STRUC {
 	struct {
 	    uint32_t rsv2:8;
@@ -1147,14 +1147,14 @@ typedef	union _TX_TIMEOUT_CFG_STRUC {
 	} field;
 	uint32_t word;
 } TX_TIMEOUT_CFG_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 #define TX_RTY_CFG	0x134c
 #define TX_RTY_CFG_RTY_LIMIT_SHORT	0x1
 #define TX_RTY_CFG_RTY_LIMIT_LONG	0x2
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_RTY_CFG_STRUC {
 	struct {
 	    uint32_t rsv:1;
@@ -1184,7 +1184,7 @@ typedef	union _TX_RTY_CFG_STRUC {
 
 
 #define TX_LINK_CFG	0x1350
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_LINK_CFG_STRUC {
 	struct {
 	    uint32_t       RemotMFS:8;	/*remote MCS feedback sequence number */
@@ -1218,7 +1218,7 @@ typedef	union _TX_LINK_CFG_STRUC {
 
 
 #define HT_FBK_CFG0	0x1354
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _HT_FBK_CFG0_STRUC {
 	struct {
 	    uint32_t HTMCS7FBK:4;
@@ -1250,7 +1250,7 @@ typedef	union _HT_FBK_CFG0_STRUC {
 
 
 #define HT_FBK_CFG1	0x1358
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _HT_FBK_CFG1_STRUC {
 	struct {
 	    uint32_t       HTMCS15FBK:4;
@@ -1282,7 +1282,7 @@ typedef	union _HT_FBK_CFG1_STRUC {
 
 
 #define LG_FBK_CFG0	0x135c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _LG_FBK_CFG0_STRUC {
 	struct {
 	    uint32_t       OFDMMCS7FBK:4;
@@ -1314,7 +1314,7 @@ typedef	union _LG_FBK_CFG0_STRUC {
 
 
 #define LG_FBK_CFG1		0x1360
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _LG_FBK_CFG1_STRUC {
 	struct {
 	    uint32_t       rsv:16;
@@ -1353,7 +1353,7 @@ typedef	union _LG_FBK_CFG1_STRUC {
 #define MM40_PROT_CFG	0x1370	/* MM40 Protection */
 #define GF20_PROT_CFG	0x1374	/* GF20 Protection */
 #define GF40_PROT_CFG	0x1378	/* GR40 Protection */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _PROT_CFG_STRUC {
 	struct {
 		uint32_t 	 ProtectTxop:3; /* TXOP allowance */
@@ -1411,7 +1411,7 @@ typedef	union _PROT_CFG_STRUC {
 
 /* RX_FILTR_CFG:  /RX configuration register */
 #define RX_FILTR_CFG	0x1400
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _RX_FILTR_CFG_STRUC {
 	struct {
 		uint32_t rsv:15;
@@ -1464,7 +1464,7 @@ typedef	union _RX_FILTR_CFG_STRUC {
 
 /* AUTO_RSP_CFG: Auto-Responder */
 #define AUTO_RSP_CFG	0x1404
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _AUTO_RSP_CFG_STRUC {
 	struct {
 		uint32_t        :24;
@@ -1531,7 +1531,7 @@ typedef union _AUTO_RSP_CFG_STRUC {
 /*  4.7 MAC Statistis registers (offset:0x1700) */
 /* RX_STA_CNT0_STRUC: RX PLCP error count & RX CRC error count */
 #define RX_STA_CNT0		0x1700
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _RX_STA_CNT0_STRUC {
 	struct {
 	    uint16_t  PhyErr;
@@ -1552,7 +1552,7 @@ typedef	union _RX_STA_CNT0_STRUC {
 
 /* RX_STA_CNT1_STRUC: RX False CCA count & RX LONG frame count */
 #define RX_STA_CNT1		0x1704
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _RX_STA_CNT1_STRUC {
 	struct {
 	    uint16_t  PlcpErr;
@@ -1573,7 +1573,7 @@ typedef	union _RX_STA_CNT1_STRUC {
 
 /* RX_STA_CNT2_STRUC: */
 #define RX_STA_CNT2		0x1708
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _RX_STA_CNT2_STRUC {
 	struct {
 	    uint16_t  RxFifoOverflowCount;
@@ -1594,7 +1594,7 @@ typedef	union _RX_STA_CNT2_STRUC {
 
 /* STA_CSR3: TX Beacon count */
 #define TX_STA_CNT0		0x170C
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_STA_CNT0_STRUC {
 	struct {
 	    uint16_t  TxBeaconCount;
@@ -1616,7 +1616,7 @@ typedef	union _TX_STA_CNT0_STRUC {
 
 /* TX_STA_CNT1: TX tx count */
 #define TX_STA_CNT1		0x1710
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_STA_CNT1_STRUC {
 	struct {
 	    uint16_t  TxRetransmit;
@@ -1637,7 +1637,7 @@ typedef	union _TX_STA_CNT1_STRUC {
 
 /* TX_STA_CNT2: TX tx count */
 #define TX_STA_CNT2		0x1714
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_STA_CNT2_STRUC {
 	struct {
 	    uint16_t  TxUnderFlowCount;
@@ -1660,7 +1660,7 @@ typedef	union _TX_STA_CNT2_STRUC {
 #define TX_STA_FIFO		0x1718
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_STA_FIFO_STRUC {
 	struct {
 		uint32_t 	PhyMode:3;
@@ -1692,14 +1692,14 @@ typedef	union _TX_STA_FIFO_STRUC {
 	} field;
 	uint32_t word;
 } TX_STA_FIFO_STRUC;
-#endif /* RT_BIG_ENDIAN */
+#endif /* __BIG_ENDIAN */
 
 
 /*
 	Debug counters
 */
 #define TX_AGG_CNT		0x171c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_NAG_AGG_CNT_STRUC {
 	struct {
 	    uint16_t  AggTxCount;
@@ -1719,7 +1719,7 @@ typedef	union _TX_NAG_AGG_CNT_STRUC {
 
 
 #define TX_AGG_CNT0	0x1720
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT0_STRUC {
 	struct {
 	    uint16_t  AggSize2Count;
@@ -1739,7 +1739,7 @@ typedef	union _TX_AGG_CNT0_STRUC {
 
 
 #define TX_AGG_CNT1	0x1724
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT1_STRUC {
 	struct {
 	    uint16_t  AggSize4Count;
@@ -1759,7 +1759,7 @@ typedef	union _TX_AGG_CNT1_STRUC {
 
 
 #define TX_AGG_CNT2	0x1728
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT2_STRUC {
 	struct {
 	    uint16_t  AggSize6Count;
@@ -1779,7 +1779,7 @@ typedef	union _TX_AGG_CNT2_STRUC {
 
 
 #define TX_AGG_CNT3	0x172c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT3_STRUC {
 	struct {
 	    uint16_t  AggSize8Count;
@@ -1799,7 +1799,7 @@ typedef	union _TX_AGG_CNT3_STRUC {
 
 
 #define TX_AGG_CNT4	0x1730
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT4_STRUC {
 	struct {
 	    uint16_t  AggSize10Count;
@@ -1819,7 +1819,7 @@ typedef	union _TX_AGG_CNT4_STRUC {
 
 
 #define TX_AGG_CNT5	0x1734
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT5_STRUC {
 	struct {
 	    uint16_t  AggSize12Count;
@@ -1839,7 +1839,7 @@ typedef	union _TX_AGG_CNT5_STRUC {
 
 
 #define TX_AGG_CNT6		0x1738
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT6_STRUC {
 	struct {
 	    uint16_t  AggSize14Count;
@@ -1859,7 +1859,7 @@ typedef	union _TX_AGG_CNT6_STRUC {
 
 
 #define TX_AGG_CNT7		0x173c
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT7_STRUC {
 	struct {
 	    uint16_t  AggSize16Count;
@@ -1894,7 +1894,7 @@ typedef	union _TX_AGG_CNT7_STRUC {
 #define TX_AGG_CNT21	0x17b0	/* AGG_SIZE = 43, 44 */
 #define TX_AGG_CNT22	0x17b4  /* AGG_SIZE = 45, 46 */
 #define TX_AGG_CNT23	0x17b8  /* AGG_SIZE = 47, 48 */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_AGG_CNT_STRUC {
 	struct {
 	    uint16_t  AggCnt_y;	/* the count of aggregation size = x + 1 */
@@ -1914,7 +1914,7 @@ typedef	union _TX_AGG_CNT_STRUC {
 
 typedef	union _TX_AGG_CNTN_STRUC {
 	struct {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	    uint16_t  AggSizeHighCount;
 	    uint16_t  AggSizeLowCount;
 #else
@@ -1927,7 +1927,7 @@ typedef	union _TX_AGG_CNTN_STRUC {
 
 
 #define MPDU_DENSITY_CNT		0x1740
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _MPDU_DEN_CNT_STRUC {
 	struct {
 	    uint16_t  RXZeroDelCount;	/*RX zero length delimiter count */
@@ -1949,7 +1949,7 @@ typedef	union _MPDU_DEN_CNT_STRUC {
 #ifdef FIFO_EXT_SUPPORT
 /* TX_STA_FIFO_EXT_STRUC: TX retry cnt for specific frame */
 #define TX_STA_FIFO_EXT		0x1798		/* Only work after RT53xx */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _TX_STA_FIFO_EXT_STRUC {
 	struct {
 		uint32_t 	Reserve:16;
@@ -1979,7 +1979,7 @@ typedef	union _TX_STA_FIFO_EXT_STRUC {
 #define WCID_TX_CNT_5	0x1780
 #define WCID_TX_CNT_6	0x1784
 #define WCID_TX_CNT_7	0x1788
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _WCID_TX_CNT_STRUC {
 	struct {
 		uint32_t 	reTryCnt:16;
@@ -2000,7 +2000,7 @@ typedef	union _WCID_TX_CNT_STRUC {
 
 #define WCID_MAPPING_0	0x178c
 #define WCID_MAPPING_1	0x1790
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _WCID_MAPPING_STRUC {
 	struct {
 		uint32_t 	wcid3:8;
@@ -2031,7 +2031,7 @@ typedef	union _WCID_MAPPING_STRUC {
 #define HW_WCID_ENTRY_SIZE   8
 
 
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _SHAREDKEY_MODE_STRUC {
 	struct {
 		uint32_t       Bss1Key3CipherAlg:4;
@@ -2092,7 +2092,7 @@ typedef struct _HW_KEY_ENTRY {
 /*8.1.2	IV/EIV  format  : 2DW */
 
 /* RX attribute entry format  : 1DW */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _WCID_ATTRIBUTE_STRUC {
 	struct {
 		uint32_t 	WAPIKeyIdx:8;
@@ -2132,7 +2132,7 @@ typedef	union _WCID_ATTRIBUTE_STRUC {
 /* ================================================================================= */
 
 /* H2M_MAILBOX_CSR: Host-to-MCU Mailbox */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _H2M_MAILBOX_STRUC {
     struct {
         uint32_t       Owner:8;
@@ -2156,7 +2156,7 @@ typedef union _H2M_MAILBOX_STRUC {
 
 
 /* M2H_CMD_DONE_CSR: MCU-to-Host command complete indication */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _M2H_CMD_DONE_STRUC {
     struct {
         uint32_t       CmdToken3;
@@ -2180,7 +2180,7 @@ typedef union _M2H_CMD_DONE_STRUC {
 
 
 /* HOST_CMD_CSR: For HOST to interrupt embedded processor */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _HOST_CMD_CSR_STRUC {
 	struct {
 	    uint32_t   Rsv:24;
@@ -2204,7 +2204,7 @@ typedef	union _HOST_CMD_CSR_STRUC {
 
 
 /* E2PROM_CSR: EEPROM control register */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _E2PROM_CSR_STRUC {
 	struct {
 		uint32_t 	Rsvd:25;
@@ -2236,7 +2236,7 @@ typedef	union _E2PROM_CSR_STRUC {
 
 
 /* QOS_CSR0: TXOP holder address0 register */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _QOS_CSR0_STRUC {
 	struct {
 		UINT8		Byte3;		/* MAC address byte 3 */
@@ -2260,7 +2260,7 @@ typedef	union _QOS_CSR0_STRUC {
 
 
 /* QOS_CSR1: TXOP holder address1 register */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef	union _QOS_CSR1_STRUC {
 	struct {
 		UINT8		Rsvd1;

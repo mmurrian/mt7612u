@@ -141,7 +141,7 @@ typedef enum _WPA_KDE_ID
 /* EAPOL Key Information definition within Key descriptor format */
 typedef	struct GNU_PACKED _KEY_INFO
 {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	u8 KeyAck:1;
     u8 Install:1;
     u8 KeyIndex:2;
@@ -204,7 +204,7 @@ typedef struct GNU_PACKED _KDE_HDR
 /*802.11i D10 page 83 */
 typedef struct GNU_PACKED _GTK_KDE
 {
-#ifndef RT_BIG_ENDIAN
+#ifndef __BIG_ENDIAN
     u8               Kid:2;
     u8               tx:1;
     u8               rsv:5;
@@ -257,7 +257,7 @@ typedef struct GNU_PACKED _RSNIE_PMKID {
 
 typedef	union GNU_PACKED _RSN_CAPABILITIES	{
 	struct	GNU_PACKED {
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
         unsigned short 	Rsvd:8;
 		unsigned short 	MFPC:1;
 		unsigned short 	MFPR:1;

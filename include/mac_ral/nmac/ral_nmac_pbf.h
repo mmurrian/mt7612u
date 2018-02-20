@@ -37,7 +37,7 @@
 
 
 /* Most are for debug. Driver doesn't touch PBF register. */
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 typedef union _RLT_PBF_SYS_CTRL_STRUC {
 	struct {
 		uint32_t rsv5:7; /* Reserved */

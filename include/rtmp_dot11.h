@@ -21,7 +21,7 @@
 
 /* 4-byte HTC field.  maybe included in any frame except non-QOS data frame.  The Order bit must set 1. */
 typedef struct GNU_PACKED _HT_CONTROL{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	uint32_t RDG:1;
 	uint32_t ACConstraint:1;
 	uint32_t rsv2:5;
@@ -51,12 +51,12 @@ typedef struct GNU_PACKED _HT_CONTROL{
 	uint32_t rsv2:5;		/*calibration sequence */
 	uint32_t ACConstraint:1;	/*feedback request */
 	uint32_t RDG:1;		/*RDG / More PPDU */
-#endif				/* !RT_BIG_ENDIAN */
+#endif				/* !__BIG_ENDIAN */
 } HT_CONTROL, *PHT_CONTROL;
 
 /* 2-byte QOS CONTROL field */
 typedef struct GNU_PACKED _QOS_CONTROL{
-#ifdef RT_BIG_ENDIAN
+#ifdef __BIG_ENDIAN
 	unsigned short Txop_QueueSize:8;
 	unsigned short AMsduPresent:1;
 	unsigned short AckPolicy:2;	/*0: normal ACK 1:No ACK 2:scheduled under MTBA/PSMP  3: BA */
@@ -68,7 +68,7 @@ typedef struct GNU_PACKED _QOS_CONTROL{
 	unsigned short AckPolicy:2;	/*0: normal ACK 1:No ACK 2:scheduled under MTBA/PSMP  3: BA */
 	unsigned short AMsduPresent:1;
 	unsigned short Txop_QueueSize:8;
-#endif				/* !RT_BIG_ENDIAN */
+#endif				/* !__BIG_ENDIAN */
 } QOS_CONTROL, *PQOS_CONTROL;
 
 
