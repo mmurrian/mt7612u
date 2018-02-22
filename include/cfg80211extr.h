@@ -133,7 +133,7 @@ VOID CFG80211_ScanEnd(struct rtmp_adapter *pAdCB, bool FlgIsAborted);
 /* Connect Releated */
 bool CFG80211DRV_OpsJoinIbss(struct rtmp_adapter *pAdOrg, VOID *pData);
 bool CFG80211DRV_OpsLeave(struct rtmp_adapter *pAdOrg, UINT8	 IfType);
-bool CFG80211DRV_Connect(struct rtmp_adapter *pAdOrg, VOID *pData);
+bool CFG80211DRV_Connect(struct rtmp_adapter *pAdOrg, CMD_RTPRIV_IOCTL_80211_CONNECT *pData);
 
 VOID CFG80211_P2pClientConnectResultInform(
         IN struct rtmp_adapter                          *pAdCB,

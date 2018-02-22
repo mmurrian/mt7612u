@@ -107,7 +107,7 @@ INT CFG80211DRV_IoctlHandle(
 				CFG80211DRV_P2pClientConnect(pAd, pData);
 			else
 #endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-				CFG80211DRV_Connect(pAd, pData);
+				CFG80211DRV_Connect(pAd, (CMD_RTPRIV_IOCTL_80211_CONNECT *)pData);
 			break;
 
 		case CMD_RTPRIV_IOCTL_80211_UNREGISTER:
@@ -801,10 +801,9 @@ bool CFG80211DRV_StaKeyAdd(
 
 bool CFG80211DRV_Connect(
 	struct rtmp_adapter				*pAd,
-	VOID						*pData)
+	CMD_RTPRIV_IOCTL_80211_CONNECT			*pConnInfo)
 {
 #ifdef CONFIG_STA_SUPPORT
-	CMD_RTPRIV_IOCTL_80211_CONNECT *pConnInfo;
 	u8 SSID[NDIS_802_11_LENGTH_SSID + 1]; /* Add One for SSID_Len == 32 */
 	uint32_t SSIDLen;
 	RT_CMD_STA_IOCTL_SECURITY_ADV IoctlWpa;
@@ -818,8 +817,6 @@ bool CFG80211DRV_Connect(
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("CFG80211: No Connection\n"));
 	}
-
-	pConnInfo = (CMD_RTPRIV_IOCTL_80211_CONNECT *)pData;
 
 	/* change to infrastructure mode if we are in ADHOC mode */
 	Set_NetworkType_Proc(pAd, "Infra");
