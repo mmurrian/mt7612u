@@ -360,10 +360,9 @@ struct net_device *RtmpPhyNetDevInit(struct rtmp_adapter *pAd,
 }
 
 
-VOID *RtmpNetEthConvertDevSearch(VOID *net_dev_, u8 *pData)
+struct net_device *RtmpNetEthConvertDevSearch(struct net_device *net_dev, u8 *pData)
 {
 	struct net_device *pNetDev;
-	struct net_device *net_dev = (struct net_device *)net_dev_;
 	struct net *net;
 	net = dev_net(net_dev);
 
@@ -374,7 +373,7 @@ VOID *RtmpNetEthConvertDevSearch(VOID *net_dev_, u8 *pData)
 			break;
 	}
 
-	return (VOID *)pNetDev;
+	return pNetDev;
 }
 
 
