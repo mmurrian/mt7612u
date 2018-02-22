@@ -204,7 +204,7 @@ bool PeerAddBARspActionSanity(
 
 		memmove(&tmpBaParm, &pAddFrame->BaParm, sizeof(BA_PARM));
 		*(unsigned short *)(&tmpBaParm) = cpu2le16(*(unsigned short *)(&tmpBaParm));
-		memmove(&pAddFrame->BaParm), &tmpBaParm, sizeof(BA_PARM));
+		memmove(&pAddFrame->BaParm, &tmpBaParm, sizeof(BA_PARM));
 	}
 #else
 	*(unsigned short *)(&pAddFrame->BaParm) = cpu2le16(*(unsigned short *)(&pAddFrame->BaParm));
@@ -735,12 +735,12 @@ bool PeerBeaconAndProbeRspSanity_Old(
 			if (SubType == SUBTYPE_BEACON)
 			{
 				u8 *	pData;
-				INT			Len = 0;
+				short	Len = 0;
 				unsigned short 	DataLen = 0;
 				PWSC_IE		pWscIE;
 
 				pData = (u8 *) pEid->Octet + 4;
-				Len = (SHORT)(pEid->Len - 4);
+				Len = (short)(pEid->Len - 4);
 
 				while (Len > 0)
 				{
@@ -1348,12 +1348,12 @@ bool PeerBeaconAndProbeRspSanity(
 			if ( SubType == SUBTYPE_BEACON )
 			{
 				u8 *	pData;
-				INT			Len = 0;
+				short	Len = 0;
 				unsigned short 	DataLen = 0;
 				PWSC_IE		pWscIE;
 
 				pData = (u8 *) pEid->Octet + 4;
-				Len = (SHORT)(pEid->Len - 4);
+				Len = (short)(pEid->Len - 4);
 
 				while (Len > 0)
 				{

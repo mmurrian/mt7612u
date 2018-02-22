@@ -524,7 +524,7 @@ VOID APPeerProbeReqAction(
 			{
 				EXT_HT_CAP_INFO extHtCapInfo;
 
-				memmove(&extHtCapInfo), &HtCapabilityTmp.ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
+				memmove(&extHtCapInfo, &HtCapabilityTmp.ExtHtCapInfo, sizeof(EXT_HT_CAP_INFO));
 				*(unsigned short *)(&extHtCapInfo) = cpu2le16(*(unsigned short *)(&extHtCapInfo));
 				memmove(&HtCapabilityTmp.ExtHtCapInfo, &extHtCapInfo, sizeof(EXT_HT_CAP_INFO));
 			}

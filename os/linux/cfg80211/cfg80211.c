@@ -2304,7 +2304,7 @@ static struct wireless_dev *CFG80211_WdevAlloc(
 	pWdev->wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
 
 #ifdef RT_CFG80211_P2P_SINGLE_DEVICE
-	pWdev->wiphy->interface_modes |= (BIT(NL80211_IFTYPE_P2P_CLIENT)
+	pWdev->wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_CLIENT)
 #endif /* RT_CFG80211_P2P_SINGLE_DEVICE */
 #endif /* CONFIG_STA_SUPPORT */
 

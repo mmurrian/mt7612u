@@ -30,7 +30,7 @@ VOID PeriodicPollingModeDetect(
   unsigned long irqFlags;
   u8 modem_status=0;
   struct rtmp_adapter *pAd = (struct rtmp_adapter *)FunctionContext;
-  struct os_cookie *_pObj = pAd->OS_Cookie);
+  struct os_cookie *_pObj = pAd->OS_Cookie;
 
   os_TCIfQuery(0x0002, &modem_status, NULL);
 

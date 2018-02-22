@@ -894,7 +894,9 @@ VOID rtmp_dbg_sanity_diff(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 	unsigned short LenVIE;
 	u8 *VarIE = NULL;
 	NDIS_802_11_VARIABLE_IEs *pVIE = NULL;
-
+#ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
+	u8 SelReg;
+#endif
 
 	BCN_IE_LIST *ie_list = NULL;
 	bool sanity_new, sanity_old;
@@ -1467,10 +1469,12 @@ VOID PeerBeaconAtJoinAction(
 						*/
 						if ((((wdev->WepStatus != Ndis802_11WEPDisabled) << 4) ^ ie_list->CapabilityInfo) & 0x0010)
 						{
+#if 0
 #ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
 							/* When using -Dwext and trigger WPS, do not check security. */
 							if ( SelReg == 0 )
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
+#endif
 							{
 							MLME_SCAN_REQ_STRUCT ScanReq;
 							DBGPRINT(RT_DEBUG_TRACE, ("%s:AP privacy %d is differenct from STA privacy%d\n",
@@ -1965,10 +1969,12 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 				if ((((wdev->WepStatus != Ndis802_11WEPDisabled) << 4) ^ bcn_ie_list->CapabilityInfo) & 0x0010)
 				{
 
+#if 0
 #ifdef NATIVE_WPA_SUPPLICANT_SUPPORT
 					/* When using -Dwext and trigger WPS, do not check security. */
 					if ( SelReg == 0 )
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
+#endif
 					{
 					/*
 						To prevent STA connect to OPEN/WEP AP when STA is OPEN/NONE or
