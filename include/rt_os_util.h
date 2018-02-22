@@ -191,7 +191,6 @@ int RtmpOSNetDevAddrSet(
 void RtmpOSNetDevClose(struct net_device *pNetDev);
 void RtmpOSNetDevFree(struct net_device *pNetDev);
 INT RtmpOSNetDevAlloc(struct net_device **new_dev_p, uint32_t privDataSize);
-INT RtmpOSNetDevOpsAlloc(PVOID *pNetDevOps);
 
 
 #ifdef CONFIG_STA_SUPPORT

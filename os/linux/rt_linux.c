@@ -1146,18 +1146,6 @@ INT RtmpOSNetDevAlloc(
 		return NDIS_STATUS_FAILURE;
 }
 
-
-INT RtmpOSNetDevOpsAlloc(PVOID *pNetDevOps)
-{
-	*pNetDevOps = (PVOID) vmalloc(sizeof (struct net_device_ops));
-	if (*pNetDevOps) {
-		memset(*pNetDevOps, 0, sizeof (struct net_device_ops));
-		return NDIS_STATUS_SUCCESS;
-	} else {
-		return NDIS_STATUS_FAILURE;
-	}
-}
-
 struct net_device *RtmpOSNetDevGetByName(struct net_device *pNetDev, char *pDevName)
 {
 	struct net_device *pTargetNetDev = NULL;
@@ -1318,9 +1306,10 @@ struct net_device *RtmpOSNetDevCreate(
 		DBGPRINT(RT_DEBUG_ERROR, ("Allocate network device fail (%s)...\n", pNamePrefix));
 		return NULL;
 	}
-	status = RtmpOSNetDevOpsAlloc((PVOID) & pNetDevOps);
 
-	if (status != NDIS_STATUS_SUCCESS) {
+	pNetDevOps = vzalloc(sizeof(struct net_device_ops));
+
+	if (!pNetDevOps) {
 		DBGPRINT(RT_DEBUG_TRACE, ("Allocate net device ops fail!\n"));
 		RtmpOSNetDevFree(pNetDev);
 

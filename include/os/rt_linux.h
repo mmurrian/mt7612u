@@ -739,9 +739,6 @@ extern int rausb_submit_urb(VOID *urb);
 #define gfp_t		int32_t
 #endif /* gfp_t */
 
-INT RtmpOSNetDevOpsAlloc(
-	IN PVOID *pNetDevOps);
-
 #define RTMP_OS_MAX_SCAN_DATA_GET()		IW_SCAN_MAX_DATA
 
 #include "os/rt_os.h"
