@@ -103,15 +103,15 @@ struct mt7612u_mcu_ctrl {
 	unsigned long flags;
 	RTMP_NET_TASK_STRUCT cmd_msg_task;
 	spinlock_t txq_lock;
-	DL_LIST txq;
+	struct list_head txq_list;
 	spinlock_t rxq_lock;
-	DL_LIST rxq;
+	struct list_head rxq_list;
 	spinlock_t ackq_lock;
-	DL_LIST ackq;
+	struct list_head ackq_list;
 	spinlock_t kickq_lock;
-	DL_LIST kickq;
+	struct list_head kickq_list;
 	spinlock_t rx_doneq_lock;
-	DL_LIST rx_doneq;
+	struct list_head rx_doneq_list;
 	unsigned long tx_kickout_fail_count;
 	unsigned long tx_timeout_fail_count;
 	unsigned long rx_receive_fail_count;
@@ -139,7 +139,7 @@ struct cmd_msg_cb {
 #define CMD_MSG_TIMEOUT 500
 
 struct cmd_msg {
-	DL_LIST list;
+	struct list_head list;
 	u8 type;
 	u8 seq;
 	u16 rsp_payload_len;
@@ -147,7 +147,7 @@ struct cmd_msg {
 	bool need_rsp;
 	bool need_retransmit;
 
-	 struct completion ack_done;
+	struct completion ack_done;
 	char *rsp_payload;
 	enum cmd_msg_state state;
 	void *priv;

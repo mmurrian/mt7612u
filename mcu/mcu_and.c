@@ -906,26 +906,30 @@ static void mt7612u_mcu_free_cmd_msg(struct cmd_msg *msg)
 {
 	struct sk_buff *skb = msg->skb;
 
-	usb_free_urb(msg->urb);
+	if (!msg)
+		return;
+
+	if (msg->urb && msg->urb->status == 0)
+		usb_free_urb(msg->urb);
 
 	kfree(msg);
 
 	dev_kfree_skb_any(skb);
 }
 
-static spinlock_t *mt7612u_mcu_get_spin_lock(struct mt7612u_mcu_ctrl  *ctl, DL_LIST *list)
+static spinlock_t *mt7612u_mcu_get_spin_lock(struct mt7612u_mcu_ctrl  *ctl, struct list_head *list)
 {
 	spinlock_t *lock = NULL;
 
-	if (list == &ctl->txq)
+	if (list == &ctl->txq_list)
 		lock = &ctl->txq_lock;
-	else if (list == &ctl->rxq)
+	else if (list == &ctl->rxq_list)
 		lock = &ctl->rxq_lock;
-	else if (list == &ctl->ackq)
+	else if (list == &ctl->ackq_list)
 		lock = &ctl->ackq_lock;
-	else if (list == &ctl->kickq)
+	else if (list == &ctl->kickq_list)
 		lock = &ctl->kickq_lock;
-	else if (list == &ctl->rx_doneq)
+	else if (list == &ctl->rx_doneq_list)
 		lock = &ctl->rx_doneq_lock;
 	else
 		DBGPRINT(RT_DEBUG_ERROR, ("%s:illegal list\n", __func__));
@@ -938,27 +942,26 @@ static inline u8 mt7612u_mcu_get_cmd_msg_seq(struct rtmp_adapter *ad)
 	struct mt7612u_mcu_ctrl  *ctl = &ad->MCUCtrl;
 	struct cmd_msg *msg;
 	unsigned long flags;
+	struct list_head *ptr, *se;
 
 	spin_lock_irqsave(&ctl->ackq_lock, flags);
 get_seq:
 	ctl->cmd_seq >= 0xf ? ctl->cmd_seq = 1 : ctl->cmd_seq++;
-
-
-       for (msg = DlListEntry((&ctl->ackq)->Next, struct cmd_msg, list);
-               &msg->list != &ctl->ackq;
-               msg = DlListEntry(msg->list.Next, struct cmd_msg, list)) {
+	list_for_each_safe(ptr, se, &ctl->ackq_list) {
+		msg = list_entry(ptr, struct cmd_msg, list);
 
 		if (msg->seq == ctl->cmd_seq) {
 			DBGPRINT(RT_DEBUG_ERROR, ("command(seq: %d) is still running\n", ctl->cmd_seq));
 			goto get_seq;
 		}
 	}
+
 	spin_unlock_irqrestore(&ctl->ackq_lock, flags);
 
 	return ctl->cmd_seq;
 }
 
-static void mt7612u_mcu_queue_tail_cmd_msg(DL_LIST *list, struct cmd_msg *msg,
+static void mt7612u_mcu_queue_tail_cmd_msg(struct list_head *list, struct cmd_msg *msg,
 					   enum cmd_msg_state state)
 {
 	unsigned long flags;
@@ -970,11 +973,11 @@ static void mt7612u_mcu_queue_tail_cmd_msg(DL_LIST *list, struct cmd_msg *msg,
 
 	spin_lock_irqsave(lock, flags);
 	msg->state = state;
-	DlListAddTail(list, &msg->list);
+	list_add_tail(&msg->list, list);
 	spin_unlock_irqrestore(lock, flags);
 }
 
-static void mt7612u_mcu_queue_head_cmd_msg(DL_LIST *list, struct cmd_msg *msg,
+static void mt7612u_mcu_queue_head_cmd_msg(struct list_head *list, struct cmd_msg *msg,
 					   enum cmd_msg_state state)
 {
 	unsigned long flags;
@@ -986,11 +989,11 @@ static void mt7612u_mcu_queue_head_cmd_msg(DL_LIST *list, struct cmd_msg *msg,
 
 	spin_lock_irqsave(lock, flags);
 	msg->state = state;
-	DlListAdd(list, &msg->list);
+	list_add(&msg->list, list);
 	spin_unlock_irqrestore(lock, flags);
 }
 
-static int mt7612u_mcu_queue_empty(struct mt7612u_mcu_ctrl  *ctl, DL_LIST *list)
+static int mt7612u_mcu_queue_empty(struct mt7612u_mcu_ctrl  *ctl, struct list_head *list)
 {
 	unsigned long flags;
 	int is_empty;
@@ -999,21 +1002,21 @@ static int mt7612u_mcu_queue_empty(struct mt7612u_mcu_ctrl  *ctl, DL_LIST *list)
 	lock = mt7612u_mcu_get_spin_lock(ctl, list);
 
 	spin_lock_irqsave(lock, flags);
-	is_empty = DlListEmpty(list);
+	is_empty = list_empty(list);
 	spin_unlock_irqrestore(lock, flags);
 
 	return is_empty;
 }
 
-static void _mt7612u_mcu_unlink_cmd_msg(struct cmd_msg *msg, DL_LIST *list)
+static void _mt7612u_mcu_unlink_cmd_msg(struct cmd_msg *msg, struct list_head *list)
 {
 	if (!msg)
 		return;
 
-	DlListDel(&msg->list);
+	list_del(&msg->list);
 }
 
-static void mt7612u_mcu_unlink_cmd_msg(struct cmd_msg *msg, DL_LIST *list)
+static void mt7612u_mcu_unlink_cmd_msg(struct cmd_msg *msg, struct list_head *list)
 {
 	unsigned long flags;
 	spinlock_t *lock;
@@ -1027,18 +1030,18 @@ static void mt7612u_mcu_unlink_cmd_msg(struct cmd_msg *msg, DL_LIST *list)
 	spin_unlock_irqrestore(lock, flags);
 }
 
-static struct cmd_msg *_mt7612u_mcu_dequeue_cmd_msg(DL_LIST *list)
+static struct cmd_msg *_mt7612u_mcu_dequeue_cmd_msg(struct list_head *list)
 {
 	struct cmd_msg *msg;
 
-	msg = DlListFirst(list, struct cmd_msg, list);
+	msg = list_first_entry_or_null(list, struct cmd_msg, list);
 
 	_mt7612u_mcu_unlink_cmd_msg(msg, list);
 
 	return msg;
 }
 
-static struct cmd_msg *mt7612u_mcu_dequeue_cmd_msg(struct mt7612u_mcu_ctrl  *ctl, DL_LIST *list)
+static struct cmd_msg *mt7612u_mcu_dequeue_cmd_msg(struct mt7612u_mcu_ctrl  *ctl, struct list_head *list)
 {
 	unsigned long flags;
 	struct cmd_msg *msg;
@@ -1056,7 +1059,6 @@ static struct cmd_msg *mt7612u_mcu_dequeue_cmd_msg(struct mt7612u_mcu_ctrl  *ctl
 static void mt7612u_mcu_rx_process_cmd_msg(struct rtmp_adapter *ad, struct cmd_msg *rx_msg)
 {
 	struct sk_buff *skb = rx_msg->skb;
-	struct cmd_msg *msg, *msg_tmp;
 	struct mt7612u_rxfce_info_cmd *rx_info = (struct mt7612u_rxfce_info_cmd *)skb->data;
 	struct mt7612u_mcu_ctrl  *ctl = &ad->MCUCtrl;
 #ifdef __BIG_ENDIAN
@@ -1080,14 +1082,14 @@ static void mt7612u_mcu_rx_process_cmd_msg(struct rtmp_adapter *ad, struct cmd_m
 		RTEnqueueInternalCmd(ad, CMDTHREAD_RESPONSE_EVENT_CALLBACK,
 				     skb->data + sizeof(*rx_info), rx_info->pkt_len);
 	} else {
+		struct list_head *ptr, *se;
+
 		spin_lock_irq(&ctl->ackq_lock);
 
-		for (msg = DlListEntry((&ctl->ackq)->Next, struct cmd_msg, list), msg_tmp = DlListEntry(msg->list.Next, struct cmd_msg, list);
-			&msg->list != &ctl->ackq;
-			msg = msg_tmp, msg_tmp = DlListEntry(msg_tmp->list.Next, struct cmd_msg, list)) {
-
+		list_for_each_safe(ptr, se, &ctl->ackq_list) {
+			struct cmd_msg *msg = list_entry(ptr, struct cmd_msg, list);
 			if (msg->seq == rx_info->cmd_seq) {
-				_mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq);
+				_mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq_list);
 				spin_unlock_irq(&ctl->ackq_lock);
 
 				if ((msg->rsp_payload_len == rx_info->pkt_len) &&
@@ -1127,7 +1129,13 @@ static void usb_rx_cmd_msg_complete(struct urb *urb)
 	enum cmd_msg_state state;
 	int ret = 0;
 
-	mt7612u_mcu_unlink_cmd_msg(msg, &ctl->rxq);
+	/* APX: do not handle emply URBs */
+	if (urb->status == -ENOENT){
+		_mt7612u_mcu_unlink_cmd_msg(msg, &ctl->rxq_list);
+		return;
+	}
+
+	mt7612u_mcu_unlink_cmd_msg(msg, &ctl->rxq_list);
 
 	skb_put(skb, urb->actual_length);
 
@@ -1139,9 +1147,10 @@ static void usb_rx_cmd_msg_complete(struct urb *urb)
 			ctl->rx_receive_fail_count++;
 
 		DBGPRINT(RT_DEBUG_ERROR, ("receive cmd msg fail(%d)\n", urb->status));
+
 	}
 
-	mt7612u_mcu_queue_tail_cmd_msg(&ctl->rx_doneq, msg, state);
+	mt7612u_mcu_queue_tail_cmd_msg(&ctl->rx_doneq_list, msg, state);
 
 	if (OS_TEST_BIT(MCU_INIT, &ctl->flags)) {
 		msg = mt7612u_mcu_alloc_cmd_msg(ad, 512);
@@ -1155,17 +1164,17 @@ static void usb_rx_cmd_msg_complete(struct urb *urb)
 				  usb_rcvbulkpipe(udev, MT_COMMAND_RSP_BULK_IN_ADDR),
 				  skb->data, 512, usb_rx_cmd_msg_complete, skb);
 
-		mt7612u_mcu_queue_tail_cmd_msg(&ctl->rxq, msg, RX_START);
+		mt7612u_mcu_queue_tail_cmd_msg(&ctl->rxq_list, msg, RX_START);
 
 		ret = usb_submit_urb(msg->urb, GFP_ATOMIC);
 
 		if (ret) {
-			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->rxq);
+			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->rxq_list);
 			if (OS_TEST_BIT(MCU_INIT, &ctl->flags))
 				ctl->rx_receive_fail_count++;
 
 			DBGPRINT(RT_DEBUG_ERROR, ("%s:submit urb fail(%d)\n", __func__, ret));
-			mt7612u_mcu_queue_tail_cmd_msg(&ctl->rx_doneq, msg, RX_RECEIVE_FAIL);
+			mt7612u_mcu_queue_tail_cmd_msg(&ctl->rx_doneq_list, msg, RX_RECEIVE_FAIL);
 		}
 
 	}
@@ -1197,17 +1206,17 @@ static int usb_rx_cmd_msg_submit(struct rtmp_adapter *ad)
 			  usb_rcvbulkpipe(udev, MT_COMMAND_RSP_BULK_IN_ADDR),
 			  skb->data, 512, usb_rx_cmd_msg_complete, skb);
 
-	mt7612u_mcu_queue_tail_cmd_msg(&ctl->rxq, msg, RX_START);
+	mt7612u_mcu_queue_tail_cmd_msg(&ctl->rxq_list, msg, RX_START);
 
 	ret = usb_submit_urb(msg->urb, GFP_ATOMIC);
 
 	if (ret) {
-		mt7612u_mcu_unlink_cmd_msg(msg, &ctl->rxq);
+		mt7612u_mcu_unlink_cmd_msg(msg, &ctl->rxq_list);
 		if (OS_TEST_BIT(MCU_INIT, &ctl->flags))
 			ctl->rx_receive_fail_count++;
 
 		DBGPRINT(RT_DEBUG_ERROR, ("%s:submit urb fail(%d)\n", __func__, ret));
-		mt7612u_mcu_queue_tail_cmd_msg(&ctl->rx_doneq, msg, RX_RECEIVE_FAIL);
+		mt7612u_mcu_queue_tail_cmd_msg(&ctl->rx_doneq_list, msg, RX_RECEIVE_FAIL);
 	}
 
 	return ret;
@@ -1219,7 +1228,7 @@ int usb_rx_cmd_msgs_receive(struct rtmp_adapter *ad)
 	int ret = 0;
 	struct mt7612u_mcu_ctrl  *ctl = &ad->MCUCtrl;
 
-	tmp = mt7612u_mcu_queue_empty(ctl, &ctl->rx_doneq);
+	tmp = mt7612u_mcu_queue_empty(ctl, &ctl->rx_doneq_list);
 	if (!tmp)
 		return ret;
 
@@ -1235,7 +1244,7 @@ static void mt7612u_mcu_cmd_msg_bh(unsigned long param)
 	struct cmd_msg *msg = NULL;
 
 	while (1) {
-		msg = mt7612u_mcu_dequeue_cmd_msg(ctl, &ctl->rx_doneq);
+		msg = mt7612u_mcu_dequeue_cmd_msg(ctl, &ctl->rx_doneq_list);
 		if (!msg)
 			break;
 
@@ -1266,7 +1275,7 @@ static void mt7612u_mcu_bh_schedule(struct rtmp_adapter *ad)
 	if (!OS_TEST_BIT(MCU_INIT, &ctl->flags))
 		return;
 
-	tmp = mt7612u_mcu_queue_empty(ctl, &ctl->rx_doneq);
+	tmp = mt7612u_mcu_queue_empty(ctl, &ctl->rx_doneq_list);
 	if (!tmp) {
 		RTMP_NET_TASK_DATA_ASSIGN(&ctl->cmd_msg_task, (unsigned long)(ad));
 		RTMP_OS_TASKLET_SCHE(&ctl->cmd_msg_task);
@@ -1284,22 +1293,29 @@ static void usb_kick_out_cmd_msg_complete(struct urb *urb)
 	if (!OS_TEST_BIT(MCU_INIT, &ctl->flags))
 		return;
 
+	/* APX: do not handle emply URBs */
+	if (urb->status == -ENOENT){
+		_mt7612u_mcu_unlink_cmd_msg(msg, &ctl->kickq_list);
+		return;
+	}
+
 	if (urb->status == 0) {
 		if (!msg->need_rsp) {
-			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->kickq);
+			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->kickq_list);
 			mt7612u_mcu_free_cmd_msg(msg);
 		} else {
 			msg->state = WAIT_ACK;
 		}
 	} else {
+
 		if (!msg->need_rsp) {
-			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->kickq);
+			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->kickq_list);
 			mt7612u_mcu_free_cmd_msg(msg);
 			if (OS_TEST_BIT(MCU_INIT, &ctl->flags))
 				ctl->tx_kickout_fail_count++;
 
 		} else {
-			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq);
+			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq_list);
 			msg->state = TX_KICKOUT_FAIL;
 			if (OS_TEST_BIT(MCU_INIT, &ctl->flags))
 				ctl->tx_kickout_fail_count++;
@@ -1330,9 +1346,9 @@ static int usb_kick_out_cmd_msg(struct rtmp_adapter *ad, struct cmd_msg *msg)
 			  skb->data, skb->len, usb_kick_out_cmd_msg_complete, skb);
 
 	if (msg->need_rsp)
-		mt7612u_mcu_queue_tail_cmd_msg(&ctl->ackq, msg, WAIT_CMD_OUT_AND_ACK);
+		mt7612u_mcu_queue_tail_cmd_msg(&ctl->ackq_list, msg, WAIT_CMD_OUT_AND_ACK);
 	else
-		mt7612u_mcu_queue_tail_cmd_msg(&ctl->kickq, msg, WAIT_CMD_OUT);
+		mt7612u_mcu_queue_tail_cmd_msg(&ctl->kickq_list, msg, WAIT_CMD_OUT);
 
 	if (!OS_TEST_BIT(MCU_INIT, &ctl->flags))
 		return -1;
@@ -1341,12 +1357,12 @@ static int usb_kick_out_cmd_msg(struct rtmp_adapter *ad, struct cmd_msg *msg)
 
 	if (ret) {
 		if (!msg->need_rsp) {
-			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->kickq);
+			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->kickq_list);
 			mt7612u_mcu_free_cmd_msg(msg);
 			if (OS_TEST_BIT(MCU_INIT, &ctl->flags))
 				ctl->tx_kickout_fail_count++;
 		} else {
-			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq);
+			mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq_list);
 			msg->state = TX_KICKOUT_FAIL;
 			if (OS_TEST_BIT(MCU_INIT, &ctl->flags))
 				ctl->tx_kickout_fail_count++;
@@ -1360,52 +1376,51 @@ static int usb_kick_out_cmd_msg(struct rtmp_adapter *ad, struct cmd_msg *msg)
 	return ret;
 }
 
-static void mt7612u_mcu_usb_unlink_urb(struct rtmp_adapter *ad, DL_LIST *list)
+static void mt7612u_mcu_usb_unlink_urb(struct rtmp_adapter *ad, struct list_head *list)
 {
 	unsigned long flags;
-	struct cmd_msg *msg, *msg_tmp;
 	spinlock_t *lock;
 	struct mt7612u_mcu_ctrl  *ctl = &ad->MCUCtrl;
+	struct list_head *ptr, *se;
 
 	lock = mt7612u_mcu_get_spin_lock(ctl, list);
 
 	spin_lock_irqsave(lock, flags);
 
-	for (msg = DlListEntry(list->Next, struct cmd_msg, list), msg_tmp = DlListEntry(msg->list.Next, struct cmd_msg, list);
-		&msg->list != &ctl->ackq;
-		msg = msg_tmp, msg_tmp = DlListEntry(msg_tmp->list.Next, struct cmd_msg, list)) {
+	list_for_each_safe(ptr, se, list) {
+		struct cmd_msg *msg = list_entry(ptr, struct cmd_msg, list);
 
 		spin_unlock_irqrestore(lock, flags);
 		if ((msg->state == WAIT_CMD_OUT_AND_ACK) ||
 		    (msg->state == WAIT_CMD_OUT) ||
 		    (msg->state == TX_START) ||
 		    (msg->state == RX_START) ||
-		    (msg->state == TX_RETRANSMIT))
-			usb_kill_urb(msg->urb);
+		    (msg->state == TX_RETRANSMIT)){
+			if (msg->urb)
+				usb_kill_urb(msg->urb);
+		}
 		spin_lock_irqsave(lock, flags);
 	}
 	spin_unlock_irqrestore(lock, flags);
 }
 
-static void mt7612u_mcu_cleanup_cmd_msg(struct rtmp_adapter *ad, DL_LIST *list)
+static void mt7612u_mcu_cleanup_cmd_msg(struct rtmp_adapter *ad, struct list_head *list)
 {
 	unsigned long flags;
-	struct cmd_msg *msg, *msg_tmp;
 	spinlock_t *lock;
 	struct mt7612u_mcu_ctrl  *ctl = &ad->MCUCtrl;
+	struct list_head *ptr, *se;
 
 	lock = mt7612u_mcu_get_spin_lock(ctl, list);
 
 	spin_lock_irqsave(lock, flags);
 
-	for (msg = DlListEntry(list->Next, struct cmd_msg, list), msg_tmp = DlListEntry(msg->list.Next, struct cmd_msg, list);
-		&msg->list != &ctl->ackq;
-		msg = msg_tmp, msg_tmp = DlListEntry(msg_tmp->list.Next, struct cmd_msg, list)) {
-
+	list_for_each_safe(ptr, se, list) {
+		struct cmd_msg *msg = list_entry(ptr, struct cmd_msg, list);
 		_mt7612u_mcu_unlink_cmd_msg(msg, list);
 		mt7612u_mcu_free_cmd_msg(msg);
 	}
-	DlListInit(list);
+	INIT_LIST_HEAD(list);
 	spin_unlock_irqrestore(lock, flags);
 }
 
@@ -1419,11 +1434,11 @@ static void mt7612u_mcu_ctrl_usb_init(struct rtmp_adapter *ad)
 	ctl->cmd_seq = 0;
 	RTMP_OS_TASKLET_INIT(ad, &ctl->cmd_msg_task, mt7612u_mcu_cmd_msg_bh, (unsigned long)ad);
 
-	DlListInit(&ctl->txq);
-	DlListInit(&ctl->rxq);
-	DlListInit(&ctl->ackq);
-	DlListInit(&ctl->kickq);
-	DlListInit(&ctl->rx_doneq);
+	INIT_LIST_HEAD(&ctl->txq_list);
+	INIT_LIST_HEAD(&ctl->rxq_list);
+	INIT_LIST_HEAD(&ctl->ackq_list);
+	INIT_LIST_HEAD(&ctl->kickq_list);
+	INIT_LIST_HEAD(&ctl->rx_doneq_list);
 
 	spin_lock_init(&ctl->txq_lock);
 	spin_lock_init(&ctl->rxq_lock);
@@ -1480,16 +1495,16 @@ static void mt7612u_mcu_ctrl_usb_exit(struct rtmp_adapter *ad)
 
 	ret = down_interruptible(&(ad->mcu_atomic));
 	OS_CLEAR_BIT(MCU_INIT, &ctl->flags);
-	mt7612u_mcu_usb_unlink_urb(ad, &ctl->txq);
-	mt7612u_mcu_usb_unlink_urb(ad, &ctl->kickq);
-	mt7612u_mcu_usb_unlink_urb(ad, &ctl->ackq);
-	mt7612u_mcu_usb_unlink_urb(ad, &ctl->rxq);
+	mt7612u_mcu_usb_unlink_urb(ad, &ctl->txq_list);
+	mt7612u_mcu_usb_unlink_urb(ad, &ctl->kickq_list);
+	mt7612u_mcu_usb_unlink_urb(ad, &ctl->ackq_list);
+	mt7612u_mcu_usb_unlink_urb(ad, &ctl->rxq_list);
 	RTMP_OS_TASKLET_KILL(&ctl->cmd_msg_task);
-	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->txq);
-	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->ackq);
-	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->rxq);
-	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->kickq);
-	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->rx_doneq);
+	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->txq_list);
+	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->ackq_list);
+	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->rxq_list);
+	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->kickq_list);
+	mt7612u_mcu_cleanup_cmd_msg(ad, &ctl->rx_doneq_list);
 	DBGPRINT(RT_DEBUG_OFF, ("tx_kickout_fail_count = %ld\n", ctl->tx_kickout_fail_count));
 	DBGPRINT(RT_DEBUG_OFF, ("tx_timeout_fail_count = %ld\n", ctl->tx_timeout_fail_count));
 	DBGPRINT(RT_DEBUG_OFF, ("rx_receive_fail_count = %ld\n", ctl->rx_receive_fail_count));
@@ -1518,7 +1533,7 @@ static int mt7612u_mcu_dequeue_and_kick_out_cmd_msgs(struct rtmp_adapter *ad)
 	while (1) {
 		bool tmp;
 
-		msg = mt7612u_mcu_dequeue_cmd_msg(ctl, &ctl->txq);
+		msg = mt7612u_mcu_dequeue_cmd_msg(ctl, &ctl->txq_list);
 		if (!msg)
 			break;
 		if (RTMP_TEST_FLAG(ad, fRTMP_ADAPTER_NIC_NOT_EXIST) ||
@@ -1528,9 +1543,9 @@ static int mt7612u_mcu_dequeue_and_kick_out_cmd_msgs(struct rtmp_adapter *ad)
 			continue;
 		}
 
-		tmp = mt7612u_mcu_queue_empty(ctl, &ctl->ackq);
+		tmp = mt7612u_mcu_queue_empty(ctl, &ctl->ackq_list);
 		if (!tmp) {
-			mt7612u_mcu_queue_head_cmd_msg(&ctl->txq, msg, msg->state);
+			mt7612u_mcu_queue_head_cmd_msg(&ctl->txq_list, msg, msg->state);
 			ret = -EAGAIN;
 			continue;
 		}
@@ -1576,7 +1591,7 @@ static int mt7612u_mcu_send_cmd_msg(struct rtmp_adapter *ad, struct cmd_msg *msg
 		return -EAGAIN;
 	}
 
-	mt7612u_mcu_queue_tail_cmd_msg(&ctl->txq, msg, TX_START);
+	mt7612u_mcu_queue_tail_cmd_msg(&ctl->txq_list, msg, TX_START);
 
 retransmit:
 	mt7612u_mcu_dequeue_and_kick_out_cmd_msgs(ad);
@@ -1595,7 +1610,7 @@ retransmit:
 				if (msg->state == WAIT_CMD_OUT_AND_ACK)
 					usb_kill_urb(msg->urb);
 				else if (msg->state == WAIT_ACK)
-					mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq);
+					mt7612u_mcu_unlink_cmd_msg(msg, &ctl->ackq_list);
 			}
 
 			if (OS_TEST_BIT(MCU_INIT, &ctl->flags))
@@ -1619,7 +1634,7 @@ retransmit:
 			if (msg->need_retransmit && (msg->retransmit_times > 0)) {
 				init_completion(&msg->ack_done);
 				state = TX_RETRANSMIT;
-				mt7612u_mcu_queue_head_cmd_msg(&ctl->txq, msg, state);
+				mt7612u_mcu_queue_head_cmd_msg(&ctl->txq_list, msg, state);
 				goto retransmit;
 			} else {
 				mt7612u_mcu_free_cmd_msg(msg);
