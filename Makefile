@@ -25,7 +25,7 @@ HAS_WPA_SUPPLICANT=y
 
 # Support Native WpaSupplicant for Network Maganger
 # i.e. wpa_supplicant -Dwext
-HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=n
+HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=y
 
 # Support for Multiple Cards
 HAS_MC_SUPPORT=n
@@ -33,7 +33,7 @@ HAS_MC_SUPPORT=n
 #Support for PCI-MSI
 HAS_MSI_SUPPORT=n
 
-HAS_KTHREAD_SUPPORT=n
+HAS_KTHREAD_SUPPORT=y
 
 
 
@@ -76,7 +76,7 @@ HAS_RESOURCE_BOOT_ALLOC=n
 
 #################################################
 
-WFLAGS := -g -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX -Wall -Wstrict-prototypes -Wno-trigraphs
+WFLAGS := -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX -Wall -Wstrict-prototypes -Wno-trigraphs
 WFLAGS += -DSYSTEM_LOG_SUPPORT -DRT28xx_MODE=$(RT28xx_MODE) -DCHIPSET=$(MODULE) -DDBG_DIAGNOSE -DDBG_RX_MCS -DDBG_TX_MCS
 #APsoc Specific
 WFLAGS += -DCONFIG_RA_NAT_NONE
