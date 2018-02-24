@@ -606,66 +606,23 @@ static inline int __RtmpOSTaskKill(OS_TASK *pTask)
 {
 	int ret = NDIS_STATUS_FAILURE;
 
-#ifdef KTHREAD_SUPPORT
 	if (pTask->kthread_task) {
 		kthread_stop(pTask->kthread_task);
 		ret = NDIS_STATUS_SUCCESS;
 	}
-#else
-	CHECK_PID_LEGALITY(pTask->taskPID) {
-		DBGPRINT(RT_DEBUG_TRACE,
-			 ("Terminate the task(%s) with pid(%d)!\n",
-			  pTask->taskName, GET_PID_NUMBER(pTask->taskPID)));
-		mb();
-		pTask->task_killed = 1;
-		mb();
-		ret = KILL_THREAD_PID(pTask->taskPID, SIGTERM, 1);
-		if (ret) {
-			printk(KERN_WARNING
-			       "kill task(%s) with pid(%d) failed(retVal=%d)!\n",
-			       pTask->taskName, GET_PID_NUMBER(pTask->taskPID),
-			       ret);
-		} else {
-			wait_for_completion(&pTask->taskComplete);
-			pTask->taskPID = THREAD_PID_INIT_VALUE;
-			pTask->task_killed = 0;
-			ret = NDIS_STATUS_SUCCESS;
-		}
-	}
-#endif
 
 	return ret;
-
 }
 
 
 static inline INT __RtmpOSTaskNotifyToExit(OS_TASK *pTask)
 {
-#ifndef KTHREAD_SUPPORT
-	pTask->taskPID = THREAD_PID_INIT_VALUE;
-	complete_and_exit(&pTask->taskComplete, 0);
-#endif
-
 	return 0;
 }
 
 
 static inline void __RtmpOSTaskCustomize(OS_TASK *pTask)
 {
-#ifndef KTHREAD_SUPPORT
-
-	daemonize((char *) & pTask->taskName[0] /*"%s",pAd->net_dev->name */ );
-
-	allow_signal(SIGTERM);
-	allow_signal(SIGKILL);
-	current->flags |= PF_NOFREEZE;
-
-	RTMP_GET_OS_PID(pTask->taskPID, current->pid);
-
-	/* signal that we've started the thread */
-	complete(&pTask->taskComplete);
-
-#endif
 }
 
 
@@ -675,30 +632,14 @@ static inline int __RtmpOSTaskAttach(
 	IN ULONG arg)
 {
 	int status = NDIS_STATUS_SUCCESS;
-#ifndef KTHREAD_SUPPORT
-	pid_t pid_number = -1;
-#endif /* KTHREAD_SUPPORT */
 
-#ifdef KTHREAD_SUPPORT
 	pTask->task_killed = 0;
 	pTask->kthread_task = NULL;
 	pTask->kthread_task =
 	    kthread_run((cast_fn) fn, (void *)arg, pTask->taskName);
 	if (IS_ERR(pTask->kthread_task))
 		status = NDIS_STATUS_FAILURE;
-#else
-	pid_number =
-	    kernel_thread((cast_fn) fn, (void *)arg, RTMP_OS_MGMT_TASK_FLAGS);
-	if (pid_number < 0) {
-		DBGPRINT(RT_DEBUG_ERROR,
-			 ("Attach task(%s) failed!\n", pTask->taskName));
-		status = NDIS_STATUS_FAILURE;
-	} else {
-		/* Wait for the thread to start */
-		wait_for_completion(&pTask->taskComplete);
-		status = NDIS_STATUS_SUCCESS;
-	}
-#endif
+
 	return status;
 }
 
@@ -712,25 +653,12 @@ static inline int __RtmpOSTaskInit(
 
 	ASSERT(pTask);
 
-#ifndef KTHREAD_SUPPORT
-	memset((u8 *) (pTask), 0, sizeof (OS_TASK));
-#endif
-
 	len = strlen(pTaskName);
 	len = len > (RTMP_OS_TASK_NAME_LEN - 1) ? (RTMP_OS_TASK_NAME_LEN - 1) : len;
 	memmove(&pTask->taskName[0], pTaskName, len);
 	pTask->priv = pPriv;
 
-#ifndef KTHREAD_SUPPORT
-/* XXX Following is undefined and KTHREAD_SUPPORT is always on */
-	RTMP_SEM_EVENT_INIT_LOCKED(&(pTask->taskSema), pSemList);
-	pTask->taskPID = THREAD_PID_INIT_VALUE;
-	init_completion(&pTask->taskComplete);
-#endif
-
-#ifdef KTHREAD_SUPPORT
 	init_waitqueue_head(&(pTask->kthread_q));
-#endif /* KTHREAD_SUPPORT */
 
 	return NDIS_STATUS_SUCCESS;
 }
@@ -741,21 +669,10 @@ bool __RtmpOSTaskWait(
 	IN OS_TASK *pTask,
 	IN int32_t *pStatus)
 {
-#ifdef KTHREAD_SUPPORT
 	RTMP_WAIT_EVENT_INTERRUPTIBLE((*pStatus), pTask);
 
 	if ((pTask->task_killed == 1) || ((*pStatus) != 0))
 		return false;
-#else
-
-	RTMP_SEM_EVENT_WAIT(&(pTask->taskSema), (*pStatus));
-
-	/* unlock the device pointers */
-	if ((*pStatus) != 0) {
-/*		RTMP_SET_FLAG_(*pFlags, fRTMP_ADAPTER_HALT_IN_PROGRESS); */
-		return false;
-	}
-#endif /* KTHREAD_SUPPORT */
 
 	return true;
 }
@@ -1571,14 +1488,8 @@ Note:
 VOID RtmpOsCmdUp(RTMP_OS_TASK *pCmdQTask)
 {
 	OS_TASK *pTask = RTMP_OS_TASK_GET(pCmdQTask);
-#ifdef KTHREAD_SUPPORT
 	pTask->kthread_running = true;
 	wake_up(&pTask->kthread_q);
-#else
-	CHECK_PID_LEGALITY(pTask->taskPID) {
-		RTMP_SEM_EVENT_UP(&(pTask->taskSema));
-	}
-#endif /* KTHREAD_SUPPORT */
 }
 
 
@@ -1600,18 +1511,10 @@ VOID RtmpOsMlmeUp(IN RTMP_OS_TASK *pMlmeQTask)
 {
 	OS_TASK *pTask = RTMP_OS_TASK_GET(pMlmeQTask);
 
-#ifdef KTHREAD_SUPPORT
 	if ((pTask != NULL) && (pTask->kthread_task)) {
 		pTask->kthread_running = true;
 		wake_up(&pTask->kthread_q);
 	}
-#else
-	if (pTask != NULL) {
-		CHECK_PID_LEGALITY(pTask->taskPID) {
-			RTMP_SEM_EVENT_UP(&(pTask->taskSema));
-		}
-	}
-#endif /* KTHREAD_SUPPORT */
 }
 
 

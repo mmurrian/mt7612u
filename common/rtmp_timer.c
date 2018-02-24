@@ -294,9 +294,7 @@ void RtmpTimerQExit(struct rtmp_adapter *pAd)
 	kfree(pAd->TimerQ.pTimerQPoll);
 	pAd->TimerQ.pQTail = NULL;
 	pAd->TimerQ.pQHead = NULL;
-/*#ifndef KTHREAD_SUPPORT*/
 	pAd->TimerQ.status = RTMP_TASK_STAT_STOPED;
-/*#endif*/
 	RTMP_INT_UNLOCK(&pAd->TimerQLock, irqFlags);
 }
 

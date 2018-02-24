@@ -79,17 +79,10 @@ typedef struct _RTMP_OS_TASK_ {
 	void *priv;
 	/*unsigned long                 taskFlags; */
 	RTMP_TASK_STATUS taskStatus;
-#ifndef KTHREAD_SUPPORT
-	struct semaphore taskSema;
-	RTMP_OS_PID taskPID;
-	struct completion taskComplete;
-#endif
 	unsigned char task_killed;
-#ifdef KTHREAD_SUPPORT
 	struct task_struct *kthread_task;
 	wait_queue_head_t kthread_q;
 	bool kthread_running;
-#endif
 } OS_TASK;
 #endif /* RTMP_MODULE_OS || ! OS_ABL_FUNC_SUPPORT */
 

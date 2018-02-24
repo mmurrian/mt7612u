@@ -59,13 +59,8 @@
 #endif /* RT_CFG80211_SUPPORT */
 
 
-/* must put the definition before include "os/rt_linux_cmm.h" */
-#define KTHREAD_SUPPORT 1
-
-#ifdef KTHREAD_SUPPORT
 #include <linux/err.h>
 #include <linux/kthread.h>
-#endif /* KTHREAD_SUPPORT */
 
 
 #include "os/rt_linux_cmm.h"
@@ -305,7 +300,6 @@ do { \
 
 #define RTCMDUp					OS_RTCMDUp
 
-#ifdef KTHREAD_SUPPORT
 #define RTMP_WAIT_EVENT_INTERRUPTIBLE(_Status, _pTask) \
 do { \
 		wait_event_interruptible(_pTask->kthread_q, \
@@ -318,9 +312,7 @@ do { \
 		} \
 		else (_Status) = 0; \
 } while(0)
-#endif
 
-#ifdef KTHREAD_SUPPORT
 #define WAKE_UP(_pTask) \
 	do{ \
 		if ((_pTask)->kthread_task) \
@@ -329,7 +321,6 @@ do { \
 	        wake_up(&(_pTask)->kthread_q); \
 		} \
 	}while(0)
-#endif
 
 /***********************************************************************************
  *	OS Memory Access related data structure and definitions

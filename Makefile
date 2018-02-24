@@ -33,7 +33,6 @@ HAS_MC_SUPPORT=n
 #Support for PCI-MSI
 HAS_MSI_SUPPORT=n
 
-HAS_KTHREAD_SUPPORT=y
 
 
 
@@ -88,9 +87,6 @@ WFLAGS += -I$(RT28xx_DIR)/include
 
 
 
-ifeq ($(HAS_KTHREAD_SUPPORT),y)
-WFLAGS += -DKTHREAD_SUPPORT
-endif
 
 ###############################################################################
 #
