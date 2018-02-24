@@ -248,34 +248,9 @@ VOID set_sniffer_mode(struct net_device *pDev, u8 mode);
 
 /* OS Semaphore */
 VOID RtmpOsCmdUp(RTMP_OS_TASK *pCmdQTask);
-bool RtmpOsSemaInitLocked(struct semaphore *pSemOrg, LIST_HEADER *pSemList);
-bool RtmpOsSemaInit(struct semaphore *pSemOrg, LIST_HEADER *pSemList);
-bool RtmpOsSemaDestory(struct semaphore *pSemOrg);
-INT RtmpOsSemaWaitInterruptible(struct semaphore *pSemOrg);
-VOID RtmpOsSemaWakeUp(struct semaphore *pSemOrg);
 VOID RtmpOsMlmeUp(RTMP_OS_TASK *pMlmeQTask);
 
 /* OS Task */
-bool RtmpOsTaskletSche(RTMP_NET_TASK_STRUCT *pTasklet);
-
-bool RtmpOsTaskletInit(
-	RTMP_NET_TASK_STRUCT *pTasklet,
-	VOID (*pFunc)(unsigned long data),
-	ULONG Data,
-	LIST_HEADER *pTaskletList);
-
-bool RtmpOsTaskletKill(RTMP_NET_TASK_STRUCT *pTasklet);
-VOID RtmpOsTaskletDataAssign(RTMP_NET_TASK_STRUCT *pTasklet, ULONG Data);
-
-VOID RtmpOsTaskWakeUp(RTMP_OS_TASK *pTaskOrg);
-int32_t RtmpOsTaskIsKilled(RTMP_OS_TASK *pTaskOrg);
-
-bool RtmpOsCheckTaskLegality(RTMP_OS_TASK *pTaskOrg);
-
-bool RtmpOSTaskAlloc(RTMP_OS_TASK *pTask, LIST_HEADER *pTaskList);
-
-VOID RtmpOSTaskFree(RTMP_OS_TASK *pTask);
-
 int RtmpOSTaskKill(RTMP_OS_TASK *pTaskOrg);
 
 INT RtmpOSTaskNotifyToExit(RTMP_OS_TASK *pTaskOrg);
@@ -290,16 +265,12 @@ int RtmpOSTaskAttach(
 int RtmpOSTaskInit(
 	IN	RTMP_OS_TASK *pTaskOrg,
 	IN	char *pTaskName,
-	IN	VOID *pPriv,
-	IN	LIST_HEADER *pTaskList,
-	IN	LIST_HEADER *pSemList);
+	IN	VOID *pPriv);
 
 bool RtmpOSTaskWait(
 	IN	VOID *pReserved,
 	IN	RTMP_OS_TASK *pTaskOrg,
 	IN	int32_t *pStatus);
-
-VOID *RtmpOsTaskDataGet(RTMP_OS_TASK *pTaskOrg);
 
 int32_t RtmpThreadPidKill(RTMP_OS_PID	 PID);
 
@@ -315,28 +286,12 @@ VOID RTMP_OS_Init_Timer(
 	IN	VOID *pReserved,
 	IN	NDIS_MINIPORT_TIMER *pTimerOrg,
 	IN	TIMER_FUNCTION function,
-	IN	PVOID data,
-	IN	LIST_HEADER *pTimerList);
+	IN	PVOID data);
 
 VOID RTMP_OS_Add_Timer(NDIS_MINIPORT_TIMER *pTimerOrg, unsigned long timeout);
 VOID RTMP_OS_Mod_Timer(NDIS_MINIPORT_TIMER *pTimerOrg, unsigned long timeout);
 VOID RTMP_OS_Del_Timer(NDIS_MINIPORT_TIMER *pTimerOrg, bool *pCancelled);
 VOID RTMP_OS_Release_Timer(NDIS_MINIPORT_TIMER *pTimerOrg);
-
-bool RTMP_OS_Alloc_Rsc(LIST_HEADER *pRscList, VOID *pRsc, uint32_t RscLen);
-VOID RTMP_OS_Free_Rscs(LIST_HEADER *pRscList);
-
-/* OS Lock */
-bool RtmpOsAllocateLock(spinlock_t *pLock, LIST_HEADER *pLockList);
-VOID RtmpOsFreeSpinLock(spinlock_t *pLockOrg);
-VOID RtmpOsSpinLockBh(spinlock_t *pLockOrg);
-VOID RtmpOsSpinUnLockBh(spinlock_t *pLockOrg);
-VOID RtmpOsIntLock(spinlock_t *pLockOrg, ULONG *pIrqFlags);
-VOID RtmpOsIntUnLock(spinlock_t *pLockOrg, ULONG IrqFlags);
-
-/* OS PID */
-VOID RtmpOsGetPid(ULONG *pDst, ULONG PID);
-VOID RtmpOsTaskPidInit(RTMP_OS_PID *pPid);
 
 /* OS I/O */
 VOID RTMP_PCI_Writel(ULONG Value, VOID *pAddr);
@@ -367,13 +322,6 @@ ULONG RtmpOsMaxScanDataGet(VOID);
 
 /* OS Interrutp */
 int32_t RtmpOsIsInInterrupt(VOID);
-
-/* OS Atomic */
-bool RtmpOsAtomicInit(RTMP_OS_ATOMIC *pAtomic, LIST_HEADER *pAtomicList);
-VOID RtmpOsAtomicDestroy(RTMP_OS_ATOMIC *pAtomic);
-LONG RtmpOsAtomicRead(RTMP_OS_ATOMIC *pAtomic);
-VOID RtmpOsAtomicDec(RTMP_OS_ATOMIC *pAtomic);
-VOID RtmpOsAtomicInterlockedExchange(RTMP_OS_ATOMIC *pAtomicSrc, LONG Value);
 
 /* OS Utility */
 void hex_dump(char *str, unsigned char *pSrcBufVA, unsigned int SrcBufLen);

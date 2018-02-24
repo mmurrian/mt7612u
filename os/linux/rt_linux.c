@@ -67,9 +67,6 @@ ULONG OS_NumOfMemAlloc = 0, OS_NumOfMemFree = 0;
 bool FlgIsUtilInit = false;
 spinlock_t UtilSemLock;
 
-bool RTMP_OS_Alloc_RscOnly(VOID *pRscSrc, uint32_t RscLen);
-bool RTMP_OS_Remove_Rsc(LIST_HEADER *pRscList, VOID *pRscSrc);
-
 /*
 ========================================================================
 Routine Description:
@@ -709,8 +706,7 @@ static inline int __RtmpOSTaskAttach(
 static inline int __RtmpOSTaskInit(
 	IN OS_TASK *pTask,
 	IN char *pTaskName,
-	IN VOID *pPriv,
-	IN LIST_HEADER *pSemList)
+	IN VOID *pPriv)
 {
 	int len;
 
@@ -726,6 +722,7 @@ static inline int __RtmpOSTaskInit(
 	pTask->priv = pPriv;
 
 #ifndef KTHREAD_SUPPORT
+/* XXX Following is undefined and KTHREAD_SUPPORT is always on */
 	RTMP_SEM_EVENT_INIT_LOCKED(&(pTask->taskSema), pSemList);
 	pTask->taskPID = THREAD_PID_INIT_VALUE;
 	init_completion(&pTask->taskComplete);
@@ -1768,12 +1765,6 @@ VOID RtmpOsPktRcvHandle(struct sk_buff *pNetPkt)
 	netif_rx(pNetPkt);
 }
 
-
-VOID RtmpOsTaskPidInit(RTMP_OS_PID *pPid)
-{
-	*pPid = THREAD_PID_INIT_VALUE;
-}
-
 /*
 ========================================================================
 Routine Description:
@@ -1898,8 +1889,7 @@ VOID RTMP_OS_Init_Timer(
 	VOID *pReserved,
 	NDIS_MINIPORT_TIMER *pTimerOrg,
 	TIMER_FUNCTION function,
-	PVOID data,
-	LIST_HEADER *pTimerList)
+	PVOID data)
 {
 	__RTMP_OS_Init_Timer(pReserved, pTimerOrg, function, data);
 }
@@ -1959,11 +1949,9 @@ int RtmpOSTaskAttach(
 int RtmpOSTaskInit(
 	RTMP_OS_TASK *pTask,
 	char *pTaskName,
-	VOID *pPriv,
-	LIST_HEADER *pTaskList,
-	LIST_HEADER *pSemList)
+	VOID *pPriv)
 {
-	return __RtmpOSTaskInit(pTask, pTaskName, pPriv, pSemList);
+	return __RtmpOSTaskInit(pTask, pTaskName, pPriv);
 }
 
 
@@ -1971,14 +1959,3 @@ bool RtmpOSTaskWait(VOID *pReserved, RTMP_OS_TASK * pTask, int32_t *pStatus)
 {
 	return __RtmpOSTaskWait(pReserved, pTask, pStatus);
 }
-
-
-VOID RtmpOsTaskWakeUp(RTMP_OS_TASK *pTask)
-{
-#ifdef KTHREAD_SUPPORT
-	WAKE_UP(pTask);
-#else
-	RTMP_SEM_EVENT_UP(&pTask->taskSema);
-#endif
-}
-

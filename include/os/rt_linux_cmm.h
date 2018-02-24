@@ -38,8 +38,7 @@ typedef struct _OS_RSTRUC  {
  *	OS task related data structure and definitions
  ******************************************************************************/
 #define RTMP_OS_TASK_INIT(__pTask, __pTaskName, __pAd)		\
-	RtmpOSTaskInit(__pTask, __pTaskName, __pAd, &(__pAd)->RscTaskMemList, &(__pAd)->RscSemMemList);
-
+	RtmpOSTaskInit(__pTask, __pTaskName, __pAd);
 
 /* rt_linux.h */
 #define RTMP_OS_TASK				OS_TASK

@@ -36,7 +36,6 @@
 
 #include "rtmp_type.h"
 #include "rtmp_os.h"
-#include "link_list.h"
 #include "rtmp_cmd.h"
 #include "iface/iface_util.h"
 

@@ -1778,6 +1778,6 @@ do{									\
 #endif /* SYSTEM_LOG_SUPPORT */
 
 #define RTMP_OS_TASK_INIT(__pTask, __pTaskName, __pAd)		\
-	RtmpOSTaskInit(__pTask, __pTaskName, __pAd, &(__pAd)->RscTaskMemList, &(__pAd)->RscSemMemList);
+	RtmpOSTaskInit(__pTask, __pTaskName, __pAd);
 
 #endif /* __RTMP_DEF_H__ */

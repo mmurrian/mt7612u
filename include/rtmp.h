@@ -3629,14 +3629,6 @@ struct rtmp_adapter {
 		u8 *pIe;
 	} ProbeRespIE[MAX_LEN_OF_BSS_TABLE];
 
-	/* purpose: We free all kernel resources when module is removed */
-	LIST_HEADER RscTimerMemList;	/* resource timers memory */
-	LIST_HEADER RscTaskMemList;	/* resource tasks memory */
-	LIST_HEADER RscLockMemList;	/* resource locks memory */
-	LIST_HEADER RscTaskletMemList;	/* resource tasklets memory */
-	LIST_HEADER RscSemMemList;	/* resource semaphore memory */
-	LIST_HEADER RscAtomicMemList;	/* resource atomic memory */
-
 	/* purpose: Cancel all timers when module is removed */
 	LIST_HEADER RscTimerCreateList;	/* timers list */
 

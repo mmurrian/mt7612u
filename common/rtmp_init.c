@@ -96,12 +96,6 @@ int RTMPAllocAdapterBlock(struct os_cookie *handle, struct rtmp_adapter **ppAdap
 		else
 		{
 			/* init resource list (must be after pAd allocation) */
-			initList(&pAd->RscTimerMemList);
-			initList(&pAd->RscTaskMemList);
-			initList(&pAd->RscLockMemList);
-			initList(&pAd->RscTaskletMemList);
-			initList(&pAd->RscSemMemList);
-			initList(&pAd->RscAtomicMemList);
 
 			initList(&pAd->RscTimerCreateList);
 
@@ -2326,7 +2320,7 @@ VOID RTMPInitTimer(
 	pTimer->cookie = (ULONG) pData;
 	pTimer->pAd = pAd;
 
-	RTMP_OS_Init_Timer(pAd, &pTimer->TimerObj,	pTimerFunc, (PVOID) pTimer, &pAd->RscTimerMemList);
+	RTMP_OS_Init_Timer(pAd, &pTimer->TimerObj,	pTimerFunc, (PVOID) pTimer);
 	DBGPRINT(RT_DEBUG_TRACE,("%s: %lx\n",__FUNCTION__, (ULONG)pTimer));
 
 	spin_unlock_bh(&TimerSemLock);
