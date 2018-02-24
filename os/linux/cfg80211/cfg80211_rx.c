@@ -215,7 +215,7 @@ bool CFG80211_HandleP2pMgmtFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk, u8 Op
 
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 			/* Check the P2P_GO exist in the VIF List */
-			if (pCfg80211_ctrl->Cfg80211VifDevSet.vifDevList.size > 0)
+			if (!list_empty(&pCfg80211_ctrl->Cfg80211VifDevSet.vifDevList)
 			{
 				if ((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL)
 				{

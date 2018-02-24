@@ -1117,7 +1117,7 @@ VOID ap_cmm_peer_assoc_req_action(
 
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 			struct net_device *pNetDev = NULL;
-			if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
+			if (!list_empty(pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList) &&
 			    ((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
 			{
 				DBGPRINT(RT_DEBUG_TRACE, ("CONCURRENT_DEVICE CFG : GO NOITFY THE CLIENT ASSOCIATED\n"));

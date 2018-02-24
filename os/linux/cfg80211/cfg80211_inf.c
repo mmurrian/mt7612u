@@ -174,7 +174,7 @@ bool RTMP_CFG80211_VIF_P2P_GO_ON(struct rtmp_adapter *pAd)
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 	struct net_device *pNetDev = NULL;
 
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
+	if (!list_empty(&pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList) &&
 		((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
     	return true;
 	else
@@ -214,19 +214,14 @@ bool RTMP_CFG80211_VIF_ON(struct rtmp_adapter *pAd)
 static
 PCFG80211_VIF_DEV RTMP_CFG80211_FindVifEntry_ByMac(struct rtmp_adapter *pAd, struct net_device *pNewNetDev)
 {
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV       	pDevEntry = NULL;
-	PLIST_ENTRY		        pListEntry = NULL;
+	struct list_head *pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
+	struct list_head *ptr, *se;
 
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	while (pDevEntry != NULL)
-	{
+	list_for_each_safe(ptr, se, pCacheList) {
+		CFG80211_VIF_DEV *pDevEntry = list_entry(ptr, CFG80211_VIF_DEV, list);
+
 		if (!memcmp(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
 			return pDevEntry;
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	}
 
 	return NULL;
@@ -234,19 +229,14 @@ PCFG80211_VIF_DEV RTMP_CFG80211_FindVifEntry_ByMac(struct rtmp_adapter *pAd, str
 
 struct net_device *RTMP_CFG80211_FindVifEntry_ByType(struct rtmp_adapter *pAd, uint32_t devType)
 {
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV       	pDevEntry = NULL;
-	PLIST_ENTRY		        pListEntry = NULL;
+	struct list_head *pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
+	struct list_head *ptr, *se;
 
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	while (pDevEntry != NULL)
-	{
+	list_for_each_safe(ptr, se, pCacheList) {
+		CFG80211_VIF_DEV *pDevEntry = list_entry(ptr, CFG80211_VIF_DEV, list);
+
 		if (pDevEntry->devType == devType)
 			return pDevEntry->net_dev;
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	}
 
 	return NULL;
@@ -256,19 +246,14 @@ PWIRELESS_DEV RTMP_CFG80211_FindVifEntryWdev_ByType(
 	IN      struct rtmp_adapter *pAd,
 	      uint32_t    devType)
 {
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV       	pDevEntry = NULL;
-	PLIST_ENTRY		        pListEntry = NULL;
+	struct list_head *pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
+	struct list_head *ptr, *se;
 
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	while (pDevEntry != NULL)
-	{
+	list_for_each_safe(ptr, se, pCacheList) {
+		CFG80211_VIF_DEV *pDevEntry = list_entry(ptr, CFG80211_VIF_DEV, list);
+
 		if (pDevEntry->devType == devType)
 			return pDevEntry->net_dev->ieee80211_ptr;
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	}
 
 	return NULL;
@@ -276,19 +261,13 @@ PWIRELESS_DEV RTMP_CFG80211_FindVifEntryWdev_ByType(
 
 VOID RTMP_CFG80211_AddVifEntry(struct rtmp_adapter *pAd, struct net_device *pNewNetDev, uint32_t DevType)
 {
-	PCFG80211_VIF_DEV pNewVifDev = NULL;
-
-	pNewVifDev = kmalloc(sizeof(CFG80211_VIF_DEV), GFP_ATOMIC);
+	PCFG80211_VIF_DEV pNewVifDev = kzalloc(sizeof(CFG80211_VIF_DEV), GFP_ATOMIC);
 	if (pNewVifDev) {
-		memset(pNewVifDev, 0, sizeof(CFG80211_VIF_DEV));
-
-		pNewVifDev->pNext = NULL;
 		pNewVifDev->net_dev = pNewNetDev;
 		pNewVifDev->devType = DevType;
-		memset(pNewVifDev->CUR_MAC, 0, MAC_ADDR_LEN);
 		memcpy(pNewVifDev->CUR_MAC, pNewNetDev->dev_addr, MAC_ADDR_LEN);
 
-		insertTailList(&pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList, (PLIST_ENTRY)pNewVifDev);
+		list_add_tail(&pNewVifDev->list, &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList);
 		DBGPRINT(RT_DEBUG_TRACE, ("Add CFG80211 VIF Device, Type: %d.\n", pNewVifDev->devType));
 	}
 	else
@@ -299,14 +278,12 @@ VOID RTMP_CFG80211_AddVifEntry(struct rtmp_adapter *pAd, struct net_device *pNew
 
 VOID RTMP_CFG80211_RemoveVifEntry(struct rtmp_adapter *pAd, struct net_device *pNewNetDev)
 {
-	PLIST_ENTRY     pListEntry = NULL;
+	PCFG80211_VIF_DEV pVifDev = RTMP_CFG80211_FindVifEntry_ByMac(pAd, pNewNetDev);
 
-	pListEntry = (PLIST_ENTRY)RTMP_CFG80211_FindVifEntry_ByMac(pAd, pNewNetDev);
-
-	if (pListEntry)
+	if (pVifDev)
 	{
-		delEntryList(&pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList, pListEntry);
-		kfree(pListEntry);
+		list_del(&pVifDev->list);
+		kfree(pVifDev);
 	}
 	else
 	{
@@ -600,20 +577,15 @@ VOID RTMP_CFG80211_VirtualIF_Remove(
 VOID RTMP_CFG80211_AllVirtualIF_Remove(
 	IN struct rtmp_adapter 		*pAd)
 {
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV           pDevEntry = NULL;
-	PLIST_ENTRY             pListEntry = NULL;
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
+	struct list_head *pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
+	struct list_head *ptr, *se;
 
-	while ((pDevEntry != NULL) && (pCacheList->size != 0))
-	{
+	list_for_each_safe(ptr, se, pCacheList) {
+		CFG80211_VIF_DEV *pDevEntry = list_entry(ptr, CFG80211_VIF_DEV, list);
+
 		RtmpOSNetDevProtect(1);
 		RTMP_CFG80211_VirtualIF_Remove(pAd, pDevEntry->net_dev, pDevEntry->net_dev->ieee80211_ptr->iftype);
 		RtmpOSNetDevProtect(0);
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	}
 }
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE

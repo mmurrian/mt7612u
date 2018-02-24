@@ -285,24 +285,19 @@ VOID CFG80211DRV_OpsMgmtFrameProbeRegister(
 
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 	struct net_device *pNewNetDev = (PNET_DEV) pData;
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV       pDevEntry = NULL;
-	PLIST_ENTRY		        pListEntry = NULL;
 
-	/* Search the CFG80211 VIF List First */
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	while (pDevEntry != NULL)
-	{
+	struct list_head *pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
+	struct list_head *ptr, *se;
+
+	list_for_each_safe(ptr, se, pCacheList) {
+		CFG80211_VIF_DEV *pDevEntry = list_entry(ptr, CFG80211_VIF_DEV, list);
+
 		if (!memcmp(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
 			break;
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	}
 
 	/* Check The Registration is for VIF Device */
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
+	if (!list_empty(pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList) &&
 		(pDevEntry != NULL))
 	{
 		if (isReg)
@@ -347,24 +342,19 @@ VOID CFG80211DRV_OpsMgmtFrameActionRegister(
 
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 	struct net_device *pNewNetDev = (PNET_DEV) pData;
-	PLIST_HEADER  pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
-	PCFG80211_VIF_DEV       pDevEntry = NULL;
-	PLIST_ENTRY		        pListEntry = NULL;
 
-	/* Search the CFG80211 VIF List First */
-	pListEntry = pCacheList->pHead;
-	pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
-	while (pDevEntry != NULL)
-	{
+	struct list_head *pCacheList = &pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList;
+	struct list_head *ptr, *se;
+
+	list_for_each_safe(ptr, se, pCacheList) {
+		CFG80211_VIF_DEV *pDevEntry = list_entry(ptr, CFG80211_VIF_DEV, list);
+
 		if (!memcmp(pDevEntry->net_dev->dev_addr, pNewNetDev->dev_addr, MAC_ADDR_LEN))
 			break;
-
-		pListEntry = pListEntry->pNext;
-		pDevEntry = (PCFG80211_VIF_DEV)pListEntry;
 	}
 
 	/* Check The Registration is for VIF Device */
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
+	if (!list_empty(pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList) &&
 		(pDevEntry != NULL))
 	{
 		if (isReg)
@@ -873,7 +863,7 @@ bool CFG80211DRV_Connect(
 	}
 	else if (pConnInfo->AuthType == Ndis802_11AuthModeAutoSwitch)
 		Set_AuthMode_Proc(pAd, "WEPAUTO");
-    else if (pConnInfo->AuthType == Ndis802_11AuthModeShared)
+	else if (pConnInfo->AuthType == Ndis802_11AuthModeShared)
 		Set_AuthMode_Proc(pAd, "SHARED");
 	else
 		Set_AuthMode_Proc(pAd, "OPEN");
@@ -1453,10 +1443,6 @@ INT CFG80211_reSetToDefault(
 	return true;
 }
 
-/*
-initList(&pAd->Cfg80211VifDevSet.vifDevList);
-initList(&pAd->cfg80211_ctrl.cfg80211TxPacketList);
-*/
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 bool CFG80211_checkScanResInKernelCache(
     IN struct rtmp_adapter                                       *pAd,

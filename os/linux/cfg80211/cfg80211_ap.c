@@ -352,7 +352,7 @@ bool CFG80211DRV_OpsBeaconAdd(struct rtmp_adapter *pAd, VOID *pData)
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 	/* Using netDev ptr from VifList if VifDevList Exist */
 	struct net_device *pNetDev = NULL;
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
+	if (!list_empty(&pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList) &&
 	   ((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
 	{
 		pMbss->MSSIDDev = pNetDev;
@@ -754,7 +754,7 @@ void CFG80211_ApStaDelSendEvent(struct rtmp_adapter *pAd, const u8 *mac_addr)
 {
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 	struct net_device *pNetDev = NULL;
-	if ((pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList.size > 0) &&
+	if (!list_empty(&pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList) &&
 		((pNetDev = RTMP_CFG80211_FindVifEntry_ByType(pAd, RT_CMD_80211_IFTYPE_P2P_GO)) != NULL))
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("CONCURRENT_DEVICE CFG : GO NOITFY THE CLIENT Disconnected\n"));

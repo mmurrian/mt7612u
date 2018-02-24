@@ -99,6 +99,8 @@ int RTMPAllocAdapterBlock(struct os_cookie *handle, struct rtmp_adapter **ppAdap
 
 			INIT_LIST_HEAD(&pAd->RscTimerCreateList);
 
+			INIT_LIST_HEAD(&pAd->cfg80211_ctrl.Cfg80211VifDevSet.vifDevList);
+
 			pAd->OS_Cookie = handle;
 		}
 		pAd->BeaconBuf = pBeaconBuf;

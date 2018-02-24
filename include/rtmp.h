@@ -31,7 +31,6 @@
 #ifndef __RTMP_H__
 #define __RTMP_H__
 
-#include "link_list.h"
 #include "spectrum_def.h"
 
 #include "rtmp_dot11.h"
@@ -2990,7 +2989,7 @@ typedef struct _SCAN_CTRL_{
 #ifdef RT_CFG80211_SUPPORT
 typedef struct _CFG80211_VIF_DEV
 {
-	struct _CFG80211_VIF_DEV *pNext;
+	struct list_head list;
 	bool isMainDev;
 	uint32_t devType;
 	struct net_device *net_dev;
@@ -3011,7 +3010,7 @@ typedef struct _CFG80211_VIF_DEV_SET
 
 	bool inUsed;
 	uint32_t vifDevNum;
-	LIST_HEADER vifDevList;
+	struct list_head vifDevList;
 	bool isGoingOn; /* To check any vif in list */
 } CFG80211_VIF_DEV_SET;
 
