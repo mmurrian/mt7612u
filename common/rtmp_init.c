@@ -2586,15 +2586,15 @@ INT RtmpRaDevCtrlInit(struct rtmp_adapter *pAd)
 	UINT8 i;
 	uint32_t ret;
 
-#ifdef CONFIG_STA_SUPPORT
-	pAd->OpMode = OPMODE_STA;
-	DBGPRINT(RT_DEBUG_TRACE, ("STA Driver version-%s\n", STA_DRIVER_VERSION));
-#endif /* CONFIG_STA_SUPPORT */
-
 #ifdef CONFIG_AP_SUPPORT
 	pAd->OpMode = OPMODE_AP;
 	DBGPRINT(RT_DEBUG_TRACE, ("AP Driver version-%s\n", AP_DRIVER_VERSION));
 #endif /* CONFIG_AP_SUPPORT */
+
+#ifdef CONFIG_STA_SUPPORT
+	pAd->OpMode = OPMODE_STA;
+	DBGPRINT(RT_DEBUG_TRACE, ("STA Driver version-%s\n", STA_DRIVER_VERSION));
+#endif /* CONFIG_STA_SUPPORT */
 
 	sema_init(&(pAd->UsbVendorReq_semaphore), 1);
 	sema_init(&(pAd->reg_atomic), 1);
