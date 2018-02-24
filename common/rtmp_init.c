@@ -97,7 +97,7 @@ int RTMPAllocAdapterBlock(struct os_cookie *handle, struct rtmp_adapter **ppAdap
 		{
 			/* init resource list (must be after pAd allocation) */
 
-			initList(&pAd->RscTimerCreateList);
+			INIT_LIST_HEAD(&pAd->RscTimerCreateList);
 
 			pAd->OS_Cookie = handle;
 		}
@@ -2175,67 +2175,28 @@ Return Value:
 Note:
 ========================================================================
 */
-VOID RTMP_TimerListAdd(struct rtmp_adapter *pAd, VOID *pRsc)
+VOID RTMP_TimerListAdd(struct rtmp_adapter *pAd, RALINK_TIMER_STRUCT *pRsc)
 {
-	LIST_HEADER *pRscList = &pAd->RscTimerCreateList;
-	LIST_RESOURCE_OBJ_ENTRY *pObj;
-
+	struct list_head *pRscList = &pAd->RscTimerCreateList;
+	struct list_head *ptr, *se;
 
 	/* try to find old entry */
-	pObj = (LIST_RESOURCE_OBJ_ENTRY *)(pRscList->pHead);
-	while(1)
-	{
-		if (pObj == NULL)
-			break;
-		if ((ULONG)(pObj->pRscObj) == (ULONG)pRsc)
+	list_for_each_safe(ptr, se, pRscList) {
+		RALINK_TIMER_STRUCT *pObj = list_entry(ptr, RALINK_TIMER_STRUCT, list);
+		if (pObj == pRsc)
 			return; /* exists */
-		pObj = pObj->pNext;
 	}
 
-	/* allocate a timer record entry */
-	pObj = kmalloc(sizeof(LIST_RESOURCE_OBJ_ENTRY), GFP_ATOMIC);
-	if (pObj == NULL) {
-		DBGPRINT(RT_DEBUG_ERROR, ("%s: alloc timer obj fail!\n", __FUNCTION__));
-		return;
-	}
-	else
-	{
-		pObj->pRscObj = pRsc;
-		insertTailList(pRscList, (LIST_ENTRY *)pObj);
-		DBGPRINT(RT_DEBUG_WARN, ("%s: add timer obj %lx!\n", __FUNCTION__, (ULONG)pRsc));
-	}
+	list_add_tail(&pRsc->list, pRscList);
+	DBGPRINT(RT_DEBUG_WARN, ("%s: add timer obj %p!\n", __FUNCTION__, pRsc));
 }
 
-
-VOID RTMP_TimerListRelease(struct rtmp_adapter *pAd, VOID *pRsc)
+VOID RTMP_TimerListRelease(struct rtmp_adapter *pAd, RALINK_TIMER_STRUCT *pRsc)
 {
-	LIST_HEADER *pRscList = &pAd->RscTimerCreateList;
-	LIST_RESOURCE_OBJ_ENTRY *pObj;
-	LIST_ENTRY *pListEntry;
+	if (!pRsc)
+		return;
 
-	pListEntry = pRscList->pHead;
-	pObj = (LIST_RESOURCE_OBJ_ENTRY *)pListEntry;
-
-	while (pObj)
-	{
-		if ((ULONG)(pObj->pRscObj) == (ULONG)pRsc)
-		{
-			pListEntry = (LIST_ENTRY *)pObj;
-			break;
-		}
-
-		pListEntry = pListEntry->pNext;
-		pObj = (LIST_RESOURCE_OBJ_ENTRY *)pListEntry;
-	}
-
-	if (pListEntry)
-	{
-		delEntryList(pRscList, pListEntry);
-
-		/* free a timer record entry */
-		DBGPRINT(RT_DEBUG_ERROR, ("%s: release timer obj %lx!\n", __FUNCTION__, (ULONG)pRsc));
-		kfree(pObj);
-	}
+	list_del(&pRsc->list);
 }
 
 /*
@@ -2254,27 +2215,17 @@ Note:
 */
 VOID RTMP_AllTimerListRelease(struct rtmp_adapter *pAd)
 {
-	LIST_HEADER *pRscList = &pAd->RscTimerCreateList;
-	LIST_RESOURCE_OBJ_ENTRY *pObj, *pObjOld;
-	bool Cancel;
+	struct list_head *pRscList = &pAd->RscTimerCreateList;
+	struct list_head *ptr, *se;
 
-	/* try to find old entry */
-	pObj = (LIST_RESOURCE_OBJ_ENTRY *)(pRscList->pHead);
-	while(1)
-	{
-		if (pObj == NULL)
-			break;
-		DBGPRINT(RT_DEBUG_TRACE, ("%s: Cancel timer obj %lx!\n", __FUNCTION__, (ULONG)(pObj->pRscObj)));
-		pObjOld = pObj;
-		pObj = pObj->pNext;
-		RTMPReleaseTimer(pObjOld->pRscObj, &Cancel);
+	list_for_each_safe(ptr, se, pRscList) {
+		RALINK_TIMER_STRUCT *pObj = list_entry(ptr, RALINK_TIMER_STRUCT, list);
+		bool Cancel;
 
-		//TODO: It will casued kernel panic on reboot
-		//kfree(pObjOld);
+		RTMPReleaseTimer(pObj, &Cancel);
 	}
 
-	/* reset TimerList */
-	initList(&pAd->RscTimerCreateList);
+	INIT_LIST_HEAD(&pAd->RscTimerCreateList);
 }
 
 
@@ -2321,7 +2272,7 @@ VOID RTMPInitTimer(
 	pTimer->pAd = pAd;
 
 	RTMP_OS_Init_Timer(pAd, &pTimer->TimerObj,	pTimerFunc, (PVOID) pTimer);
-	DBGPRINT(RT_DEBUG_TRACE,("%s: %lx\n",__FUNCTION__, (ULONG)pTimer));
+	DBGPRINT(RT_DEBUG_TRACE,("%s: pAd=%p, pTimer=%p\n",__FUNCTION__, pAd, pTimer));
 
 	spin_unlock_bh(&TimerSemLock);
 }

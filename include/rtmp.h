@@ -3629,9 +3629,7 @@ struct rtmp_adapter {
 	} ProbeRespIE[MAX_LEN_OF_BSS_TABLE];
 
 	/* purpose: Cancel all timers when module is removed */
-	LIST_HEADER RscTimerCreateList;	/* timers list */
-
-
+	struct list_head RscTimerCreateList;	/* timers list */
 
 	struct mt7612u_txwi NullTxWI;
 	unsigned short NullBufOffset[2];
@@ -4239,8 +4237,8 @@ VOID NicGetTxRawCounters(
 VOID AtoH(char *src, u8 *dest, int destlen);
 u8 BtoH(char ch);
 
-VOID RTMP_TimerListAdd(struct rtmp_adapter *pAd, VOID *pRsc);
-VOID RTMP_TimerListRelease(struct rtmp_adapter *pAd, VOID *pRsc);
+VOID RTMP_TimerListAdd(struct rtmp_adapter *pAd, RALINK_TIMER_STRUCT *pRsc);
+VOID RTMP_TimerListRelease(struct rtmp_adapter *pAd, RALINK_TIMER_STRUCT *pRsc);
 VOID RTMP_AllTimerListRelease(struct rtmp_adapter *pAd);
 
 VOID RTMPInitTimer(

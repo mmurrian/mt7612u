@@ -34,12 +34,6 @@
 
 #include "rtmp_os.h"
 
-#define DECLARE_TIMER_FUNCTION(_func)			\
-	void rtmp_timer_##_func(unsigned long data)
-
-#define GET_TIMER_FUNCTION(_func)				\
-	(PVOID)rtmp_timer_##_func
-
 /* ----------------- Timer Related MARCO ---------------*/
 /* In some os or chipset, we have a lot of timer functions and will read/write register, */
 /*   it's not allowed in Linux USB sub-system to do it ( because of sleep issue when */
@@ -63,6 +57,7 @@ typedef struct _RALINK_TIMER_STRUCT {
 	ULONG TimerValue;	/* Timer value in milliseconds */
 	ULONG cookie;		/* os specific object */
 	struct rtmp_adapter *pAd;
+	struct list_head list;
 #ifdef RTMP_TIMER_TASK_SUPPORT
 	RTMP_TIMER_TASK_HANDLE handle;
 #endif				/* RTMP_TIMER_TASK_SUPPORT */
@@ -84,12 +79,17 @@ typedef struct _RTMP_TIMER_TASK_QUEUE_ {
 	RTMP_TIMER_TASK_ENTRY *pQTail;
 } RTMP_TIMER_TASK_QUEUE;
 
+#define DECLARE_TIMER_FUNCTION(_func)			\
+	void rtmp_timer_##_func(PRALINK_TIMER_STRUCT pTimer)
+
+#define GET_TIMER_FUNCTION(_func)				\
+	(PVOID)rtmp_timer_##_func
+
 #define BUILD_TIMER_FUNCTION(_func)										\
-void rtmp_timer_##_func(unsigned long data)										\
+void rtmp_timer_##_func(PRALINK_TIMER_STRUCT _pTimer)										\
 {																			\
-	PRALINK_TIMER_STRUCT	_pTimer = (PRALINK_TIMER_STRUCT)data;				\
 	RTMP_TIMER_TASK_ENTRY	*_pQNode;										\
-	struct rtmp_adapter 		*_pAd;											\
+	struct rtmp_adapter 	*_pAd;											\
 																			\
 	_pTimer->handle = _func;													\
 	_pAd = _pTimer->pAd;										\
@@ -99,10 +99,8 @@ void rtmp_timer_##_func(unsigned long data)										\
 }
 #else /* !RTMP_TIMER_TASK_SUPPORT */
 #define BUILD_TIMER_FUNCTION(_func)										\
-void rtmp_timer_##_func(unsigned long data)										\
+void rtmp_timer_##_func(PRALINK_TIMER_STRUCT pTimer)										\
 {																			\
-	PRALINK_TIMER_STRUCT	pTimer = (PRALINK_TIMER_STRUCT) data;				\
-																			\
 	_func(NULL, (PVOID) pTimer->cookie, NULL, pTimer); 							\
 	if (pTimer->Repeat)														\
 		RTMP_OS_Add_Timer(&pTimer->TimerObj, pTimer->TimerValue);			\
