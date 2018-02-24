@@ -3054,7 +3054,6 @@ typedef struct _CFG80211_CONTROL
 	u8 *pTxStatusBuf;		  /* TxMgmt Packet buffer content */
 	uint32_t TxStatusBufLen;		  /* TxMgmt Packet buffer Length */
 	bool TxStatusInUsed;
-	LIST_HEADER cfg80211TxPacketList;
 
 	/* P2P Releated*/
 	u8 P2PCurrentAddress[MAC_ADDR_LEN];	  /* User changed MAC address */

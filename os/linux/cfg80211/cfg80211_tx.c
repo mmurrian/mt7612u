@@ -388,31 +388,6 @@ void CFG80211_ParseBeaconIE(struct rtmp_adapter *pAd, MULTISSID_STRUCT *pMbss, s
 
 #endif /* CONFIG_AP_SUPPORT */
 
-static
-PCFG80211_TX_PACKET CFG80211_TxMgmtFrameSearch(struct rtmp_adapter *pAd, unsigned short Sequence)
-{
-	PLIST_HEADER  pPacketList = &pAd->cfg80211_ctrl.cfg80211TxPacketList;
-	PCFG80211_TX_PACKET pTxPkt = NULL;
-	PLIST_ENTRY pListEntry = NULL;
-
-	DBGPRINT(RT_DEBUG_ERROR, ("CFG_TX_STATUS: Search %d\n", Sequence));
-	pListEntry = pPacketList->pHead;
-	pTxPkt = (PCFG80211_TX_PACKET)pListEntry;
-
-	while (pTxPkt != NULL)
-	{
-		if (pTxPkt->TxStatusSeq == Sequence)
-		{
-			DBGPRINT(RT_DEBUG_ERROR, ("CFG_TX_STATUS: got %d\n", Sequence));
-			return pTxPkt;
-		}
-
-		pListEntry = pListEntry->pNext;
-		pTxPkt = (PCFG80211_TX_PACKET)pListEntry;
-	}
-
-}
-
 void CFG80211_SendMgmtFrame(struct rtmp_adapter *pAd, VOID *pData, ULONG Data)
 {
 	if (pData != NULL)
