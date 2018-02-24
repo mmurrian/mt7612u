@@ -367,9 +367,6 @@ typedef struct tasklet_struct  *POS_NET_TASK_STRUCT;
  **********************************************************************************/
 #define OS_HZ			HZ
 
-typedef struct timer_list	OS_NDIS_MINIPORT_TIMER;
-typedef struct timer_list	OS_TIMER;
-
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
 typedef void (*TIMER_FUNCTION)(struct timer_list *);
 #else

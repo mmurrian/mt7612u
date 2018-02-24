@@ -49,7 +49,10 @@ typedef VOID(
 #endif /* RTMP_TIMER_TASK_SUPPORT */
 
 typedef struct _RALINK_TIMER_STRUCT {
-	RTMP_OS_TIMER TimerObj;	/* Ndis Timer object */
+	struct timer_list TimerObj;	/* Ndis Timer object
+					   should be first member in this struct because
+					   of the way it gets passed to timer func
+					 */
 	bool Valid;		/* Set to True when call RTMPInitTimer */
 	bool State;		/* True if timer cancelled */
 	bool PeriodicType;	/* True if timer is periodic timer */
