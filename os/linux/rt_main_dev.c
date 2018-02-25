@@ -38,18 +38,6 @@
 #define SA_SHIRQ IRQF_SHARED
 #endif
 
-// TODO: shiang-6590, remove it when MP
-// TODO: End---
-
-/*---------------------------------------------------------------------*/
-/* Private Variables Used                                              */
-/*---------------------------------------------------------------------*/
-
-char *mode = "";		/* supported mode: normal/ate/monitor;  default: normal */
-
-module_param(mode, charp, 0);
-MODULE_PARM_DESC (mode, "rt_wifi: wireless operation mode");
-
 /*---------------------------------------------------------------------*/
 /* Prototypes of Functions Used                                        */
 /*---------------------------------------------------------------------*/

@@ -1442,7 +1442,7 @@ static int CFG80211_OpsRFKill(
 
 
 VOID CFG80211_RFKillStatusUpdate(
-	PVOID			pAd,
+	struct rtmp_adapter	*pAd,
 	bool			active)
 {
 	struct wiphy *pWiphy;
@@ -1450,9 +1450,9 @@ VOID CFG80211_RFKillStatusUpdate(
 
 	CFG80211DBG(RT_DEBUG_TRACE, ("80211> %s ==>\n", __FUNCTION__));
 	pCfg80211_CB = RTMP_DRIVER_80211_CB_GET(pAd);
-	if (p80211CB == NULL) {
+	if (pCfg80211_CB == NULL) {
 		CFG80211DBG(RT_DEBUG_ERROR, ("80211> p80211CB == NULL!\n"));
-		return 0;
+		return;
 	}
 	pWiphy = pCfg80211_CB->pCfg80211_Wdev->wiphy;
 	wiphy_rfkill_set_hw_state(pWiphy, !active);

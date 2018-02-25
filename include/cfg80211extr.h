@@ -230,7 +230,7 @@ bool CFG80211_SupBandReInit(
 
 #ifdef RFKILL_HW_SUPPORT
 VOID CFG80211_RFKillStatusUpdate(
-	struct rtmp_adapter				pAd,
+	struct rtmp_adapter				*pAd,
 	bool						active);
 #endif /* RFKILL_HW_SUPPORT */
 
