@@ -3200,12 +3200,10 @@ struct rtmp_adapter {
 	struct rtmp_wifi_dev *wdev_list[WDEV_NUM_MAX];
 
 	RTMP_OS_TASK mlmeTask;
-#ifdef RTMP_TIMER_TASK_SUPPORT
 	/* If you want use timer task to handle the timer related jobs, enable this. */
 	RTMP_TIMER_TASK_QUEUE TimerQ;
 	spinlock_t TimerQLock;
 	RTMP_OS_TASK timerTask;
-#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 /*********************************************************/
 /*      Tx related parameters                                                           */
@@ -6418,7 +6416,6 @@ int StoreConnectInfo(struct rtmp_adapter *pAd);
 #endif /* CREDENTIAL_STORE */
 #endif /* CONFIG_STA_SUPPORT */
 
-#ifdef RTMP_TIMER_TASK_SUPPORT
 INT RtmpTimerQThread(ULONG Context);
 
 RTMP_TIMER_TASK_ENTRY *RtmpTimerQInsert(
@@ -6431,7 +6428,6 @@ bool RtmpTimerQRemove(
 
 void RtmpTimerQExit(struct rtmp_adapter *pAd);
 void RtmpTimerQInit(struct rtmp_adapter *pAd);
-#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 /*////////////////////////////////////*/
 
