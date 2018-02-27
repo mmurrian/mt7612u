@@ -360,13 +360,6 @@ void announce_802_3_packet(
 #ifdef CONFIG_AP_SUPPORT
 #endif /* CONFIG_AP_SUPPORT */
 
-	{
-#ifdef CONFIG_RT2880_BRIDGING_ONLY
-		PACKET_CB_ASSIGN(pRxPkt, 22) = 0xa8;
-#endif
-
-	}
-
 
 		RtmpOsPktProtocolAssign(pRxPkt);
 
