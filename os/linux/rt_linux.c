@@ -1574,26 +1574,6 @@ bool RtmpOsStatsAlloc(
 	return true;
 }
 
-
-/*
-========================================================================
-Routine Description:
-	Pass the received packet to OS.
-
-Arguments:
-	pPkt			- the packet
-
-Return Value:
-	None
-
-Note:
-========================================================================
-*/
-VOID RtmpOsPktRcvHandle(struct sk_buff *pNetPkt)
-{
-	netif_rx(pNetPkt);
-}
-
 #ifdef CONFIG_STA_SUPPORT
 INT RtmpOSNotifyRawData(
 	IN struct net_device *pNetDev,

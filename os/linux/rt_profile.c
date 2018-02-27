@@ -426,12 +426,12 @@ void announce_802_3_packet(
 					pRxPkt = NULL;
 					return;
 				}
-				RtmpOsPktRcvHandle(pRxPkt);
+				netif_rx(pRxPkt);
 			}
 			else if (retVal == 0)
 			{
 				RtmpOsPktProtocolAssign(pRxPkt);
-				RtmpOsPktRcvHandle(pRxPkt);
+				netif_rx(pRxPkt);
 			}
 			else
 			{
@@ -441,7 +441,7 @@ void announce_802_3_packet(
 		else
 		{
 			RtmpOsPktProtocolAssign(pRxPkt);
-			RtmpOsPktRcvHandle(pRxPkt);
+			netif_rx(pRxPkt);
 		}
 
 		return;
@@ -484,7 +484,7 @@ void announce_802_3_packet(
 		}
 #endif /* CONFIG_WIFI_PKT_FWD */
 
-		RtmpOsPktRcvHandle(pRxPkt);
+		netif_rx(pRxPkt);
 }
 
 

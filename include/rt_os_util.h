@@ -156,9 +156,6 @@ VOID RtmpOsPktReserve(struct sk_buff *pNetPkt, UINT len);
 
 VOID RtmpOsPktProtocolAssign(struct sk_buff *pNetPkt);
 VOID RtmpOsPktInfPpaSend(struct sk_buff *pNetPkt);
-VOID RtmpOsPktRcvHandle(struct sk_buff *pNetPkt);
-VOID RtmpOsPktNatMagicTag(struct sk_buff *pNetPkt);
-VOID RtmpOsPktNatNone(struct sk_buff *pNetPkt);
 VOID RtmpOsPktInit(struct sk_buff *pNetPkt, struct net_device *pNetDev, u8 *buf, unsigned short len);
 
 struct sk_buff *RtmpOsPktIappMakeUp(struct net_device *pNetDev, UINT8 *pMac);
