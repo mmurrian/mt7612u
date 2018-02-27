@@ -538,7 +538,7 @@ VOID SendSignalToDaemon(
 	Task create/management/kill related functions.
 
  *******************************************************************************/
-static inline int __RtmpOSTaskKill(OS_TASK *pTask)
+int RtmpOSTaskKill(OS_TASK *pTask)
 {
 	int ret = NDIS_STATUS_FAILURE;
 
@@ -550,19 +550,16 @@ static inline int __RtmpOSTaskKill(OS_TASK *pTask)
 	return ret;
 }
 
-
-static inline INT __RtmpOSTaskNotifyToExit(OS_TASK *pTask)
+int RtmpOSTaskNotifyToExit(OS_TASK *pTask)
 {
 	return 0;
 }
 
-
-static inline void __RtmpOSTaskCustomize(OS_TASK *pTask)
+void RtmpOSTaskCustomize(OS_TASK *pTask)
 {
 }
 
-
-static inline int __RtmpOSTaskAttach(
+int RtmpOSTaskAttach(
 	IN OS_TASK *pTask,
 	IN RTMP_OS_TASK_CALLBACK fn,
 	IN ULONG arg)
@@ -579,8 +576,7 @@ static inline int __RtmpOSTaskAttach(
 	return status;
 }
 
-
-static inline int __RtmpOSTaskInit(
+int RtmpOSTaskInit(
 	IN OS_TASK *pTask,
 	IN char *pTaskName,
 	IN VOID *pPriv)
@@ -599,8 +595,7 @@ static inline int __RtmpOSTaskInit(
 	return NDIS_STATUS_SUCCESS;
 }
 
-
-bool __RtmpOSTaskWait(
+bool RtmpOSTaskWait(
 	IN VOID *pReserved,
 	IN OS_TASK *pTask,
 	IN int32_t *pStatus)
@@ -1771,46 +1766,4 @@ VOID RTMP_OS_Del_Timer(struct timer_list *pTimer, bool *pCancelled)
 
 VOID RTMP_OS_Release_Timer(struct timer_list *pTimerOrg)
 {
-}
-
-
-int RtmpOSTaskKill(RTMP_OS_TASK *pTask)
-{
-	return __RtmpOSTaskKill(pTask);
-}
-
-
-INT RtmpOSTaskNotifyToExit(RTMP_OS_TASK *pTask)
-{
-	return __RtmpOSTaskNotifyToExit(pTask);
-}
-
-
-void RtmpOSTaskCustomize(RTMP_OS_TASK *pTask)
-{
-	__RtmpOSTaskCustomize(pTask);
-}
-
-
-int RtmpOSTaskAttach(
-	RTMP_OS_TASK *pTask,
-	RTMP_OS_TASK_CALLBACK fn,
-	ULONG arg)
-{
-	return __RtmpOSTaskAttach(pTask, fn, arg);
-}
-
-
-int RtmpOSTaskInit(
-	RTMP_OS_TASK *pTask,
-	char *pTaskName,
-	VOID *pPriv)
-{
-	return __RtmpOSTaskInit(pTask, pTaskName, pPriv);
-}
-
-
-bool RtmpOSTaskWait(VOID *pReserved, RTMP_OS_TASK * pTask, int32_t *pStatus)
-{
-	return __RtmpOSTaskWait(pReserved, pTask, pStatus);
 }
