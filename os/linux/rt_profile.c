@@ -453,16 +453,6 @@ void announce_802_3_packet(
 		PACKET_CB_ASSIGN(pRxPkt, 22) = 0xa8;
 #endif
 
-#if defined(CONFIG_RA_CLASSIFIER)||defined(CONFIG_RA_CLASSIFIER_MODULE)
-		if(ra_classifier_hook_rx!= NULL)
-		{
-			unsigned int flags;
-
-			spin_lock_bh(&pAd->page_lock);
-			ra_classifier_hook_rx(pRxPkt, classifier_cur_cycle);
-			spin_unlock_bh(&pAd->page_lock);
-		}
-#endif /* CONFIG_RA_CLASSIFIER */
 	}
 
 
