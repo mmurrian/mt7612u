@@ -1473,26 +1473,6 @@ VOID RtmpOsWlanEventSet(
 }
 
 
-/*
-========================================================================
-Routine Description:
-	Assign protocol to the packet.
-
-Arguments:
-	pPkt			- the packet
-
-Return Value:
-	None
-
-Note:
-========================================================================
-*/
-VOID RtmpOsPktProtocolAssign(struct sk_buff *pNetPkt)
-{
-	pNetPkt->protocol = eth_type_trans(pNetPkt, pNetPkt->dev);
-}
-
-
 bool RtmpOsStatsAlloc(
 	IN VOID **ppStats,
 	IN VOID **ppIwStats)

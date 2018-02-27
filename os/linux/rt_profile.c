@@ -342,32 +342,15 @@ void tbtt_tasklet(unsigned long data)
 
 void announce_802_3_packet(
 	IN struct rtmp_adapter *pAd,
-	IN struct sk_buff *pPacket,
+	IN struct sk_buff *pRxPkt,
 	IN u8 OpMode)
 {
-	struct sk_buff *pRxPkt = pPacket;
+	ASSERT(pRxPkt);
 
+	pRxPkt->protocol = eth_type_trans(pRxPkt, pRxPkt->dev);
 
-	ASSERT(pPacket);
-
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-#ifdef CONFIG_STA_SUPPORT
-#endif /* CONFIG_STA_SUPPORT */
-
-    /* Push up the protocol stack */
-#ifdef CONFIG_AP_SUPPORT
-#endif /* CONFIG_AP_SUPPORT */
-
-
-		RtmpOsPktProtocolAssign(pRxPkt);
-
-		netif_rx(pRxPkt);
+	netif_rx(pRxPkt);
 }
-
-
-
 
 extern spinlock_t TimerSemLock;
 
