@@ -1634,30 +1634,6 @@ VOID RtmpOsPktNatNone(IN struct sk_buff *pNetPkt)
 #endif /* CONFIG_RA_NAT_NONE */
 }
 
-
-/*
-========================================================================
-Routine Description:
-	Flush a data cache line.
-
-Arguments:
-	AddrStart		- the start address
-	Size			- memory size
-
-Return Value:
-	None
-
-Note:
-========================================================================
-*/
-VOID RtmpOsDCacheFlush(
-	IN ULONG AddrStart,
-	IN ULONG Size)
-{
-	RTMP_UTIL_DCACHE_FLUSH(AddrStart, Size);
-}
-
-
 #ifdef CONFIG_STA_SUPPORT
 INT RtmpOSNotifyRawData(
 	IN struct net_device *pNetDev,

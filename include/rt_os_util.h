@@ -274,9 +274,6 @@ bool RtmpOSTaskWait(
 
 int32_t RtmpThreadPidKill(RTMP_OS_PID	 PID);
 
-/* OS Cache */
-VOID RtmpOsDCacheFlush(ULONG AddrStart, ULONG Size);
-
 /* OS Timer */
 VOID RTMP_SetPeriodicTimer(
 	IN	struct timer_list *pTimerOrg,
@@ -610,9 +607,6 @@ VOID CFG80211OS_RecvObssBeacon(VOID *pCB, const u8 *pFrame, INT frameLen, INT fr
 
 
 
-
-/* ================================ MACRO =================================== */
-#define RTMP_UTIL_DCACHE_FLUSH(__AddrStart, __Size)
 
 /* ================================ EXTERN ================================== */
 extern u8 SNAP_802_1H[6];
