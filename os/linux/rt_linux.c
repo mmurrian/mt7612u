@@ -1447,27 +1447,6 @@ VOID RtmpOsMlmeUp(IN RTMP_OS_TASK *pMlmeQTask)
 /*
 ========================================================================
 Routine Description:
-	Check if the file is error.
-
-Arguments:
-	pFile			- the file
-
-Return Value:
-	OK or any error
-
-Note:
-	rt_linux.h, not rt_drv.h
-========================================================================
-*/
-int32_t RtmpOsFileIsErr(IN VOID *pFile)
-{
-	return IS_FILE_OPEN_ERR(pFile);
-}
-
-
-/*
-========================================================================
-Routine Description:
 	Enable or disable wireless event sent.
 
 Arguments:

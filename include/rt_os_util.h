@@ -171,8 +171,6 @@ void RtmpOSFileSeek(RTMP_OS_FD osfd, int offset);
 int RtmpOSFileRead(RTMP_OS_FD osfd, char *pDataPtr, int readLen);
 int RtmpOSFileWrite(RTMP_OS_FD osfd, char *pDataPtr, int writeLen);
 
-int32_t RtmpOsFileIsErr(VOID *pFile);
-
 void RtmpOSFSInfoChange(RTMP_OS_FS_INFO *pOSFSInfoOrg, bool bSet);
 
 /* OS Network Interface */
