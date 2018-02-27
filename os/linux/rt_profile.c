@@ -518,13 +518,6 @@ VOID RTMPFreeAdapter(struct rtmp_adapter *pAd)
 		pAd->stats = NULL;
 	}
 
-	RTMP_OS_FREE_TIMER(pAd);
-	RTMP_OS_FREE_LOCK(pAd);
-	RTMP_OS_FREE_TASKLET(pAd);
-	RTMP_OS_FREE_TASK(pAd);
-	RTMP_OS_FREE_SEM(pAd);
-	RTMP_OS_FREE_ATOMIC(pAd);
-
 	vfree(pAd);
 	if (os_cookie)
 		kfree(os_cookie);

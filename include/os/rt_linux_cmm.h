@@ -60,19 +60,6 @@ typedef struct _OS_RSTRUC  {
 
 
 
-/*****************************************************************************
- * Timer related definitions and data structures.
- ******************************************************************************/
-
-/* rt_linux.h */
-#define RTMP_OS_FREE_TIMER(__pAd)
-#define RTMP_OS_FREE_LOCK(__pAd)
-#define RTMP_OS_FREE_TASKLET(__pAd)
-#define RTMP_OS_FREE_TASK(__pAd)
-#define RTMP_OS_FREE_SEM(__pAd)
-#define RTMP_OS_FREE_ATOMIC(__pAd)
-
-
 
 /*****************************************************************************
  *	OS file operation related data structure definitions
