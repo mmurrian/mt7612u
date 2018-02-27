@@ -525,7 +525,7 @@ VOID RTMPFreeAdapter(struct rtmp_adapter *pAd)
 	RTMP_OS_FREE_SEM(pAd);
 	RTMP_OS_FREE_ATOMIC(pAd);
 
-	RtmpOsVfree(pAd); /* pci_free_consistent(os_cookie->pci_dev,sizeof(struct rtmp_adapter),pAd,os_cookie->pAd_pa); */
+	vfree(pAd);
 	if (os_cookie)
 		kfree(os_cookie);
 }

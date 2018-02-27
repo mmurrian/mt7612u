@@ -38,9 +38,6 @@ uint32_t RtmpOsTickUnitGet(VOID);
 
 int AdapterBlockAllocateMemory(struct rtmp_adapter **ppAd, uint32_t SizeOfpAd);
 
-VOID *RtmpOsVmalloc(ULONG Size);
-VOID RtmpOsVfree(VOID *pMem);
-
 ULONG RtmpOsCopyFromUser(VOID *to, const void *from, ULONG n);
 ULONG RtmpOsCopyToUser(VOID *to, const void *from, ULONG n);
 

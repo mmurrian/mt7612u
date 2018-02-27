@@ -1493,45 +1493,6 @@ VOID RtmpOsWlanEventSet(
 #endif
 }
 
-/*
-========================================================================
-Routine Description:
-	vmalloc
-
-Arguments:
-	Size			- memory size
-
-Return Value:
-	the memory
-
-Note:
-========================================================================
-*/
-VOID *RtmpOsVmalloc(ULONG Size)
-{
-	return vmalloc(Size);
-}
-
-/*
-========================================================================
-Routine Description:
-	vfree
-
-Arguments:
-	pMem			- the memory
-
-Return Value:
-	None
-
-Note:
-========================================================================
-*/
-VOID RtmpOsVfree(VOID *pMem)
-{
-	if (pMem != NULL)
-		vfree(pMem);
-}
-
 
 /*
 ========================================================================
