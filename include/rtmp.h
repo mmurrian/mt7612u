@@ -3528,11 +3528,6 @@ struct rtmp_adapter {
 #ifdef HOSTAPD_SUPPORT
 	uint32_t IoctlIF;
 #endif /* HOSTAPD_SUPPORT */
-#ifdef INF_PPA_SUPPORT
-	uint32_t g_if_id;
-	bool PPAEnable;
-	PPA_DIRECTPATH_CB *pDirectpathCb;
-#endif /* INF_PPA_SUPPORT */
 
 	/**********************************************************/
 	/*      Statistic related parameters                                                    */
@@ -5982,16 +5977,6 @@ INT Set_TxBurst_Proc(struct rtmp_adapter *pAd, char *arg);
 #ifdef AGGREGATION_SUPPORT
 INT	Set_PktAggregate_Proc(struct rtmp_adapter *pAd, char *arg);
 #endif /* AGGREGATION_SUPPORT */
-
-#ifdef INF_PPA_SUPPORT
-INT	Set_INF_AMAZON_SE_PPA_Proc(struct rtmp_adapter *pAd, char *arg);
-
-INT ifx_ra_start_xmit (
-	IN	struct net_device *rx_dev,
-	IN	struct net_device *tx_dev,
-	IN	struct sk_buff *skb,
-	IN	int len);
-#endif /* INF_PPA_SUPPORT */
 
 INT	Set_IEEE80211H_Proc(struct rtmp_adapter *pAd, char *arg);
 

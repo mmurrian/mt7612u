@@ -603,10 +603,6 @@ bool RtmpPhyNetDevExit(struct rtmp_adapter *pAd, struct net_device *net_dev)
 #else
 #endif /* RT_CFG80211_SUPPORT */
 
-#ifdef INF_PPA_SUPPORT
-	RTMP_DRIVER_INF_PPA_EXIT(pAd);
-#endif /* INF_PPA_SUPPORT */
-
 	/* Unregister network device */
 	if (net_dev != NULL)
 	{

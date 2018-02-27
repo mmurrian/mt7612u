@@ -175,10 +175,6 @@ static int rt2870_probe(
 
 	*ppAd = pAd;
 
-#ifdef INF_PPA_SUPPORT
-	RTMP_DRIVER_INF_PPA_INIT(pAd);
-#endif /* INF_PPA_SUPPORT */
-
 	DBGPRINT(RT_DEBUG_TRACE, ("<===rt2870_probe()!\n"));
 
 	return 0;

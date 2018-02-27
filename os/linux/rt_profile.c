@@ -340,55 +340,6 @@ void tbtt_tasklet(unsigned long data)
 #endif /* CONFIG_AP_SUPPORT */
 }
 
-#ifdef INF_PPA_SUPPORT
-static INT process_nbns_packet(
-	IN struct rtmp_adapter *	pAd,
-	IN struct sk_buff 		*skb)
-{
-	u8 *data;
-	unsigned short *eth_type;
-
-	data = (u8 *)eth_hdr(skb);
-	if (data == 0)
-	{
-		data = (u8 *)skb->data;
-		if (data == 0)
-		{
-			DBGPRINT(RT_DEBUG_ERROR, ("%s::Error\n", __FUNCTION__));
-			return 1;
-		}
-	}
-
-	eth_type = (unsigned short *)&data[12];
-	if (*eth_type == cpu_to_be16(ETH_P_IP))
-	{
-		INT ip_h_len;
-		u8 *ip_h;
-		u8 *udp_h;
-		unsigned short dport, host_dport;
-
-		ip_h = data + 14;
-		ip_h_len = (ip_h[0] & 0x0f)*4;
-
-		if (ip_h[9] == 0x11) /* UDP */
-		{
-			udp_h = ip_h + ip_h_len;
-			memcpy(&dport, udp_h + 2, 2);
-			host_dport = ntohs(dport);
-			if ((host_dport == 67) || (host_dport == 68)) /* DHCP */
-			{
-				return 0;
-			}
-		}
-	}
-    	else if ((data[12] == 0x88) && (data[13] == 0x8e)) /* EAPOL */
-	{
-		return 0;
-    	}
-	return 1;
-}
-#endif /* INF_PPA_SUPPORT */
-
 void announce_802_3_packet(
 	IN struct rtmp_adapter *pAd,
 	IN struct sk_buff *pPacket,
@@ -408,45 +359,6 @@ void announce_802_3_packet(
     /* Push up the protocol stack */
 #ifdef CONFIG_AP_SUPPORT
 #endif /* CONFIG_AP_SUPPORT */
-
-#ifdef INF_PPA_SUPPORT
-	{
-		if (ppa_hook_directpath_send_fn && (pAd->PPAEnable == true))
-		{
-			INT retVal, ret = 0;
-			UINT ppa_flags = 0;
-
-			retVal = process_nbns_packet(pAd, pRxPkt);
-
-			if (retVal > 0)
-			{
-				ret = ppa_hook_directpath_send_fn(pAd->g_if_id, pRxPkt, pRxPkt->len, ppa_flags);
-				if (ret == 0)
-				{
-					pRxPkt = NULL;
-					return;
-				}
-				netif_rx(pRxPkt);
-			}
-			else if (retVal == 0)
-			{
-				RtmpOsPktProtocolAssign(pRxPkt);
-				netif_rx(pRxPkt);
-			}
-			else
-			{
-				dev_kfree_skb_any(pRxPkt);
-			}
-		}
-		else
-		{
-			RtmpOsPktProtocolAssign(pRxPkt);
-			netif_rx(pRxPkt);
-		}
-
-		return;
-	}
-#endif /* INF_PPA_SUPPORT */
 
 	{
 #ifdef CONFIG_RT2880_BRIDGING_ONLY
