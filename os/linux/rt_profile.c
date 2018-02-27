@@ -117,12 +117,6 @@ static char *RT2870STA_dat =
 "PMFSHA256=0\n";
 
 
-#if defined (CONFIG_RA_HW_NAT)  || defined (CONFIG_RA_HW_NAT_MODULE)
-#include "../../../../../../net/nat/hw_nat/ra_nat.h"
-#include "../../../../../../net/nat/hw_nat/frame_engine.h"
-#endif
-
-
 struct dev_type_name_map{
 	INT type;
 	char *prefix[2];
@@ -469,37 +463,6 @@ void announce_802_3_packet(
 			spin_unlock_bh(&pAd->page_lock);
 		}
 #endif /* CONFIG_RA_CLASSIFIER */
-
-#if !defined(CONFIG_RA_NAT_NONE)
-#if defined (CONFIG_RA_HW_NAT)  || defined (CONFIG_RA_HW_NAT_MODULE)
-		RtmpOsPktNatMagicTag(pRxPkt);
-#endif
-
-		/* bruce+
-			ra_sw_nat_hook_rx return 1 --> continue
-			ra_sw_nat_hook_rx return 0 --> FWD & without netif_rx
-		*/
-		if (ra_sw_nat_hook_rx!= NULL)
-		{
-			unsigned int flags;
-
-			RtmpOsPktProtocolAssign(pRxPkt);
-
-			spin_lock_bh(&pAd->page_lock);
-			if(ra_sw_nat_hook_rx(pRxPkt))
-			{
-				RtmpOsPktRcvHandle(pRxPkt);
-			}
-			spin_unlock_bh(&pAd->page_lock);
-			return;
-		}
-#else
-		{
-#if defined (CONFIG_RA_HW_NAT)  || defined (CONFIG_RA_HW_NAT_MODULE)
-			RtmpOsPktNatNone(pRxPkt);
-#endif /* CONFIG_RA_HW_NAT */
-		}
-#endif /* CONFIG_RA_NAT_NONE */
 	}
 
 
@@ -607,17 +570,6 @@ int RTMPSendPackets(
 		}
 	}
 #endif /* CONFIG_STA_SUPPORT */
-
-#if !defined(CONFIG_RA_NAT_NONE)
-	if(ra_sw_nat_hook_tx!= NULL)
-	{
-		unsigned long flags;
-
-		RTMP_INT_LOCK(&pAd->page_lock, flags);
-		ra_sw_nat_hook_tx(pPacket);
-		RTMP_INT_UNLOCK(&pAd->page_lock, flags);
-	}
-#endif
 
 #ifdef CONFIG_5VT_ENHANCE
 	RTMP_SET_PACKET_5VT(pPacket, 0);
