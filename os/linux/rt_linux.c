@@ -1762,8 +1762,3 @@ VOID RTMP_OS_Del_Timer(struct timer_list *pTimer, bool *pCancelled)
 	else
 		*pCancelled = true;
 }
-
-
-VOID RTMP_OS_Release_Timer(struct timer_list *pTimerOrg)
-{
-}

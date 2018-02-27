@@ -291,7 +291,6 @@ VOID RTMP_OS_Init_Timer(
 VOID RTMP_OS_Add_Timer(struct timer_list *pTimerOrg, unsigned long timeout);
 VOID RTMP_OS_Mod_Timer(struct timer_list *pTimerOrg, unsigned long timeout);
 VOID RTMP_OS_Del_Timer(struct timer_list *pTimerOrg, bool *pCancelled);
-VOID RTMP_OS_Release_Timer(struct timer_list *pTimerOrg);
 
 /* OS I/O */
 VOID RTMP_PCI_Writel(ULONG Value, VOID *pAddr);

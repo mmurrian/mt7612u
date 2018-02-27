@@ -2458,9 +2458,6 @@ VOID RTMPReleaseTimer(RALINK_TIMER_STRUCT *pTimer, bool *pCancelled)
 		/*		it's still waiting for execution.*/
 		RtmpTimerQRemove(pTimer->pAd, pTimer);
 
-		/* release timer */
-		RTMP_OS_Release_Timer(&pTimer->TimerObj);
-
 		pTimer->Valid = false;
 
 		RTMP_TimerListRelease(pTimer->pAd, pTimer);
