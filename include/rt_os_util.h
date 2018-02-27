@@ -642,9 +642,6 @@ void RtmpOsSpinLockIrqSave(spinlock_t *lock, unsigned long *flags);
 void RtmpOsSpinUnlockIrqRestore(spinlock_t *lock, unsigned long *flags);
 void RtmpOsSpinLockIrq(spinlock_t *lock);
 void RtmpOsSpinUnlockIrq(spinlock_t *lock);
-int OS_TEST_BIT(int bit, unsigned long *flags);
-void OS_SET_BIT(int bit, unsigned long *flags);
-void OS_CLEAR_BIT(int bit, unsigned long *flags);
 void OS_LOAD_CODE_FROM_BIN(unsigned char **image, char *bin_name, void *inf_dev, uint32_t *code_len);
 
 #endif /* __RT_OS_UTIL_H__ */

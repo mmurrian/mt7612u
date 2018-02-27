@@ -1694,23 +1694,6 @@ INT RtmpOSNotifyRawData(
 
 #endif /* CONFIG_STA_SUPPORT */
 
-int OS_TEST_BIT(int bit, unsigned long *flags)
-{
-	return test_bit(bit, flags);
-}
-
-void OS_SET_BIT(int bit, unsigned long *flags)
-{
-	set_bit(bit, flags);
-}
-
-void OS_CLEAR_BIT(int bit, unsigned long *flags)
-{
-	clear_bit(bit, flags);
-}
-
-
-
 /* timeout -- ms */
 VOID RTMP_SetPeriodicTimer(struct timer_list *pTimer, unsigned long timeout)
 {
