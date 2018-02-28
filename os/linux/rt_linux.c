@@ -473,7 +473,6 @@ void hex_dump(char *str, u8 *pSrcBufVA, UINT SrcBufLen)
 #endif /* DBG */
 }
 
-#ifdef SYSTEM_LOG_SUPPORT
 /*
 	========================================================================
 
@@ -512,7 +511,6 @@ VOID RtmpOsSendWirelessEvent(
 		  __FUNCTION__));
 #endif /* WIRELESS_EXT >= 15 */
 }
-#endif /* SYSTEM_LOG_SUPPORT */
 
 #ifdef CONFIG_AP_SUPPORT
 VOID SendSignalToDaemon(

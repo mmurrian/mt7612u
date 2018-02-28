@@ -996,7 +996,6 @@ typedef struct _RT_802_11_LINK_STATUS {
 	ULONG CentralChannel;	/* 40MHz central channel number */
 } RT_802_11_LINK_STATUS, *PRT_802_11_LINK_STATUS;
 
-#ifdef SYSTEM_LOG_SUPPORT
 typedef struct _RT_802_11_EVENT_LOG {
 	LARGE_INTEGER SystemTime;	/* timestammp via NdisGetCurrentSystemTime() */
 	u8 Addr[MAC_ADDR_LEN];
@@ -1008,7 +1007,6 @@ typedef struct _RT_802_11_EVENT_TABLE {
 	ULONG Rsv;		/* to align Log[] at LARGE_INEGER boundary */
 	RT_802_11_EVENT_LOG Log[MAX_NUMBER_OF_EVENT];
 } RT_802_11_EVENT_TABLE, *PRT_802_11_EVENT_TABLE;
-#endif /* SYSTEM_LOG_SUPPORT */
 
 /* MIMO Tx parameter, ShortGI, MCS, STBC, etc.  these are fields in TXWI. Don't change this definition!!! */
 typedef union _MACHTTRANSMIT_SETTING {

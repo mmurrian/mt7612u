@@ -2692,7 +2692,6 @@ int RTMPSetProfileParameters(
 			/*pRadarDetect->DfsSessionTime = 13;*/
 		}
 
-#ifdef SYSTEM_LOG_SUPPORT
 		/*WirelessEvent*/
 		if(RTMPGetKeyParameter("WirelessEvent", tmpbuf, 10, pBuffer, true))
 		{
@@ -2704,7 +2703,6 @@ int RTMPSetProfileParameters(
 			RtmpOsWlanEventSet(pAd, &pAd->CommonCfg.bWirelessEvent, FlgIsWEntSup);
 			DBGPRINT(RT_DEBUG_TRACE, ("WirelessEvent=%d\n", pAd->CommonCfg.bWirelessEvent));
 		}
-#endif /* SYSTEM_LOG_SUPPORT */
 
 
 		/*AuthMode*/

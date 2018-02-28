@@ -3,7 +3,6 @@
 */
 
 
-#ifdef SYSTEM_LOG_SUPPORT
 
 #include "rt_config.h"
 
@@ -147,6 +146,5 @@ VOID RtmpDrvSendWirelessEvent(
 		DBGPRINT(RT_DEBUG_ERROR, ("%s : Can't allocate memory for wireless event.\n", __FUNCTION__));
 }
 
-#endif /* SYSTEM_LOG_SUPPORT */
 
 

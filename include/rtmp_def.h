@@ -1766,16 +1766,12 @@ do{									\
 					get_netdev_from_bssid(__pAd, __FromWhichBSSID),			\
 					__pRxBlk->pData, __pRxBlk->DataSize);
 
-#ifdef SYSTEM_LOG_SUPPORT
 /*
 	RTMPSendWirelessEvent --> RtmpOsSendWirelessEvent --> RtmpDrvSendWirelessEvent
 */
 #define RTMPSendWirelessEvent(__pAd, __Event_flag, __pAddr, __BssIdx, __Rssi)	\
 	RtmpOsSendWirelessEvent(__pAd, __Event_flag, __pAddr, __BssIdx, __Rssi,		\
 							RtmpDrvSendWirelessEvent);
-#else
-#define RTMPSendWirelessEvent(__pAd, __Event_flag, __pAddr, __BssIdx, __Rssi)
-#endif /* SYSTEM_LOG_SUPPORT */
 
 #define RTMP_OS_TASK_INIT(__pTask, __pTaskName, __pAd)		\
 	RtmpOSTaskInit(__pTask, __pTaskName, __pAd);

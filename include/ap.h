@@ -217,14 +217,10 @@ MAC_TABLE_ENTRY *APSsPsInquiry(
     OUT u8           *PsMode,
     OUT u8           *Rate);
 
-#ifdef SYSTEM_LOG_SUPPORT
 VOID ApLogEvent(
     IN struct rtmp_adapter *   pAd,
     IN u8 *          pAddr,
     IN unsigned short           Event);
-#else
-#define ApLogEvent(_pAd, _pAddr, _Event)
-#endif /* SYSTEM_LOG_SUPPORT */
 
 VOID APUpdateCapabilityAndErpIe(struct rtmp_adapter *pAd);
 

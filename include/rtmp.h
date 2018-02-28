@@ -1718,10 +1718,8 @@ typedef struct _COMMON_CONFIG {
 	VHT_CAP_IE vht_cap_ie;
 	bool bNonVhtDisallow; /* Disallow non-VHT connection */
 
-#ifdef SYSTEM_LOG_SUPPORT
 	/* Enable wireless event */
 	bool bWirelessEvent;
-#endif /* SYSTEM_LOG_SUPPORT */
 
 	/* Tx & Rx Stream number selection */
 	u8 TxStream;
@@ -3518,12 +3516,10 @@ struct rtmp_adapter {
 	ULONG ExtraInfo;	/* Extra information for displaying status of UI */
 	ULONG SystemErrorBitmap;	/* b0: E2PROM version error */
 
-#ifdef SYSTEM_LOG_SUPPORT
 	/* --------------------------- */
 	/* System event log                       */
 	/* --------------------------- */
 	RT_802_11_EVENT_TABLE EventTab;
-#endif /* SYSTEM_LOG_SUPPORT */
 
 #ifdef HOSTAPD_SUPPORT
 	uint32_t IoctlIF;
@@ -5708,16 +5704,12 @@ INT get_ht_max_mcs(struct rtmp_adapter *pAd, u8 *desire_mcs, u8 *cap_mcs);
 VOID RTMPDisableDesiredHtInfo(
 	IN	struct rtmp_adapter *pAd);
 
-#ifdef SYSTEM_LOG_SUPPORT
 VOID RtmpDrvSendWirelessEvent(
 	IN	struct rtmp_adapter	*pAdSrc,
 	IN	unsigned short 		Event_flag,
 	IN	u8 *			pAddr,
 	IN  u8 		BssIdx,
 	IN	CHAR			Rssi);
-#else
-#define RtmpDrvSendWirelessEvent(_pAd, _Event_flag, _pAddr, _BssIdx, _Rssi)
-#endif /* SYSTEM_LOG_SUPPORT */
 
 CHAR    ConvertToRssi(
 	IN struct rtmp_adapter * pAd,

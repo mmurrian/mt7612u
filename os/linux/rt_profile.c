@@ -84,7 +84,7 @@ static char *RT2870STA_dat =
 "EthCloneMac=\n"
 "IEEE80211H=0\n"
 "TGnWifiTest=0\n"
-"WirelessEvent=0\n"
+"WirelessEvent=1\n"
 "MeshId=MESH\n"
 "MeshAutoLink=1\n"
 "MeshAuthMode=OPEN\n"
@@ -266,7 +266,6 @@ void RTMP_IndicateMediaState(
 {
 	pAd->IndicateMediaState = media_state;
 
-#ifdef SYSTEM_LOG_SUPPORT
 		if (pAd->IndicateMediaState == NdisMediaStateConnected)
 		{
 			RTMPSendWirelessEvent(pAd, IW_STA_LINKUP_EVENT_FLAG, pAd->MacTab.Content[BSSID_WCID].Addr, BSS0, 0);
@@ -275,7 +274,6 @@ void RTMP_IndicateMediaState(
 		{
 			RTMPSendWirelessEvent(pAd, IW_STA_LINKDOWN_EVENT_FLAG, pAd->MacTab.Content[BSSID_WCID].Addr, BSS0, 0);
 		}
-#endif /* SYSTEM_LOG_SUPPORT */
 }
 
 

@@ -1146,7 +1146,6 @@ MAC_TABLE_ENTRY *APSsPsInquiry(
 }
 
 
-#ifdef SYSTEM_LOG_SUPPORT
 /*
 	==========================================================================
 	Description:
@@ -1171,7 +1170,6 @@ VOID ApLogEvent(
 		pAd->EventTab.Num += 1;
 	}
 }
-#endif /* SYSTEM_LOG_SUPPORT */
 
 
 /*
