@@ -5889,11 +5889,6 @@ bool RTMP_FillTxBlkInfo(
 	IN struct rtmp_adapter *pAd,
 	IN TX_BLK *pTxBlk);
 
- void announce_802_3_packet(
-	IN	struct rtmp_adapter	*pAdSrc,
-	IN	struct sk_buff *pPacket,
-	IN	u8 		OpMode);
-
 UINT BA_Reorder_AMSDU_Annnounce(
 	IN	struct rtmp_adapter *pAd,
 	IN	struct sk_buff *pPacket,

@@ -93,10 +93,14 @@ typedef void (*RTMP_CB_8023_PACKET_ANNOUNCE)(
 			IN	struct sk_buff *pPacket,
 			IN	u8 		OpMode);
 
+void announce_802_3_packet(
+	IN	struct rtmp_adapter	*pAdSrc,
+	IN	struct sk_buff *pPacket,
+	IN	u8 		OpMode);
+
 bool RTMPL2FrameTxAction(
 	IN  struct rtmp_adapter *pAd,
 	IN	struct net_device *			pNetDev,
-	IN	RTMP_CB_8023_PACKET_ANNOUNCE _announce_802_3_packet,
 	IN	u8 				apidx,
 	IN	u8 *				pData,
 	IN	uint32_t 				data_len,

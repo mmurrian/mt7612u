@@ -310,7 +310,6 @@ struct sk_buff *duplicate_pkt_with_VLAN(
 bool RTMPL2FrameTxAction(
 	IN struct rtmp_adapter *pAd,
 	IN struct net_device *pNetDev,
-	IN RTMP_CB_8023_PACKET_ANNOUNCE _announce_802_3_packet,
 	IN u8 apidx,
 	IN u8 *pData,
 	IN uint32_t data_len,
@@ -329,15 +328,11 @@ bool RTMPL2FrameTxAction(
 	/* 16 byte align the IP header */
 	skb_reserve(skb, 2);
 
-	/* Insert the frame content */
-	memmove(skb->data, pData, data_len);
-
-	/* End this frame */
-	skb_put(skb, data_len);
+	memmove(skb_put(skb, data_len), pData, data_len);
 
 	DBGPRINT(RT_DEBUG_TRACE, ("%s doen\n", __FUNCTION__));
 
-	_announce_802_3_packet(pAd, skb, OpMode);
+	announce_802_3_packet(pAd, skb, OpMode);
 
 	return true;
 

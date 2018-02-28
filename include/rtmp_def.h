@@ -1755,7 +1755,7 @@ do{									\
 
 #define RTMP_L2_FRAME_TX_ACTION(__pAd, __ApIdx, __FrameBuf, __FrameLen)		\
 	RTMPL2FrameTxAction(__pAd, get_netdev_from_bssid(__pAd, __ApIdx),		\
-						announce_802_3_packet, __ApIdx, __FrameBuf, __FrameLen, __pAd->OpMode)
+						__ApIdx, __FrameBuf, __FrameLen, __pAd->OpMode)
 
 #define RTMP_DUPLICATE_PACKET(__pAd, __pPacket, __FromWhichBSSID)			\
 	DuplicatePacket(get_netdev_from_bssid(__pAd, __FromWhichBSSID),			\
