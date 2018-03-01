@@ -888,9 +888,8 @@ INT RTUSBCmdThread(
 
 }
 
-void InitUSBDevice(RT_CMD_USB_INIT *config, VOID *ad_src)
+void InitUSBDevice(struct rtmp_adapter *ad)
 {
-	struct rtmp_adapter *ad = (struct rtmp_adapter *)ad_src;
 	uint32_t value;
 
 	sema_init(&(ad->UsbVendorReq_semaphore), 1);

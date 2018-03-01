@@ -20,17 +20,6 @@
 #define RTMP_DRV_NAME		"mt7612u"
 
 extern USB_DEVICE_ID rtusb_dev_id[];
-extern INT const rtusb_usb_id_len;
-
-#ifndef PF_NOFREEZE
-#define PF_NOFREEZE  0
-#endif
-
-VOID rtusb_reject_pending_pkts(VOID *pAd)
-{
-	/* clear PS packets */
-	/* clear TxSw packets */
-}
 
 static bool USBDevConfigInit(struct usb_device *dev, struct usb_interface *intf, struct rtmp_adapter *pAd)
 {
@@ -92,8 +81,7 @@ static bool USBDevConfigInit(struct usb_device *dev, struct usb_interface *intf,
 static int rt2870_probe(
 	struct usb_interface *intf,
 	struct usb_device *usb_dev,
-	const USB_DEVICE_ID *dev_id,
-	struct rtmp_adapter **ppAd)
+	const USB_DEVICE_ID *dev_id)
 {
 	struct net_device *net_dev = NULL;
 	struct rtmp_adapter *pAd = NULL;
@@ -104,14 +92,11 @@ static int rt2870_probe(
 
 	DBGPRINT(RT_DEBUG_TRACE, ("===>rt2870_probe()!\n"));
 
-
-
-	handle = kmalloc(sizeof(struct os_cookie), GFP_ATOMIC);
+	handle = kzalloc(sizeof(struct os_cookie), GFP_ATOMIC);
 	if (handle == NULL) {
 		printk("rt2870_probe(): Allocate memory for os handle failed!\n");
 		return -ENOMEM;
 	}
-	memset(handle, 0, sizeof(struct os_cookie));
 
 	((struct os_cookie *)handle)->pUsb_Dev = usb_dev;
 
@@ -128,7 +113,7 @@ static int rt2870_probe(
 	if (USBDevConfigInit(usb_dev, intf, pAd) == false)
 		goto err_out_free_radev;
 
-	RTMP_DRIVER_USB_INIT(pAd, usb_dev, dev_id->driver_info);
+	InitUSBDevice(pAd);
 
 	net_dev = RtmpPhyNetDevInit(pAd, &netDevHook);
 	if (net_dev == NULL)
@@ -171,8 +156,6 @@ static int rt2870_probe(
 	if (status != 0)
 		goto err_out_free_netdev;
 
-	*ppAd = pAd;
-
 	DBGPRINT(RT_DEBUG_TRACE, ("<===rt2870_probe()!\n"));
 
 	return 0;
@@ -185,7 +168,6 @@ err_out_free_radev:
 	RTMPFreeAdapter(pAd);
 
 err_out:
-	*ppAd = NULL;
 
 	return -1;
 
@@ -309,18 +291,15 @@ static int rtusb_resume(struct usb_interface *intf)
 
 static int rtusb_probe(struct usb_interface *intf, const USB_DEVICE_ID *id)
 {
-	struct rtmp_adapter *pAd;
 	struct usb_device *dev;
 	int rv;
 
 	dev = interface_to_usbdev(intf);
 	dev = usb_get_dev(dev);
 
-	rv = rt2870_probe(intf, dev, id, &pAd);
+	rv = rt2870_probe(intf, dev, id);
 	if (rv != 0)
 		usb_put_dev(dev);
-	else
-		usb_set_intfdata(intf, pAd);
 	return rv;
 }
 

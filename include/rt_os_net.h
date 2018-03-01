@@ -477,14 +477,6 @@ VOID RTMP_CFG80211_AllVirtualIF_Remove(struct rtmp_adapter *pAdSrc);
 #define RTMP_DRIVER_USB_RESUME(__pAd)										\
 	RTMP_COM_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_USB_RESUME, 0, NULL, 0)
 
-#define RTMP_DRIVER_USB_INIT(__pAd, __pUsbDev, __driver_info)	\
-do {	\
-	RT_CMD_USB_INIT __Config, *__pConfig = &__Config;	\
-	__pConfig->pUsbDev = __pUsbDev;	\
-	__pConfig->driver_info = __driver_info;	\
-	RTMP_COM_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_USB_INIT, 0, __pConfig, 0);	\
-} while (0)
-
 /* ap */
 #define RTMP_DRIVER_AP_BITRATE_GET(__pAd, __pConfig)							\
 	RTMP_AP_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_AP_SIOCGIWRATEQ, 0, __pConfig, 0)

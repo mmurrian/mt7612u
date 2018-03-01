@@ -895,10 +895,6 @@ INT RTMP_COM_IoctlHandle(
 			pAd->PM_FlgSuspend = 0;
 			break;
 
-		case CMD_RTPRIV_IOCTL_USB_INIT:
-			InitUSBDevice(pData, pAd);
-			break;
-
 
 
 #ifdef RT_CFG80211_SUPPORT

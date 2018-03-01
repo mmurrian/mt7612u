@@ -6507,7 +6507,7 @@ VOID DoBulkIn(struct rtmp_adapter *pAd);
 
 VOID RTUSBInitRxDesc(struct rtmp_adapter *pAd, RX_CONTEXT *pRxContext);
 VOID RTUSBBulkRxHandle(ULONG data);
-VOID InitUSBDevice(RT_CMD_USB_INIT *pConfig, VOID *pAd);
+VOID InitUSBDevice(struct rtmp_adapter *pAd);
 
 
 #ifdef SOFT_ENCRYPT
