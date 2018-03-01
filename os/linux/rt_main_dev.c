@@ -254,17 +254,12 @@ int rt28xx_open(struct net_device *net_dev)
 
 
 
-#ifdef RT_CFG80211_SUPPORT
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 	RTMP_CFG80211_DummyP2pIf_Init(pAd);
 #endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-#else
-#endif /* RT_CFG80211_SUPPORT */
 
 #ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
 	RTMP_DRIVER_CFG80211_START(pAd);
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* LINUX */
 
 	RTMPDrvOpen(pAd);
@@ -592,13 +587,10 @@ bool RtmpPhyNetDevExit(struct rtmp_adapter *pAd, struct net_device *net_dev)
 #endif /* CONFIG_AP_SUPPORT */
 
 
-#ifdef RT_CFG80211_SUPPORT
 #ifdef RT_CFG80211_P2P_CONCURRENT_DEVICE
 	RTMP_CFG80211_AllVirtualIF_Remove(pAd);
 	RTMP_CFG80211_DummyP2pIf_Remove(pAd);
 #endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-#else
-#endif /* RT_CFG80211_SUPPORT */
 
 	/* Unregister network device */
 	if (net_dev != NULL)

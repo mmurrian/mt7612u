@@ -1051,11 +1051,7 @@ VOID BeaconUpdateExec(PVOID SystemSpecific1, PVOID FunctionContext,
 				pObj = pAd->OS_Cookie;
 				RTMP_OS_TASKLET_SCHE(&pObj->tbtt_task);
 			}
-#ifdef RT_CFG80211_SUPPORT
 			RT_CFG80211_BEACON_TIM_UPDATE(pAd);
-#else
-			APUpdateAllBeaconFrame(pAd);
-#endif /* RT_CFG80211_SUPPORT  */
 		}
 #endif /* CONFIG_AP_SUPPORT */
 

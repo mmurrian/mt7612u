@@ -709,9 +709,7 @@ bool MacTableDeleteEntry(struct rtmp_adapter *pAd, unsigned short wcid, u8 *pAdd
 						NULL, 0,pEntry->apidx);
 				}
 #endif /* HOSTAPD_SUPPORT */
-#ifdef RT_CFG80211_SUPPORT
 				CFG80211_ApStaDelSendEvent(pAd, pEntry->Addr);
-#endif /*RT_CFG80211_SUPPORT*/
 			}
 #endif /* CONFIG_AP_SUPPORT */
 

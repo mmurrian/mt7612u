@@ -24,8 +24,6 @@
 
 #define RTMP_MODULE_OS
 
-#ifdef RT_CFG80211_SUPPORT
-
 #include "rt_config.h"
 
 u8 CFG_WPS_OUI[4] = {0x00, 0x50, 0xf2, 0x04};
@@ -203,5 +201,4 @@ void CFG80211DRV_OpsCancelRemainOnChannel(struct rtmp_adapter *pAd, uint32_t coo
 	}
 }
 
-#endif /* RT_CFG80211_SUPPORT */
 

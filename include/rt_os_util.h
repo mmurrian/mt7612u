@@ -491,7 +491,6 @@ typedef VOID (*USB_COMPLETE_HANDLER)(VOID *);
 
 
 /* CFG80211 */
-#ifdef RT_CFG80211_SUPPORT
 typedef struct __CFG80211_BAND {
 
 	UINT8 RFICType;
@@ -599,7 +598,6 @@ VOID CFG80211OS_MICFailReport(IN struct net_device *pNetDev, IN const u8 *src_ad
 VOID CFG80211OS_Roamed(struct net_device *pNetDev, IN u8 *pBSSID,
 					   u8 *pReqIe, uint32_t ReqIeLen, u8 *pRspIe, uint32_t RspIeLen);
 VOID CFG80211OS_RecvObssBeacon(VOID *pCB, const u8 *pFrame, INT frameLen, INT freq);
-#endif /* RT_CFG80211_SUPPORT */
 
 
 

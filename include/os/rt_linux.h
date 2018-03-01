@@ -49,9 +49,7 @@
 
 #include <linux/pid.h>
 
-#ifdef RT_CFG80211_SUPPORT
 #include <net/mac80211.h>
-#endif /* RT_CFG80211_SUPPORT */
 
 
 #include <linux/err.h>
@@ -60,9 +58,7 @@
 
 #include "os/rt_linux_cmm.h"
 
-#ifdef RT_CFG80211_SUPPORT
 #include "cfg80211.h"
-#endif /* RT_CFG80211_SUPPORT */
 
 #include <linux/firmware.h>
 

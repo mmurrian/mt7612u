@@ -49,7 +49,6 @@
 #include "rt_config.h"
 
 
-#ifdef RT_CFG80211_SUPPORT
 
 /* 36 ~ 64, 100 ~ 136, 140 ~ 161 */
 #define CFG80211_NUM_OF_CHAN_5GHZ	(sizeof(Cfg80211_Chan)-CFG80211_NUM_OF_CHAN_2GHZ)
@@ -301,7 +300,6 @@ static int CFG80211_OpsVirtualInfChg(
 	return 0;
 }
 
-#if defined(SIOCGIWSCAN) || defined(RT_CFG80211_SUPPORT)
 extern int rt_ioctl_siwscan(struct net_device *dev,
 			struct iw_request_info *info,
 			union iwreq_data *wreq, char *extra);
@@ -2345,13 +2343,3 @@ bool CFG80211_Register(
 	CFG80211DBG(RT_DEBUG_ERROR, ("80211> CFG80211_Register\n"));
 	return true;
 } /* End of CFG80211_Register */
-
-
-
-
-/* =========================== Local Function =============================== */
-
-#endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX_VERSION_CODE */
-
-/* End of crda.c */

@@ -54,9 +54,7 @@
 
 
 
-#ifdef RT_CFG80211_SUPPORT
 #include "cfg80211_cmm.h"
-#endif /* RT_CFG80211_SUPPORT */
 
 
 #include "drs_extr.h"
@@ -1311,9 +1309,7 @@ struct rtmp_wifi_dev{
 	u8 LastSNR1;
 	RSSI_SAMPLE RssiSample;
 	ULONG NumOfAvgRssiSample;
-#if defined(RT_CFG80211_SUPPORT) || defined(HOSTAPD_SUPPORT)
 	NDIS_HOSTAPD_STATUS Hostapd;
-#endif
 };
 
 
@@ -2960,7 +2956,6 @@ typedef struct _SCAN_CTRL_{
 }SCAN_CTRL;
 
 
-#ifdef RT_CFG80211_SUPPORT
 typedef struct _CFG80211_VIF_DEV
 {
 	struct list_head list;
@@ -3050,7 +3045,6 @@ typedef struct _CFG80211_CONTROL
 	/* TODO: need fix it */
 	u8 Cfg80211_Alpha2[2];
 } CFG80211_CTRL, *PCFG80211_CTRL;
-#endif /* RT_CFG80211_SUPPORT */
 
 typedef struct rtmp_phy_ctrl{
 	UINT8 rf_band_cap;
@@ -3568,10 +3562,8 @@ struct rtmp_adapter {
 	u8 FifoUpdateDone, FifoUpdateRx;
 
 #ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
 	CFG80211_CTRL cfg80211_ctrl;
 	struct mt7612u_cfg80211_cb *pCfg80211_CB;
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* LINUX */
 
 	uint32_t ContinueMemAllocFailCount;
@@ -5914,9 +5906,7 @@ INT Set_CountryRegionABand_Proc(struct rtmp_adapter *pAd, char *arg);
 INT Set_WirelessMode_Proc(struct rtmp_adapter *pAd, char *arg);
 INT Set_MBSS_WirelessMode_Proc(struct rtmp_adapter *pAd, char *arg);
 INT Set_Channel_Proc(struct rtmp_adapter *pAd, char *arg);
-#ifdef RT_CFG80211_SUPPORT
 INT Set_DisableCfg2040Scan_Proc(struct rtmp_adapter *pAd, char *arg);
-#endif
 INT	Set_ShortSlot_Proc(struct rtmp_adapter *pAd, char *arg);
 INT	Set_TxPower_Proc(struct rtmp_adapter *pAd, char *arg);
 INT Set_BGProtection_Proc(struct rtmp_adapter *pAd, char *arg);

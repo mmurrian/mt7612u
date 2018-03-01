@@ -1011,12 +1011,6 @@ VOID APMakeAllBssBeacon(struct rtmp_adapter *pAd)
 	}
 
 	mt76u_reg_write(pAd, MAC_BSSID_DW1, regValue);
-
-
-#ifndef RT_CFG80211_SUPPORT
-	RTUSBBssBeaconStart(pAd);
-#endif /* RT_CFG80211_SUPPORT */
-
 }
 
 

@@ -138,7 +138,6 @@ VOID wdev_tx_pkts(NDIS_HANDLE dev_hnd, struct sk_buff **pkt_list, UINT pkt_cnt, 
 			continue;
 		}
 
-#ifdef RT_CFG80211_SUPPORT
 	if (pAd->cfg80211_ctrl.isCfgInApMode == RT_CMD_80211_IFTYPE_AP && (wdev->Hostapd != Hostapd_CFG)
 		)
 		{
@@ -146,7 +145,6 @@ VOID wdev_tx_pkts(NDIS_HANDLE dev_hnd, struct sk_buff **pkt_list, UINT pkt_cnt, 
 			dev_kfree_skb_any(pPacket);
 			continue;
 		}
-#endif /*RT_CFG80211_SUPPORT*/
 
 		if ((wdev->allow_data_tx == true) && (wdev->tx_pkt_allowed))
 			allowToSend = wdev->tx_pkt_allowed(pAd, wdev, pPacket, &wcid);

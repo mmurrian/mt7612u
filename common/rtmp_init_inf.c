@@ -489,7 +489,6 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 	uint32_t i = 0;
 
 
-#ifdef RT_CFG80211_SUPPORT
 #ifdef CONFIG_AP_SUPPORT
 		if (pAd->cfg80211_ctrl.isCfgInApMode == RT_CMD_80211_IFTYPE_AP && RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_START_UP))
 		{
@@ -497,7 +496,6 @@ VOID RTMPDrvClose(struct rtmp_adapter *pAd, struct net_device *net_dev)
 			pAd->cfg80211_ctrl.isCfgInApMode = RT_CMD_80211_IFTYPE_STATION;
 		}
 #endif /* CONFIG_AP_SUPPORT */
-#endif/*RT_CFG80211_SUPPORT*/
 
 #ifdef BB_SOC
 	 if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_RADIO_OFF))

@@ -21,7 +21,6 @@
 	History:
 
 ***************************************************************************/
-#ifdef RT_CFG80211_SUPPORT
 #ifdef CONFIG_AP_SUPPORT
 
 #include "rt_config.h"
@@ -466,9 +465,7 @@ bool CFG80211DRV_OpsBeaconAdd(struct rtmp_adapter *pAd, VOID *pData)
 
 	OPSTATUS_SET_FLAG(pAd, fOP_AP_STATUS_MEDIA_STATE_CONNECTED);
 	RTMP_IndicateMediaState(pAd, NdisMediaStateConnected);
-#ifdef RT_CFG80211_SUPPORT
 		wdev->Hostapd=Hostapd_CFG;
-#endif /*RT_CFG80211_SUPPORT*/
 	return true;
 }
 
@@ -557,9 +554,7 @@ bool CFG80211DRV_ApKeyAdd(struct rtmp_adapter *pAd, void *pData)
 	PMULTISSID_STRUCT pMbss = &pAd->ApCfg.MBSSID[MAIN_MBSSID];
 	struct rtmp_wifi_dev *pWdev = &pMbss->wdev;
 	UINT8 Wcid;
-#ifdef RT_CFG80211_SUPPORT
 	UINT apidx = MAIN_MBSSID;
-#endif
 
 	DBGPRINT(RT_DEBUG_TRACE,("%s =====> \n", __FUNCTION__));
 	pKeyInfo = (CMD_RTPRIV_IOCTL_80211_KEY *)pData;
@@ -767,4 +762,3 @@ void CFG80211_ApStaDelSendEvent(struct rtmp_adapter *pAd, const u8 *mac_addr)
 }
 
 #endif /* CONFIG_AP_SUPPORT */
-#endif /* RT_CFG80211_SUPPORT */

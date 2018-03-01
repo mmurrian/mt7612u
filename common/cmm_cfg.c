@@ -897,12 +897,10 @@ INT RTMP_COM_IoctlHandle(
 
 
 
-#ifdef RT_CFG80211_SUPPORT
 		case CMD_RTPRIV_IOCTL_CFG80211_CFG_START:
 			RT_CFG80211_REINIT(pAd);
 			RT_CFG80211_CRDA_REG_RULE_APPLY(pAd);
 			break;
-#endif /* RT_CFG80211_SUPPORT */
 
 		case CMD_RTPRIV_IOCTL_VIRTUAL_INF_UP:
 		/* interface up */
@@ -1165,13 +1163,11 @@ INT RTMP_COM_IoctlHandle(
 
 	}
 
-#ifdef RT_CFG80211_SUPPORT
 	if ((CMD_RTPRIV_IOCTL_80211_START <= cmd) &&
 		(cmd <= CMD_RTPRIV_IOCTL_80211_END))
 	{
 		Status = CFG80211DRV_IoctlHandle(pAd, wrq, cmd, subcmd, pData, Data);
 	}
-#endif /* RT_CFG80211_SUPPORT */
 
 	if (cmd >= CMD_RTPRIV_IOCTL_80211_COM_LATEST_ONE)
 		return NDIS_STATUS_FAILURE;

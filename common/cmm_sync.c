@@ -221,7 +221,6 @@ VOID BuildChannelList(struct rtmp_adapter *pAd)
 	DBGPRINT(RT_DEBUG_TRACE,("country code=%d/%d, RFIC=%d, PHY mode=%d, support %d channels\n",
 		pAd->CommonCfg.CountryRegion, pAd->CommonCfg.CountryRegionForABand, pAd->RfIcType, pAd->CommonCfg.PhyMode, pAd->ChannelListNum));
 
-#ifdef RT_CFG80211_SUPPORT
 	for (i=0;i<pAd->ChannelListNum;i++) {
 		CFG80211OS_ChanInfoInit(
 					pAd->pCfg80211_CB,
@@ -231,8 +230,6 @@ VOID BuildChannelList(struct rtmp_adapter *pAd)
 					WMODE_CAP_N(pAd->CommonCfg.PhyMode),
 					(pAd->CommonCfg.RegTransmitSetting.field.BW == BW_20));
 	}
-#endif /* RT_CFG80211_SUPPORT */
-
 }
 
 /*

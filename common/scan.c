@@ -388,7 +388,6 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 		FrameLen += WpsTmpLen;
 	}
 #endif /* WPA_SUPPLICANT_SUPPORT */
-#ifdef RT_CFG80211_SUPPORT
 	if ((OpMode == OPMODE_STA) &&
 		(pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP != WPA_SUPPLICANT_DISABLE) &&
 		CFG80211DRV_OpsScanRunning(pAd))
@@ -401,7 +400,6 @@ static INT scan_active(struct rtmp_adapter *pAd, u8 OpMode, u8 ScanType)
 
 		FrameLen += ExtraIeTmpLen;
 	}
-#endif /* RT_CFG80211_SUPPORT */
 #endif /*CONFIG_STA_SUPPORT*/
 
 
@@ -458,11 +456,9 @@ VOID ScanNextChannel(struct rtmp_adapter *pAd, u8 OpMode)
 	ScanPending = ((pAd->StaCfg.bImprovedScan) && (pAd->StaCfg.ScanChannelCnt>=7));
 #endif /* CONFIG_STA_SUPPORT */
 #ifdef CONFIG_STA_SUPPORT
-#ifdef RT_CFG80211_SUPPORT
 	/* Since the Channel List is from Upper layer */
 	if (CFG80211DRV_OpsScanRunning(pAd))
 		pAd->MlmeAux.Channel = CFG80211DRV_OpsScanGetNextChannel(pAd);
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* CONFIG_STA_SUPPORT */
 	if ((pAd->MlmeAux.Channel == 0) || ScanPending)
 	{

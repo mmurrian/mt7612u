@@ -21,7 +21,6 @@
 	History:
 
 ***************************************************************************/
-#ifdef RT_CFG80211_SUPPORT
 #include "rtmp_comm.h"
 #include "rt_os_util.h"
 
@@ -1056,5 +1055,3 @@ VOID CFG80211OS_RecvObssBeacon(VOID *pCB, const u8 *pFrame, INT frameLen, INT fr
         cfg80211_report_obss_beacon(pWiphy, pFrame,frameLen, freq, 50, GFP_ATOMIC);
 }
 #endif
-
-#endif /* RT_CFG80211_SUPPORT */

@@ -478,11 +478,8 @@ static void rtusb_mgmt_dma_done_tasklet(unsigned long data)
 	pAd->MgmtRing.TxSwFreeIdx++;
 	spin_unlock_bh(&pAd->MLMEBulkOutLock);
 
-
-#if RT_CFG80211_SUPPORT
 	pHeader = (HEADER_802_11 *) (pPacket->data + MT_DMA_HDR_LEN + pAd->chipCap.TXWISize);
 	CFG80211_SendMgmtFrameDone(pAd, pHeader->Sequence);
-#endif /* RT_CFG80211_SUPPORT */
 
 	/* No-matter success or fail, we free the mgmt packet. */
 	if (pPacket)

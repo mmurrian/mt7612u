@@ -162,10 +162,7 @@ VOID MlmeCntlMachinePerformAction(
 			/* scan completed, init to not FastScan */
 			pAd->StaCfg.bImprovedScan = false;
 
-#ifdef RT_CFG80211_SUPPORT
 			RT_CFG80211_SCAN_END(pAd, false);
-#endif /* RT_CFG80211_SUPPORT */
-
 
 			/* AP sent a 2040Coexistence mgmt frame, then station perform a scan, and then send back the respone. */
 			if ((pAd->CommonCfg.BSSCoexist2040.field.InfoReq == 1)
@@ -571,7 +568,6 @@ VOID CntlOidSsidProc(
 			IterateOnBssTab(pAd);
 		}
 
-#ifdef RT_CFG80211_SUPPORT
 		if ((pAd->MlmeAux.SsidBssTab.BssNr == 0) && (pAd->MlmeAux.BssType == BSS_INFRA)
 		    && (pAd->cfg80211_ctrl.FlgCfg80211Connecting == true))
 		{
@@ -584,7 +580,6 @@ VOID CntlOidSsidProc(
 
 			RT_CFG80211_CONN_RESULT_INFORM(pAd, pAd->MlmeAux.Bssid, NULL, 0, NULL, 0, 0);
 		}
-#endif /* RT_CFG80211_SUPPORT */
 	}
 }
 
@@ -1166,10 +1161,8 @@ VOID CntlWaitAuthProc2(
 				/* not success, try next BSS */
 				DBGPRINT(RT_DEBUG_TRACE,
 					 ("CNTL - AUTH FAIL, give up; try next BSS\n"));
-#ifdef RT_CFG80211_SUPPORT
                 RT_CFG80211_CONN_RESULT_INFORM(pAd, pAd->MlmeAux.Bssid, NULL, 0,
                                                             NULL, 0, 0);
-#endif /* RT_CFG80211_SUPPORT */
 				RTMP_STA_ENTRY_MAC_RESET(pAd, BSSID_WCID);
 				pAd->Mlme.CntlMachine.CurrState = CNTL_IDLE;
 				pAd->MlmeAux.BssIdx++;
@@ -1207,10 +1200,8 @@ VOID CntlWaitAssocProc(
 			/* not success, try next BSS */
 			DBGPRINT(RT_DEBUG_TRACE,
 				 ("CNTL - Association fails on BSS #%ld\n", pAd->MlmeAux.BssIdx));
-#ifdef RT_CFG80211_SUPPORT
             RT_CFG80211_CONN_RESULT_INFORM(pAd, pAd->MlmeAux.Bssid, NULL, 0,
             	                                  NULL, 0, 0);
-#endif /* RT_CFG80211_SUPPORT */
 			RTMP_STA_ENTRY_MAC_RESET(pAd, BSSID_WCID);
 			pAd->MlmeAux.BssIdx++;
 			IterateOnBssTab(pAd);
@@ -1950,10 +1941,8 @@ VOID LinkDown(
 	/* reset to not doing improved scan */
 	pAd->StaCfg.bImprovedScan = false;
 
-#ifdef RT_CFG80211_SUPPORT
     if (CFG80211DRV_OpsScanRunning(pAd))
 		CFG80211DRV_OpsScanInLinkDownAction(pAd);
-#endif /* RT_CFG80211_SUPPORT */
 
 	if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_DOZE)
 /*||	RTMP_TEST_PSFLAG(pAd, fRTMP_PS_SET_PCI_CLK_OFF_COMMAND) */
@@ -2172,10 +2161,7 @@ VOID LinkDown(
 				NULL, 0);
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
 
-#ifdef RT_CFG80211_SUPPORT
 	RT_CFG80211_LOST_AP_INFORM(pAd);
-#endif /* RT_CFG80211_SUPPORT */
-
 
 	if (pAd->StaCfg.BssType != BSS_ADHOC)
 		pAd->StaCfg.bNotFirstScan = false;

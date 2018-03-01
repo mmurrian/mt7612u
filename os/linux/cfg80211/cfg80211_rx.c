@@ -24,8 +24,6 @@
 	--------	----------		----------------------------------------------
 */
 
-#ifdef RT_CFG80211_SUPPORT
-
 #include "rt_config.h"
 
 extern u8 CFG_P2POUIBYTE[];
@@ -242,7 +240,4 @@ bool CFG80211_HandleP2pMgmtFrame(struct rtmp_adapter *pAd, RX_BLK *pRxBlk, u8 Op
 
 	return false;
 }
-
-
-#endif /* RT_CFG80211_SUPPORT */
 

@@ -274,7 +274,6 @@ VOID MlmeForceJoinReqAction(
 			FrameLen += WpsTmpLen;
 		}
 
-#ifdef RT_CFG80211_SUPPORT
         	if ((pAd->OpMode == OPMODE_STA) &&
                     (pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP != WPA_SUPPLICANT_DISABLE) &&
                     (pAd->cfg80211_ctrl.ExtraIeLen != 0))
@@ -287,7 +286,6 @@ VOID MlmeForceJoinReqAction(
 
                 	FrameLen += ExtraIeTmpLen;
         	}
-#endif /* RT_CFG80211_SUPPORT */
 
 #endif /* WPA_SUPPLICANT_SUPPORT */
 
@@ -722,7 +720,6 @@ VOID MlmeJoinReqAction(
 			}
 #endif /* WPA_SUPPLICANT_SUPPORT */
 
-#ifdef RT_CFG80211_SUPPORT
 	                if ((pAd->OpMode == OPMODE_STA) &&
         	            (pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP != WPA_SUPPLICANT_DISABLE) &&
                 	    (pAd->cfg80211_ctrl.ExtraIeLen != 0))
@@ -735,7 +732,6 @@ VOID MlmeJoinReqAction(
 
                         	FrameLen += ExtraIeTmpLen;
                 	}
-#endif /* RT_CFG80211_SUPPORT */
 
 
 			MiniportMMRequest(pAd, 0, pOutBuffer, FrameLen);
@@ -1316,13 +1312,11 @@ VOID PeerBeaconAtScanAction(
 		}
 
 #ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
 		if (!memcmp(ie_list->Ssid, "DIRECT-", 7))
 			DBGPRINT(RT_DEBUG_OFF, ("%s P2P_SCANNING: %s [%ld]\n", __FUNCTION__, ie_list->Ssid, Idx));
 
 		RT_CFG80211_SCANNING_INFORM(pAd, Idx, Elem->Channel, (u8 *)pFrame,
 									Elem->MsgLen, Rssi);
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* LINUX */
 	}
 	/* sanity check fail, ignored */
@@ -1682,13 +1676,11 @@ VOID PeerBeaconAtJoinAction(
 			MlmeEnqueue(pAd, MLME_CNTL_STATE_MACHINE, MT2_JOIN_CONF, 2, &Status, 0);
 
 #ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
 			if (!memcmp(ie_list->Ssid, "DIRECT-", 7))
                         	DBGPRINT(RT_DEBUG_OFF, ("%s P2P_SCANNING: %s [%ld]\n", __FUNCTION__, ie_list->Ssid, Idx));
 
 			RT_CFG80211_SCANNING_INFORM(pAd, Idx, Elem->Channel, Elem->Msg,
 										Elem->MsgLen, Rssi);
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* LINUX */
 		}
 		/* not to me BEACON, ignored */
@@ -1803,13 +1795,11 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 
 
 #ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
 //                if (!memcmp(ie_list->Ssid, "DIRECT-", 7))
                         DBGPRINT(RT_DEBUG_INFO, ("%s PASSIVE SCANNING: %s [%ld]\n", __FUNCTION__, bcn_ie_list->Ssid, Bssidx));
 
                   RT_CFG80211_SCANNING_INFORM(pAd, Bssidx, Elem->Channel, Elem->Msg,
                                                                         Elem->MsgLen, RealRssi);
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* LINUX */
 
 			}
@@ -1943,12 +1933,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 					{
 						pAd->ScanTab.BssEntry[Bssidx].Channel = bcn_ie_list->NewChannel;
 						pAd->CommonCfg.Channel = bcn_ie_list->NewChannel;
-#ifdef RT_CFG80211_SUPPORT
-						//CFG_TODO
-#else
-						AsicSwitchChannel(pAd, pAd->CommonCfg.Channel, false);
-						AsicLockChannel(pAd, pAd->CommonCfg.Channel);
-#endif /* RT_CFG80211_SUPPORT */
 						DBGPRINT(RT_DEBUG_TRACE, ("PeerBeacon - STA receive channel switch announcement IE (New Channel =%d)\n", bcn_ie_list->NewChannel));
 						break;
 					}
@@ -1992,12 +1976,6 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 				}
 			}
 			}
-
-#ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
-/*			CFG80211_BeaconCountryRegionParse(pAd, pVIE, LenVIE); */
-#endif /* RT_CFG80211_SUPPORT */
-#endif /* LINUX */
 
 			if (bcn_ie_list->AironetCellPowerLimit != 0xFF)
 			{

@@ -21,8 +21,6 @@
 	History:
 
 ***************************************************************************/
-#ifdef RT_CFG80211_SUPPORT
-
 #include "rt_config.h"
 
 extern INT RtmpIoctl_rt_ioctl_siwauth(
@@ -1595,6 +1593,4 @@ u8 CFG80211_getCenCh(struct rtmp_adapter *pAd, u8 prim_ch)
 
 	return ret_channel;
 }
-
-#endif /* RT_CFG80211_SUPPORT */
 

@@ -526,19 +526,13 @@ static unsigned short APBuildAssociation(
 #ifdef HOSTAPD_SUPPORT
 				&& (wdev->Hostapd == Hostapd_EXT)
 #endif /* HOSTAPD_SUPPORT */
-#ifdef RT_CFG80211_SUPPORT
 				&& (wdev->Hostapd == Hostapd_CFG)
-#endif /*RT_CFG80211_SUPPORT*/
 
 		)
 		{
-#ifdef RT_CFG80211_SUPPORT
 			//CFG_TODO: due to WPS_AP flag
 			pEntry->Sst = SST_ASSOC;
 			StatusCode = MLME_SUCCESS;
-#else
-			StatusCode = MLME_ASSOC_DENY_OUT_SCOPE;
-#endif
 
 #ifdef HOSTAPD_SUPPORT
 			if(wdev->Hostapd == Hostapd_EXT
@@ -1110,7 +1104,6 @@ VOID ap_cmm_peer_assoc_req_action(
 		}
 
 
-#ifdef RT_CFG80211_SUPPORT
 		if (true) /*CFG_TODO*/
         {
 			hex_dump("ASSOC_REQ", Elem->Msg, Elem->MsgLen);
@@ -1151,7 +1144,6 @@ VOID ap_cmm_peer_assoc_req_action(
 			}
         }
 		else
-#endif	/* RT_CFG80211_SUPPORT */
 		/* enqueue a EAPOL_START message to trigger EAP state machine doing the authentication */
 	    if ((pEntry->AuthMode == Ndis802_11AuthModeWPAPSK) ||
 			(pEntry->AuthMode == Ndis802_11AuthModeWPA2PSK))

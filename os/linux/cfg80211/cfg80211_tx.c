@@ -22,8 +22,6 @@
 
 ***************************************************************************/
 
-#ifdef RT_CFG80211_SUPPORT
-
 #include "rt_config.h"
 
 VOID CFG80211_SwitchTxChannel(struct rtmp_adapter *pAd, ULONG Data)
@@ -454,6 +452,4 @@ VOID CFG80211_SendMgmtFrameDone(struct rtmp_adapter *pAd, unsigned short Sequenc
 
 
 }
-
-#endif /* RT_CFG80211_SUPPORT */
 

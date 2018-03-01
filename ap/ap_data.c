@@ -63,13 +63,11 @@ INT ApAllowToSendPacket(
 	ASSERT(IdBss < pAd->ApCfg.BssidNum);
 #endif /* MBSS_SUPPORT */
 
-#ifdef RT_CFG80211_SUPPORT
 	//CFG_TODO: POS NO GOOD
 	if (pAd->cfg80211_ctrl.isCfgInApMode == RT_CMD_80211_IFTYPE_AP)
 	{
 		RTMP_SET_PACKET_OPMODE(pPacket, OPMODE_AP);
 	}
-#endif /* RT_CFG80211_SUPPORT */
 
 	if (MAC_ADDR_IS_GROUP(pSrcBufVA)) /* mcast & broadcast address */
 	{
@@ -2828,14 +2826,12 @@ VOID APRxEAPOLFrameIndicate(
 		return;
 	}
 #endif/*HOSTAPD_SUPPORT*/
-#ifdef RT_CFG80211_SUPPORT
 	if (pEntry)
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("CFG80211_AP EAPOL Indicate_Legacy_Packet\n"));
 		Indicate_Legacy_Packet(pAd, pRxBlk, FromWhichBSSID);
         return;
 	}
-#endif/*RT_CFG80211_SUPPORT*/
 
 #ifdef DOT1X_SUPPORT
 	/* sent this frame to upper layer TCPIP */

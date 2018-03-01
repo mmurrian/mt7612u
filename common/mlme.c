@@ -1256,10 +1256,8 @@ VOID MlmePeriodicExec(
 		IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 		{
 			if ((OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED)
-#ifdef RT_CFG80211_SUPPORT
 					|| (pAd->cfg80211_ctrl.isCfgInApMode == RT_CMD_80211_IFTYPE_AP)
 					//CFG_TODO: FOR GC
-#endif /* RT_CFG80211_SUPPORT */
 				)
 				&& (!OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_DOZE)))
 				MlmeDynamicTxRateSwitching(pAd);
@@ -3508,10 +3506,8 @@ ULONG BssTableSetEntry(
 			{
 				if (MAC_ADDR_EQUAL(pAd->MlmeAux.Bssid, ie_list->Bssid) ||
 					SSID_EQUAL(pAd->MlmeAux.Ssid, pAd->MlmeAux.SsidLen, ie_list->Ssid, ie_list->SsidLen)
-#ifdef RT_CFG80211_SUPPORT
 					/* YF: Driver ScanTable full but supplicant the SSID exist on supplicant */
 					|| SSID_EQUAL(pAd->cfg80211_ctrl.Cfg_pending_Ssid, pAd->cfg80211_ctrl.Cfg_pending_SsidLen, ie_list->Ssid, ie_list->SsidLen)
-#endif /* RT_CFG80211_SUPPORT */
 					)
 				{
 					Idx = Tab->BssOverlapNr;
@@ -3519,10 +3515,8 @@ ULONG BssTableSetEntry(
 					BssEntrySet(pAd, &Tab->BssEntry[Idx], ie_list, Rssi, LengthVIE, pVIE);
 					Tab->BssOverlapNr += 1;
 					Tab->BssOverlapNr = Tab->BssOverlapNr % MAX_LEN_OF_BSS_TABLE;
-#ifdef RT_CFG80211_SUPPORT
 					pAd->cfg80211_ctrl.Cfg_pending_SsidLen = 0;
 					memset(pAd->cfg80211_ctrl.Cfg_pending_Ssid, 0, MAX_LEN_OF_SSID+1);
-#endif /* RT_CFG80211_SUPPORT */
 				}
 				return Idx;
 			}

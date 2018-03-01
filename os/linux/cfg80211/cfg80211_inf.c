@@ -31,8 +31,6 @@
 #include "rt_os_util.h"
 #include "rt_os_net.h"
 
-#ifdef RT_CFG80211_SUPPORT
-
 extern INT ApCliAllowToSendPacket(
 	struct rtmp_adapter *pAd, struct rtmp_wifi_dev *wdev,
 	struct sk_buff *pPacket, u8 *pWcid);
@@ -731,5 +729,4 @@ VOID RTMP_CFG80211_DummyP2pIf_Init(
 	DBGPRINT(RT_DEBUG_TRACE, (" %s <=====\n", __FUNCTION__));
 }
 #endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
-#endif /* RT_CFG80211_SUPPORT */
 

@@ -263,14 +263,12 @@ int rt_ioctl_giwrange(struct net_device *dev,
 	}
 
 #ifndef NATIVE_WPA_SUPPLICANT_SUPPORT
-#ifndef RT_CFG80211_SUPPORT
 /*	if(!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_IN_USE)) */
 	if (RTMP_DRIVER_IOCTL_SANITY_CHECK(pAd, NULL) != NDIS_STATUS_SUCCESS)
 	{
     	DBGPRINT(RT_DEBUG_TRACE, ("INFO::Network is down!\n"));
     	return -ENETDOWN;
 	}
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
 
 	DBGPRINT(RT_DEBUG_TRACE ,("===>rt_ioctl_giwrange\n"));
@@ -546,7 +544,6 @@ int rt_ioctl_iwaplist(struct net_device *dev,
 	return 0;
 }
 
-#if defined(SIOCGIWSCAN) || defined(RT_CFG80211_SUPPORT)
 int rt_ioctl_siwscan(struct net_device *dev,
 			struct iw_request_info *info,
 			union iwreq_data *wreq, char *extra)
@@ -1058,7 +1055,6 @@ go_out:
 
 	return status;
 }
-#endif
 
 int rt_ioctl_siwessid(struct net_device *dev,
 			 struct iw_request_info *info,

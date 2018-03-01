@@ -251,14 +251,12 @@ INT	Set_WirelessMode_Proc(struct rtmp_adapter *pAd, char *arg)
 	return Set_Cmm_WirelessMode_Proc(pAd, arg, 0);
 }
 
-#ifdef RT_CFG80211_SUPPORT
 INT Set_DisableCfg2040Scan_Proc(struct rtmp_adapter *pAd, char *arg)
 {
 	pAd->cfg80211_ctrl.FlgCfg8021Disable2040Scan = (u8) simple_strtol(arg, 0, 10);
 	DBGPRINT(RT_DEBUG_TRACE, ("pAd->cfg80211_ctrl.FlgCfg8021Disable2040Scan  %d \n",pAd->cfg80211_ctrl.FlgCfg8021Disable2040Scan ));
 	return true;
 }
-#endif
 
 
 

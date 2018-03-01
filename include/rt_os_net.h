@@ -275,7 +275,6 @@ VOID RTMP_CFG80211_AllVirtualIF_Remove(struct rtmp_adapter *pAdSrc);
 #define RTMP_DRIVER_P2P_INF_CHECK(__pAd, __InfId)							\
 	RTMP_COM_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_INF_P2P_CHECK, 0, NULL, __InfId)
 
-#ifdef RT_CFG80211_SUPPORT
 /* General Part */
 #define RTMP_DRIVER_CFG80211_START(__pAd)									\
 	RTMP_COM_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_CFG80211_CFG_START, 0, NULL, 0)
@@ -435,7 +434,6 @@ VOID RTMP_CFG80211_AllVirtualIF_Remove(struct rtmp_adapter *pAdSrc);
 #define RTMP_DRIVER_80211_SEND_WIRELESS_EVENT(__pAd, __pMacAddr)					\
 	RTMP_COM_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_80211_SEND_WIRELESS_EVENT, 0, __pMacAddr, 0)
 #endif /* RT_P2P_SPECIFIC_WIRELESS_EVENT */
-#endif /* RT_CFG80211_SUPPORT */
 
 /* mesh */
 #define RTMP_DRIVER_MESH_REMOVE(__pAd)										\

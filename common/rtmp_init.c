@@ -1577,10 +1577,8 @@ VOID NICUpdateRawCounters(struct rtmp_adapter *pAd)
 
 VOID UserCfgExit(struct rtmp_adapter *pAd)
 {
-#ifdef RT_CFG80211_SUPPORT
 	/* Reset the CFG80211 Internal Flag */
 	RTMP_DRIVER_80211_RESET(pAd);
-#endif /* RT_CFG80211_SUPPORT */
 
 	BATableExit(pAd);
 }
@@ -1871,11 +1869,7 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 		pAd->StaCfg.bShowHiddenSSID = false;		/* Default no show*/
 
 		/* Nitro mode control*/
-#if defined(NATIVE_WPA_SUPPLICANT_SUPPORT) || defined(RT_CFG80211_SUPPORT)
 		pAd->StaCfg.bAutoReconnect = false;
-#else
-		pAd->StaCfg.bAutoReconnect = true;
-#endif /* NATIVE_WPA_SUPPLICANT_SUPPORT || RT_CFG80211_SUPPORT*/
 
 		/* Save the init time as last scan time, the system should do scan after 2 seconds.*/
 		/* This patch is for driver wake up from standby mode, system will do scan right away.*/
@@ -1889,9 +1883,7 @@ VOID UserCfgInit(struct rtmp_adapter *pAd)
 		pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP = WPA_SUPPLICANT_DISABLE;
 		pAd->StaCfg.wpa_supplicant_info.bRSN_IE_FromWpaSupplicant = false;
 
-#if defined(NATIVE_WPA_SUPPLICANT_SUPPORT) || defined(RT_CFG80211_SUPPORT)
 		pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP = WPA_SUPPLICANT_ENABLE;
-#endif /* NATIVE_WPA_SUPPLICANT_SUPPORT || RT_CFG80211_SUPPORT */
 
 		pAd->StaCfg.wpa_supplicant_info.bLostAp = false;
 		pAd->StaCfg.wpa_supplicant_info.pWpsProbeReqIe = NULL;

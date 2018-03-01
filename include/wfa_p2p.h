@@ -31,9 +31,6 @@
 
 #include "rtmp_type.h"
 
-
-#if defined(RT_CFG80211_SUPPORT)
-
 typedef	struct	_P2P_PUBLIC_FRAME	{
 	HEADER_802_11   p80211Header;
 	u8          Category;
@@ -160,8 +157,6 @@ typedef	struct	_P2P_NOA_DESC	{
 #define SERVICE_PROTOCOL_TYPE_WS_DISCOVERY		3
 #define SERVICE_PROTOCOL_TYPE_WFD				4
 #define SERVICE_PROTOCOL_TYPE_VENDOR_SPECIFIC	255
-
-#endif
 
 #endif /* __WFA_P2P_H */
 

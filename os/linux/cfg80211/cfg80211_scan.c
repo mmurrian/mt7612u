@@ -22,8 +22,6 @@
 
 ***************************************************************************/
 
-#ifdef RT_CFG80211_SUPPORT
-
 #include "rt_config.h"
 
 #ifdef CONFIG_STA_SUPPORT
@@ -142,14 +140,12 @@ bool CFG80211DRV_OpsScanCheckStatus(struct rtmp_adapter *pAd,
 	}
 #endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 
-#ifdef RT_CFG80211_SUPPORT
 	if (pAd->cfg80211_ctrl.FlgCfg8021Disable2040Scan == true &&
         (IfType == RT_CMD_80211_IFTYPE_AP))
 	{
 		DBGPRINT(RT_DEBUG_ERROR,("Disable 20/40 scan!!\n"));
 		return false;
 	}
-#endif /* RT_CFG80211_SUPPORT */
 
 	/* do scan */
 	pAd->cfg80211_ctrl.FlgCfg80211Scanning = true;
@@ -393,6 +389,4 @@ VOID CFG80211_ScanStatusLockInit(
 	{
 	}
 }
-
-#endif /* RT_CFG80211_SUPPORT */
 

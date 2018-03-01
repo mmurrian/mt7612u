@@ -22,8 +22,6 @@
 #ifndef __CFG80211_H__
 #define __CFG80211_H__
 
-#ifdef RT_CFG80211_SUPPORT
-
 #include <linux/ieee80211.h>
 
 /* ULLI : hack NUM_NL80211_BANDS is defined only in >= v4.7 */
@@ -94,8 +92,6 @@ bool CFG80211_Register(
 	struct rtmp_adapter			*pAd,
 	struct device				*pDev,
 	struct net_device			*pNetDev);
-
-#endif /* RT_CFG80211_SUPPORT */
 
 #endif /* __CFG80211_H__ */
 

@@ -108,17 +108,7 @@ VOID WpaSendMicFailureToWpaSupplicant(
 	IN INT key_id,
 	IN const u8 *tsc)
 {
-#ifdef RT_CFG80211_SUPPORT
 	CFG80211OS_MICFailReport(pNetDev, src_addr, bUnicast, key_id, tsc);
-#else
-	char custom[IW_CUSTOM_MAX] = {0};
-
-	snprintf(custom, sizeof(custom), "MLME-MICHAELMICFAILURE.indication");
-	if(bUnicast)
-		sprintf(custom, "%s unicast", custom);
-
-	RtmpOSWrielessEventSend(pNetDev, RT_WLAN_EVENT_CUSTOM, -1, NULL, (u8 *)custom, strlen(custom));
-#endif /* RT_CFG80211_SUPPORT */
 
 	return;
 }

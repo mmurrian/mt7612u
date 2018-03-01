@@ -2146,18 +2146,7 @@ if (0) {
 			a. pointer pRxBlk->pData to payload
 			b. modify pRxBlk->DataSize
 	*/
-#ifdef RT_CFG80211_SUPPORT
 	CFG80211_Convert802_3Packet(pAd, pRxBlk, Header802_3);
-#else
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-		RTMP_AP_802_11_REMOVE_LLC_AND_CONVERT_TO_802_3(pRxBlk, Header802_3);
-#endif /* CONFIG_AP_SUPPORT */
-#ifdef CONFIG_STA_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
-		RTMP_802_11_REMOVE_LLC_AND_CONVERT_TO_802_3(pRxBlk, Header802_3);
-#endif /* CONFIG_STA_SUPPORT */
-#endif /* RT_CFG80211_SUPPORT */
 
 	if (pRxBlk->DataSize > MAX_RX_PKT_LEN)
 	{
@@ -2223,21 +2212,7 @@ if (0) {
 
 
 	/* pass this 802.3 packet to upper layer or forward this packet to WM directly*/
-#ifdef RT_CFG80211_SUPPORT
 	CFG80211_Announce802_3Packet(pAd, pRxBlk, FromWhichBSSID);
-#else
-#ifdef CONFIG_AP_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_AP(pAd)
-	{
-		AP_ANNOUNCE_OR_FORWARD_802_3_PACKET(pAd, pRxPacket, FromWhichBSSID);
-	}
-#endif /* CONFIG_AP_SUPPORT */
-
-#ifdef CONFIG_STA_SUPPORT
-	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
-		ANNOUNCE_OR_FORWARD_802_3_PACKET(pAd, pRxPacket, FromWhichBSSID);
-#endif /* CONFIG_STA_SUPPORT */
-#endif /* RT_CFG80211_SUPPORT */
 }
 
 
@@ -2819,10 +2794,8 @@ VOID dev_rx_mgmt_frm(struct rtmp_adapter *pAd, RX_BLK *pRxBlk)
 	bool 	bPassTheBcastPkt = false;
 	INT			i;
 
-#ifdef RT_CFG80211_SUPPORT
 	if (CFG80211_HandleP2pMgmtFrame(pAd, pRxBlk, op_mode))
 		goto done;
-#endif /* RT_CFG80211_SUPPORT */
 
 
 

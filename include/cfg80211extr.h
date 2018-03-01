@@ -23,8 +23,6 @@
 #ifndef __CFG80211EXTR_H__
 #define __CFG80211EXTR_H__
 
-#ifdef RT_CFG80211_SUPPORT
-
 #define CFG80211CB				    (pAd->pCfg80211_CB)
 #define RT_CFG80211_DEBUG 			/* debug use */
 #ifdef RT_CFG80211_DEBUG
@@ -308,7 +306,5 @@ void CFG80211DRV_OpsBeaconSet(struct rtmp_adapter *pAd,void  *pData);
 bool CFG80211DRV_OpsBeaconAdd(struct rtmp_adapter *pAd, void  *pData);
 void CFG80211DRV_DisableApInterface(struct rtmp_adapter *pAd);
 bool CFG80211DRV_OpsVifAdd(struct rtmp_adapter *pA, void  *pData);
-
-#endif /* RT_CFG80211_SUPPORT */
 
 #endif /* __CFG80211EXTR_H__ */

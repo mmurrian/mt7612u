@@ -124,10 +124,8 @@
 
 
 #ifdef LINUX
-#ifdef RT_CFG80211_SUPPORT
 #include "cfg80211extr.h"
 #include "cfg80211_cmm.h"
-#endif /* RT_CFG80211_SUPPORT */
 #endif /* LINUX */
 
 #endif	/* __RT_CONFIG_H__ */
