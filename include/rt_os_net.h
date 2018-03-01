@@ -483,9 +483,6 @@ VOID RTMP_CFG80211_AllVirtualIF_Remove(struct rtmp_adapter *pAdSrc);
 	RTMP_AP_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_MAIN_OPEN, 0, NULL, 0)
 
 /* sta */
-#define RTMP_DRIVER_STA_DEV_TYPE_SET(__pAd, __Type)							\
-	RTMP_STA_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_ORI_DEV_TYPE_SET, 0, NULL, __Type, __Type)
-
 #define RTMP_DRIVER_ADAPTER_CSO_SUPPORT_TEST(__pAd, __flag)								\
 	RTMP_COM_IoctlHandle(__pAd, NULL, CMD_RTPRIV_IOCTL_ADAPTER_CSO_SUPPORT_TEST, 0,  __flag, 0)
 

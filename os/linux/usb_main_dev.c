@@ -129,8 +129,7 @@ static int rt2870_probe(
 #endif /* NATIVE_WPA_SUPPLICANT_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
-/*    pAd->StaCfg.OriDevType = net_dev->type; */
-	RTMP_DRIVER_STA_DEV_TYPE_SET(pAd, net_dev->type);
+	pAd->StaCfg.OriDevType = net_dev->type;
 #endif /* CONFIG_STA_SUPPORT */
 
 /*All done, it's time to register the net device to linux kernel. */

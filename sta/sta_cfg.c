@@ -3627,10 +3627,6 @@ INT RTMP_STA_IoctlHandle(
 			RTMP_MapKHZ2ChannelID(Data, (uint32_t *)pData);
 			break;
 
-		case CMD_RTPRIV_IOCTL_ORI_DEV_TYPE_SET:
-			pAd->StaCfg.OriDevType = Data;
-
-			break;
 		case CMD_RTPRIV_IOCTL_STA_SCAN_SANITY_CHECK:
 			if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS))
 		    {
