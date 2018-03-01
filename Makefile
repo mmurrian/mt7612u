@@ -236,10 +236,6 @@ WFLAGS += -DNEW_RATE_ADAPT_SUPPORT
 endif
 WFLAGS += -DFIFO_EXT_SUPPORT
 
-ifeq ($(HAS_CSO_SUPPORT), y)
-WFLAGS += -DCONFIG_CSO_SUPPORT -DCONFIG_TSO_SUPPORT
-endif
-
 #################################################
 # Platform Related definitions
 #
@@ -287,7 +283,6 @@ obj_cmm := \
 	common/cmm_asic.o\
 	common/scan.o\
 	common/cmm_cmd.o\
-	common/uapsd.o\
 	common/ps.o\
 	common/sys_log.o\
 	common/txpower.o\
@@ -299,14 +294,9 @@ obj_cmm := \
 	os/linux/rt_profile.o
 
 
-obj_phy := phy/phy.o	\
-	   phy/rf.o
+obj_phy := phy/phy.o
 
 obj_mac := mac/rtmp_mac.o
-
-ifeq ($(HAS_RTMP_BBP),y)
-obj_phy += phy/rtmp_phy.o
-endif
 
 obj_phy += phy/rlt_phy.o
 
@@ -545,32 +535,16 @@ $(MOD_NAME)-objs += \
 	common/cmm_mac_usb.o\
 	common/cmm_data_usb.o\
 	common/rtusb_io.o\
-	common/rtusb_data.o\
 	common/rtusb_bulk.o\
 	os/linux/rt_usb.o\
 	chips/rt65xx.o\
 	chips/mt76x2.o\
 	mac/ral_nmac.o\
-	mcu/mcu.o\
 	mcu/mcu_and.o\
-	phy/rt_rf.o\
 	phy/mt_rf.o
-
-ifeq ($(HAS_TSO_SUPPORT),y)
-$(MOD_NAME)-objs += \
-	naf/net_acc.o\
-	naf/cso.o
-endif
-
-ifeq ($(HAS_CSO_SUPPORT), y)
-$(MOD_NAME)-objs += \
-	naf/net_acc.o\
-	naf/cso.o
-endif
 
 $(MOD_NAME)-objs += \
 	os/linux/rt_usb.o\
-	os/linux/rt_usb_util.o\
 	os/linux/usb_main_dev.o\
 	common/rtusb_dev_id.o
 
