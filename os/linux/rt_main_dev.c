@@ -258,9 +258,7 @@ int rt28xx_open(struct net_device *net_dev)
 	RTMP_CFG80211_DummyP2pIf_Init(pAd);
 #endif /* RT_CFG80211_P2P_CONCURRENT_DEVICE */
 
-#ifdef LINUX
 	RTMP_DRIVER_CFG80211_START(pAd);
-#endif /* LINUX */
 
 	RTMPDrvOpen(pAd);
 

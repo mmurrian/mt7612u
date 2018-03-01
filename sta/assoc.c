@@ -999,7 +999,6 @@ VOID PeerAssocRspAction(
 			pAd->Mlme.AssocMachine.CurrState = ASSOC_IDLE;
 			MlmeEnqueue(pAd, MLME_CNTL_STATE_MACHINE, MT2_ASSOC_CONF, 2, &Status, 0);
 
-#ifdef LINUX
 			if (Status == MLME_SUCCESS)
 			{
 				PFRAME_802_11 pFrame =  (PFRAME_802_11) (Elem->Msg);
@@ -1009,7 +1008,6 @@ VOID PeerAssocRspAction(
 								Elem->MsgLen - 6 - sizeof (HEADER_802_11),
                                 true);
 			}
-#endif /* LINUX */
 		}
 	}
 	else

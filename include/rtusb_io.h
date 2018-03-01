@@ -79,18 +79,10 @@
 #define CMDTHREAD_UPDATE_PROTECT					0x0D73011B
 /* end johnli */
 
-#ifdef LINUX
 #define CMDTHREAD_REG_HINT							0x0D73011C
 #define CMDTHREAD_REG_HINT_11D						0x0D73011D
 #define CMDTHREAD_SCAN_END							0x0D73011E
 #define CMDTHREAD_CONNECT_RESULT_INFORM				0x0D73011F
-#endif /* LINUX */
-
-
-
-
-
-
 
 typedef struct _CMDHandler_TLV {
 	unsigned short Offset;

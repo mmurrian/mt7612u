@@ -410,17 +410,6 @@ static void CalcRFCalPhase(
 	}
 }
 
-
-
-
-#ifdef DBG
-#ifdef LINUX
-/* #define TIMESTAMP_CAL_CAPTURE0 */
-/* #define TIMESTAMP_CAL_CAPTURE1 */
-#endif /* LINUX */
-#endif /* DBG */
-
-
 /*
 	mapChannelKHz - map channel number to KHz
 */
@@ -536,13 +525,6 @@ u8  MidVGA[2];
 
 static SC_TABLE_ENTRY impSubCarrierTable[3] = { {224, 255, 1, 31}, {198, 254, 2, 58}, {134, 254, 2, 122} };
 static SC_TABLE_ENTRY expSubCarrierTable[3] = { {224, 255, 1, 31}, {198, 254, 2, 58}, {134, 254, 2, 122} };
-
-
-#ifdef DBG
-#ifdef LINUX
-/* #define TIMESTAMP_CALC_CALIBRATION */
-#endif /* LINUX */
-#endif /* DBG */
 
 #define P_RESOLUTION	256		/* Resolution of phase calculation: 2pi/256 */
 

@@ -123,10 +123,8 @@
 #include "mac_ral/fce.h"
 
 
-#ifdef LINUX
 #include "cfg80211extr.h"
 #include "cfg80211_cmm.h"
-#endif /* LINUX */
 
 #endif	/* __RT_CONFIG_H__ */
 

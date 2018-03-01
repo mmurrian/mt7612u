@@ -2553,8 +2553,6 @@ VOID dynamic_tune_be_tx_op(struct rtmp_adapter *pAd, ULONG nonBEpackets)
 				u8   txop_value = 0;
 
 				pAd->ApCfg.ChangeTxOpClient = pAd->MacTab.Size;
-#ifdef LINUX
-#endif /* LINUX */
 
 				RegValue = mt76u_reg_read(pAd, EDCA_AC0_CFG);
 

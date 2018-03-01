@@ -3099,9 +3099,6 @@ bool rtmp_rx_done_handle(struct rtmp_adapter *pAd)
 	RX_BLK rxblk, *pRxBlk;
 	bool bCmdRspPacket = false;
 
-#ifdef LINUX
-#endif /* LINUX */
-
 	RxProcessed = RxPending = 0;
 
 	/* process whole rx ring */

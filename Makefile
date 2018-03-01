@@ -75,7 +75,7 @@ HAS_RESOURCE_BOOT_ALLOC=n
 
 #################################################
 
-WFLAGS := -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX -Wall -Wstrict-prototypes -Wno-trigraphs
+WFLAGS := -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT -Wall -Wstrict-prototypes -Wno-trigraphs
 WFLAGS += -DRT28xx_MODE=$(RT28xx_MODE) -DCHIPSET=$(MODULE) -DDBG_DIAGNOSE -DDBG_RX_MCS -DDBG_TX_MCS
 
 WFLAGS += -I$(RT28xx_DIR)/include
