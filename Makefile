@@ -25,7 +25,7 @@ HAS_WPA_SUPPLICANT=y
 
 # Support Native WpaSupplicant for Network Maganger
 # i.e. wpa_supplicant -Dwext
-HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=n
+HAS_NATIVE_WPA_SUPPLICANT_SUPPORT=y
 
 # Support for Multiple Cards
 HAS_MC_SUPPORT=n
