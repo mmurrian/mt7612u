@@ -69,8 +69,7 @@ int	RTMPSendPackets(
 	IN	NDIS_HANDLE		MiniportAdapterContext,
 	IN	struct sk_buff		**ppPacketArray,
 	IN	UINT			NumberOfPackets,
-	IN	uint32_t 		PktTotalLen,
-	IN	RTMP_NET_ETH_CONVERT_DEV_SEARCH	Func);
+	IN	uint32_t 		PktTotalLen);
 
 int P2P_PacketSend(
 	IN	struct sk_buff *			pPktSrc,

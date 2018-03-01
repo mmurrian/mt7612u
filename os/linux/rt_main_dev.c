@@ -340,25 +340,6 @@ struct net_device *RtmpPhyNetDevInit(struct rtmp_adapter *pAd,
 }
 
 
-struct net_device *RtmpNetEthConvertDevSearch(struct net_device *net_dev, u8 *pData)
-{
-	struct net_device *pNetDev;
-	struct net *net;
-	net = dev_net(net_dev);
-
-	BUG_ON(!net);
-	for_each_netdev(net, pNetDev) {
-		if ((pNetDev->type == ARPHRD_ETHER)
-			&& !memcmp(pNetDev->dev_addr, &pData[6], pNetDev->addr_len))
-			break;
-	}
-
-	return pNetDev;
-}
-
-
-
-
 /*
 ========================================================================
 Routine Description:
@@ -386,8 +367,7 @@ int rt28xx_packet_xmit(struct sk_buff *skb)
 	ASSERT(wdev);
 
 
-	return RTMPSendPackets((NDIS_HANDLE)wdev, &pPacket, 1,
-							skb->len, RtmpNetEthConvertDevSearch);
+	return RTMPSendPackets((NDIS_HANDLE)wdev, &pPacket, 1, skb->len);
 }
 
 

@@ -390,8 +390,7 @@ int RTMPSendPackets(
 	IN NDIS_HANDLE dev_hnd,
 	IN struct sk_buff **pkt_list,
 	IN UINT pkt_cnt,
-	IN uint32_t pkt_total_len,
-	IN RTMP_NET_ETH_CONVERT_DEV_SEARCH Func)
+	IN uint32_t pkt_total_len)
 {
 	struct rtmp_wifi_dev *wdev = (struct rtmp_wifi_dev *)dev_hnd;
 	struct rtmp_adapter *pAd;
