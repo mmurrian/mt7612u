@@ -351,15 +351,15 @@ static int CFG80211_OpsScan(
 	struct iw_scan_req IwReq;
 	union iwreq_data Wreq;
 
-	CFG80211DBG(RT_DEBUG_TRACE, ("========================================================================\n"));
-#if 0  /* ULLI : disabled */
-	CFG80211DBG(RT_DEBUG_TRACE, ("80211> %s ==> %s(%d)\n", __FUNCTION__, pNdev->name, pNdev->ieee80211_ptr->iftype));
-#endif
 	pAd = MAC80211_PAD_GET(pWiphy);
 	if (pAd == NULL)
 		return -EINVAL;
 
 	RTMP_DRIVER_NET_DEV_GET(pAd, &pNdev);
+	if (pNdev == NULL)
+		return -EINVAL;
+
+	CFG80211DBG(RT_DEBUG_TRACE, ("80211> %s ==> %s(%d)\n", __FUNCTION__, pNdev->name, pNdev->ieee80211_ptr->iftype));
 
 	/* YF_TODO: record the scan_req per netdevice */
 	pCfg80211_CB = RTMP_DRIVER_80211_CB_GET(pAd);
