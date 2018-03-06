@@ -341,20 +341,9 @@ typedef void (*TIMER_FUNCTION)(struct timer_list *);
 typedef void (*TIMER_FUNCTION)(unsigned long);
 #endif
 
-#define RTMP_TIME_AFTER(a,b)		\
-	(typecheck(unsigned long, (unsigned long)a) && \
-	 typecheck(unsigned long, (unsigned long)b) && \
-	 ((long)(b) - (long)(a) < 0))
-
-#define RTMP_TIME_AFTER_EQ(a,b)	\
-	(typecheck(unsigned long, (unsigned long)a) && \
-	 typecheck(unsigned long, (unsigned long)b) && \
-	 ((long)(a) - (long)(b) >= 0))
-#define RTMP_TIME_BEFORE(a,b)	RTMP_TIME_AFTER_EQ(b,a)
-
 #define ONE_TICK 1
 
-static inline void NdisGetSystemUpTime(ULONG *time)
+static inline void NdisGetSystemUpTime(unsigned long *time)
 {
 	*time = jiffies;
 }

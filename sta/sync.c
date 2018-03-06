@@ -2005,7 +2005,7 @@ VOID PeerBeacon(struct rtmp_adapter *pAd, MLME_QUEUE_ELEM *Elem)
 				   To prevent always check this, we use wcid == RESERVED_WCID to recognize it as newly joined adhoc station.
 				*/
 				if ((ADHOC_ON(pAd) && ((!pEntry) || (pEntry && IS_ENTRY_NONE(pEntry)))) ||
-					(pEntry && RTMP_TIME_AFTER(Now, pEntry->LastBeaconRxTime + ADHOC_ENTRY_BEACON_LOST_TIME)))
+					(pEntry && time_after(Now, pEntry->LastBeaconRxTime + ADHOC_ENTRY_BEACON_LOST_TIME)))
 				{
 					/* Another adhoc joining, add to our MAC table. */
 					if (pEntry == NULL)

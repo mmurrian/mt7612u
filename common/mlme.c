@@ -1562,7 +1562,7 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 	{
 		/* WPA MIC error should block association attempt for 60 seconds*/
 		if (pAd->StaCfg.bBlockAssoc &&
-			RTMP_TIME_AFTER(pAd->Mlme.Now32, pAd->StaCfg.LastMicErrorTime + (60*OS_HZ)))
+			time_after(pAd->Mlme.Now32, pAd->StaCfg.LastMicErrorTime + (60*OS_HZ)))
 			pAd->StaCfg.bBlockAssoc = false;
 	}
 
@@ -1650,7 +1650,7 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 		*/
 		if ((bCheckBeaconLost == false) &&
 			RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS) &&
-			(RTMP_TIME_AFTER(pAd->Mlme.Now32, pAd->StaCfg.LastBeaconRxTime + (1*OS_HZ))))
+			(time_after(pAd->Mlme.Now32, pAd->StaCfg.LastBeaconRxTime + (1*OS_HZ))))
 		{
 			ULONG BPtoJiffies;
 			LONG timeDiff;
@@ -1660,14 +1660,14 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 			if (timeDiff > 0)
 				pAd->StaCfg.LastBeaconRxTime += (timeDiff * BPtoJiffies);
 
-			if (RTMP_TIME_AFTER(pAd->StaCfg.LastBeaconRxTime, pAd->Mlme.Now32))
+			if (time_after(pAd->StaCfg.LastBeaconRxTime, pAd->Mlme.Now32))
 			{
 				DBGPRINT(RT_DEBUG_TRACE, ("MMCHK - BeaconRxTime adjust wrong(BeaconRx=0x%lx, Now=0x%lx)\n",
 								pAd->StaCfg.LastBeaconRxTime, pAd->Mlme.Now32));
 			}
 		}
 
-		if ((RTMP_TIME_AFTER(pAd->Mlme.Now32, pAd->StaCfg.LastBeaconRxTime + (1*OS_HZ))) &&
+		if ((time_after(pAd->Mlme.Now32, pAd->StaCfg.LastBeaconRxTime + (1*OS_HZ))) &&
 			(!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS)) &&
 			(pAd->StaCfg.bImprovedScan == false) &&
 			((TxTotalCnt + pAd->RalinkCounters.OneSecRxOkCnt) < 600))
@@ -1838,7 +1838,7 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 		/* If all peers leave, and this STA becomes the last one in this IBSS, then change MediaState*/
 		/* to DISCONNECTED. But still holding this IBSS (i.e. sending BEACON) so that other STAs can*/
 		/* join later.*/
-		if (/*(RTMP_TIME_AFTER(pAd->Mlme.Now32, pAd->StaCfg.LastBeaconRxTime + ADHOC_BEACON_LOST_TIME)
+		if (/*(time_after(pAd->Mlme.Now32, pAd->StaCfg.LastBeaconRxTime + ADHOC_BEACON_LOST_TIME)
 			|| (pAd->StaCfg.AuthMode == Ndis802_11AuthModeWPA2PSK))
 			&& */OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED))
 		{
@@ -1850,7 +1850,7 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 				if (!IS_ENTRY_CLIENT(pEntry))
 					continue;
 
-				if (RTMP_TIME_AFTER(pAd->Mlme.Now32, pEntry->LastBeaconRxTime + ADHOC_BEACON_LOST_TIME))
+				if (time_after(pAd->Mlme.Now32, pEntry->LastBeaconRxTime + ADHOC_BEACON_LOST_TIME))
 					MlmeDeAuthAction(pAd, pEntry, REASON_DISASSOC_STA_LEAVING, false);
 			}
 
@@ -1870,7 +1870,7 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 #endif /* WPA_SUPPLICANT_SUPPORT */
 
 		if (pAd->StaCfg.bSkipAutoScanConn &&
-			RTMP_TIME_BEFORE(pAd->Mlme.Now32, pAd->StaCfg.LastScanTime + (30 * OS_HZ)))
+			time_before(pAd->Mlme.Now32, pAd->StaCfg.LastScanTime + (30 * OS_HZ)))
 			goto SKIP_AUTO_SCAN_CONN;
 		else
 			pAd->StaCfg.bSkipAutoScanConn = false;
@@ -1884,7 +1884,7 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 			{
 				MLME_SCAN_REQ_STRUCT	   ScanReq;
 
-				if (RTMP_TIME_AFTER(pAd->Mlme.Now32, pAd->StaCfg.LastScanTime + (10 * OS_HZ))
+				if (time_after(pAd->Mlme.Now32, pAd->StaCfg.LastScanTime + (10 * OS_HZ))
 					||(pAd->StaCfg.bNotFirstScan == false))
 				{
 					DBGPRINT(RT_DEBUG_TRACE, ("STAMlmePeriodicExec():CNTL - ScanTab.BssNr==0, start a new ACTIVE scan SSID[%s]\n", pAd->MlmeAux.AutoReconnectSsid));
@@ -2067,7 +2067,7 @@ VOID MlmeCheckForRoaming(struct rtmp_adapter *pAd, ULONG Now32)
 	{
 		pBss = &pAd->ScanTab.BssEntry[i];
 
-		if (RTMP_TIME_AFTER(Now32, pBss->LastBeaconRxTime + pAd->StaCfg.BeaconLostTime))
+		if (time_after(Now32, pBss->LastBeaconRxTime + pAd->StaCfg.BeaconLostTime))
 			continue;	 /* AP disappear*/
 		if (pBss->Rssi <= RSSI_THRESHOLD_FOR_ROAMING)
 			continue;	 /* RSSI too weak. forget it.*/
@@ -2330,7 +2330,7 @@ VOID MlmeCalculateChannelQuality(
 	if ((pAd->OpMode == OPMODE_STA) &&
 		INFRA_ON(pAd) &&
 		(OneSecTxNoRetryOkCount < 2) && /* no heavy traffic*/
-		RTMP_TIME_AFTER(Now32, LastBeaconRxTime + BeaconLostTime))
+		time_after(Now32, LastBeaconRxTime + BeaconLostTime))
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("BEACON lost > %ld msec with TxOkCnt=%ld -> CQI=0\n", BeaconLostTime * (1000 / OS_HZ) , TxOkCnt));
 		ChannelQuality = 0;

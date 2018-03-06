@@ -2708,7 +2708,7 @@ VOID MaintainBssTable(
 			pBss->SameRxTimeCount++;
 
 		NdisGetSystemUpTime(&now_time);
-		if (RTMP_TIME_AFTER(now_time, pBss->LastBeaconRxTime + (MaxRxTimeDiff * OS_HZ)))
+		if (time_after(now_time, pBss->LastBeaconRxTime + (MaxRxTimeDiff * OS_HZ)))
 			bDelEntry = true;
 		else if (pBss->SameRxTimeCount > MaxSameRxTimeCount)
 			bDelEntry = true;

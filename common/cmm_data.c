@@ -1244,7 +1244,7 @@ VOID RTMPDeQueuePacket(
 					ULONG Now32;
 
 					NdisGetSystemUpTime(&Now32);
-					if(RTMP_TIME_BEFORE(Now32, pMacEntry->TimeStamp_toTxRing + ENTRY_RETRY_INTERVAL))
+					if(time_before(Now32, pMacEntry->TimeStamp_toTxRing + ENTRY_RETRY_INTERVAL))
 					{
 						pEntry = RemoveHeadQueue(pQueue);
 						dev_kfree_skb_any(pPacket);
@@ -2175,7 +2175,7 @@ if (0) {
 				/* update last rx time*/
 				NdisGetSystemUpTime(&Now32);
 				if ((pBAEntry->list.qlen > 0) &&
-					 RTMP_TIME_AFTER((unsigned long)Now32, (unsigned long)(pBAEntry->LastIndSeqAtTimer+(REORDERING_PACKET_TIMEOUT)))
+					 time_after((unsigned long)Now32, (unsigned long)(pBAEntry->LastIndSeqAtTimer+(REORDERING_PACKET_TIMEOUT)))
 	   				)
 				{
 					DBGPRINT(RT_DEBUG_OFF, ("Indicate_Legacy_Packet():flush reordering_timeout_mpdus! RxWI->Flags=%d, pRxWI.TID=%d, RxD->AMPDU=%d!\n",

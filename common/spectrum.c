@@ -411,7 +411,7 @@ PMEASURE_REQ_ENTRY MeasureReqInsert(
 			pEntry = &pTab->Content[i];
 
 			if ((pEntry->Valid == true)
-				&& RTMP_TIME_AFTER((unsigned long)Now, (unsigned long)(pEntry->lastTime + MQ_REQ_AGE_OUT)))
+				&& time_after((unsigned long)Now, (unsigned long)(pEntry->lastTime + MQ_REQ_AGE_OUT)))
 			{
 				PMEASURE_REQ_ENTRY pPrevEntry = NULL;
 				ULONG HashIdx = MQ_DIALOGTOKEN_HASH_INDEX(pEntry->DialogToken);
@@ -637,7 +637,7 @@ static PTPC_REQ_ENTRY TpcReqInsert(
 			pEntry = &pTab->Content[i];
 
 			if ((pEntry->Valid == true)
-				&& RTMP_TIME_AFTER((unsigned long)Now, (unsigned long)(pEntry->lastTime + TPC_REQ_AGE_OUT)))
+				&& time_after((unsigned long)Now, (unsigned long)(pEntry->lastTime + TPC_REQ_AGE_OUT)))
 			{
 				PTPC_REQ_ENTRY pPrevEntry = NULL;
 				ULONG HashIdx = TPC_DIALOGTOKEN_HASH_INDEX(pEntry->DialogToken);

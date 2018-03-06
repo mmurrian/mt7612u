@@ -1050,7 +1050,7 @@ VOID RTMPMaintainPMKIDCache(
 
 			if ((pBssInfo->Valid)
 				&& /*((Now - pBssInfo->RefreshTime) >= pMbss->PMKCachePeriod)*/
-				(RTMP_TIME_AFTER(Now, (pBssInfo->RefreshTime + pMbss->PMKCachePeriod))))
+				(time_after(Now, (pBssInfo->RefreshTime + pMbss->PMKCachePeriod))))
 			{
 				RTMPDeletePMKIDCache(pAd, i, j);
 			}
