@@ -113,11 +113,17 @@ int RTEnqueueInternalCmd(
 	int status;
 	PCmdQElmt	cmdqelmt = NULL;
 
+#ifdef DBG
+	if (RTDebugLevel >= RT_DEBUG_TRACE){
+		printk("%s: %s: Oid=%08x, BufLen=%u\n", __FILE__, __func__, Oid, InformationBufferLength);
+		if(InformationBufferLength)
+			print_hex_dump(KERN_INFO, "", DUMP_PREFIX_OFFSET, 16, InformationBufferLength/16+1, pInformationBuffer, InformationBufferLength, true);
+	}
+#endif
 
-	cmdqelmt = kmalloc(sizeof(CmdQElmt), GFP_ATOMIC);
+	cmdqelmt = kzalloc(sizeof(CmdQElmt), GFP_ATOMIC);
 	if (cmdqelmt == NULL)
 		return (NDIS_STATUS_RESOURCES);
-	memset(cmdqelmt, 0, sizeof(CmdQElmt));
 
 	if(InformationBufferLength > 0)
 	{

@@ -451,22 +451,11 @@ void wlan_802_11_to_802_3_packet(
 void hex_dump(char *str, u8 *pSrcBufVA, UINT SrcBufLen)
 {
 #ifdef DBG
-	unsigned char *pt;
-	int x;
-
 	if (RTDebugLevel < RT_DEBUG_TRACE)
 		return;
 
-	pt = pSrcBufVA;
 	printk("%s: %p, len = %d\n", str, pSrcBufVA, SrcBufLen);
-	for (x = 0; x < SrcBufLen; x++) {
-		if (x % 16 == 0)
-			printk("0x%04x : ", x);
-		printk("%02x ", ((unsigned char)pt[x]));
-		if (x % 16 == 15)
-			printk("\n");
-	}
-	printk("\n");
+	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_OFFSET, 16, SrcBufLen/16+1, pSrcBufVA, SrcBufLen, true);
 #endif /* DBG */
 }
 
