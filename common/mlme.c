@@ -1557,14 +1557,14 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 	bool bCheckBeaconLost = true;
 
 #ifdef WPA_SUPPLICANT_SUPPORT
-    if (pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP == WPA_SUPPLICANT_DISABLE)
+	if (pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP == WPA_SUPPLICANT_DISABLE)
 #endif /* WPA_SUPPLICANT_SUPPORT */
-    {
-    	/* WPA MIC error should block association attempt for 60 seconds*/
+	{
+		/* WPA MIC error should block association attempt for 60 seconds*/
 		if (pAd->StaCfg.bBlockAssoc &&
 			RTMP_TIME_AFTER(pAd->Mlme.Now32, pAd->StaCfg.LastMicErrorTime + (60*OS_HZ)))
-    		pAd->StaCfg.bBlockAssoc = false;
-    }
+			pAd->StaCfg.bBlockAssoc = false;
+	}
 
 	/* If station is idle, go to sleep*/
 	if ( 1
@@ -1576,21 +1576,17 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 		&& (!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_IDLE_RADIO_OFF))
 		)
 	{
-			mt7612u_radio_off(pAd, MLME_RADIO_OFF);
+		mt7612u_radio_off(pAd, MLME_RADIO_OFF);
 
 		DBGPRINT(RT_DEBUG_TRACE, ("PSM - Issue Sleep command)\n"));
 	}
-
-
-
-
 
 	if (ADHOC_ON(pAd))
 	{
 	}
 	else
 	{
-    		AsicStaBbpTuning(pAd);
+		AsicStaBbpTuning(pAd);
 	}
 
 	TxTotalCnt = pAd->RalinkCounters.OneSecTxNoRetryOkCount +
@@ -1605,8 +1601,6 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 		if (pAd->StaCfg.bImprovedScan)
 			bCheckBeaconLost = false;
 
-
-
 		if (bCheckBeaconLost)
 		{
 			/* The NIC may lost beacons during scaning operation.*/
@@ -1615,7 +1609,6 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 		}
 	}
 
-
 	/* must be AFTER MlmeDynamicTxRateSwitching() because it needs to know if*/
 	/* Radio is currently in noisy environment*/
 	if (!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS))
@@ -1623,32 +1616,28 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 		AsicAdjustTxPower(pAd);
 	}
 
-
 	/*
 		Driver needs to up date value of LastOneSecTotalTxCount here;
 		otherwise UI couldn't do scanning sometimes when STA doesn't connect to AP or peer Ad-Hoc.
 	*/
 	pAd->RalinkCounters.LastOneSecTotalTxCount = TxTotalCnt;
 
+	/* resume Improved Scanning*/
+	if ((pAd->StaCfg.bImprovedScan) &&
+		(!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS)) &&
+		(pAd->Mlme.SyncMachine.CurrState == SCAN_PENDING))
+	{
+		MLME_SCAN_REQ_STRUCT       ScanReq;
 
+		pAd->StaCfg.LastScanTime = pAd->Mlme.Now32;
 
-		/* resume Improved Scanning*/
-		if ((pAd->StaCfg.bImprovedScan) &&
-			(!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS)) &&
-			(pAd->Mlme.SyncMachine.CurrState == SCAN_PENDING))
-		{
-			MLME_SCAN_REQ_STRUCT       ScanReq;
-
-			pAd->StaCfg.LastScanTime = pAd->Mlme.Now32;
-
-			ScanParmFill(pAd, &ScanReq, pAd->MlmeAux.Ssid, pAd->MlmeAux.SsidLen, BSS_ANY, SCAN_ACTIVE);
-			MlmeEnqueue(pAd, SYNC_STATE_MACHINE, MT2_MLME_SCAN_REQ, sizeof(MLME_SCAN_REQ_STRUCT), &ScanReq, 0);
-			DBGPRINT(RT_DEBUG_WARN, ("bImprovedScan ............. Resume for bImprovedScan, SCAN_PENDING .............. \n"));
-		}
+		ScanParmFill(pAd, &ScanReq, pAd->MlmeAux.Ssid, pAd->MlmeAux.SsidLen, BSS_ANY, SCAN_ACTIVE);
+		MlmeEnqueue(pAd, SYNC_STATE_MACHINE, MT2_MLME_SCAN_REQ, sizeof(MLME_SCAN_REQ_STRUCT), &ScanReq, 0);
+		DBGPRINT(RT_DEBUG_WARN, ("bImprovedScan ............. Resume for bImprovedScan, SCAN_PENDING .............. \n"));
+	}
 
 	if (INFRA_ON(pAd))
 	{
-
 
 		/* Is PSM bit consistent with user power management policy?*/
 		/* This is the only place that will set PSM bit ON.*/
@@ -1686,59 +1675,58 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 			DBGPRINT(RT_DEBUG_TRACE, ("MMCHK - No BEACON. restore R66 to the low bound(%d) \n", (0x2E + GET_LNA_GAIN(pAd))));
 		}
 
-
-/*for 1X1 STA pass 11n wifi wmm, need to change txop per case;*/
-/* 1x1 device for 802.11n WMM Test*/
-	if(!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_IDLE_RADIO_OFF))
-	{
-
-		if ((pAd->Antenna.field.TxPath == 1)&&
-		(pAd->StaActive.SupportedPhyInfo.bHtEnable == true) &&
-			(pAd->CommonCfg.BACapability.field.Policy == BA_NOTUSE)
-		)
+		/*for 1X1 STA pass 11n wifi wmm, need to change txop per case;*/
+		/* 1x1 device for 802.11n WMM Test*/
+		if(!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_IDLE_RADIO_OFF))
 		{
-			u32 Ac0Cfg;
-			u32 Ac2Cfg;
-			Ac2Cfg = mt76u_reg_read(pAd, EDCA_AC2_CFG);
-			Ac0Cfg = mt76u_reg_read(pAd, EDCA_AC0_CFG);
 
-			if ((pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VO] == 0) &&
-			(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BK] == 0) &&
-			(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BE] < 50) &&
-			(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VI] >= 1000))
+			if ((pAd->Antenna.field.TxPath == 1)&&
+			(pAd->StaActive.SupportedPhyInfo.bHtEnable == true) &&
+			(pAd->CommonCfg.BACapability.field.Policy == BA_NOTUSE)
+			)
 			{
-			/*5.2.27/28 T7: Total throughput need to ~36Mbps*/
-				if (FIELD_GET(MT_EDCA_CFG_AIFSN, Ac2Cfg) !=0xc) {
-					Ac2Cfg &= ~MT_EDCA_CFG_AIFSN;
-					Ac2Cfg |= FIELD_PREP(MT_EDCA_CFG_AIFSN, 0xc);
-					mt76u_reg_write(pAd, EDCA_AC2_CFG, Ac2Cfg);
-				}
-			}
-			else if ((pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VO] == 0) &&
-			(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BK] == 0) &&
-			(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VI] == 0) &&
-			(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BE] < 10))
-			{
-			/* restore default parameter of BE*/
-				if ((FIELD_GET(MT_EDCA_CFG_AIFSN, Ac0Cfg) !=3)  ||
-				    (FIELD_GET(MT_EDCA_CFG_TXOP, Ac0Cfg) !=0)) {
-					if (FIELD_GET(MT_EDCA_CFG_AIFSN, Ac0Cfg) !=3)
-						Ac0Cfg |= FIELD_PREP(MT_EDCA_CFG_AIFSN, 3);
-					if (FIELD_GET(MT_EDCA_CFG_TXOP, Ac0Cfg) !=0)
-						Ac0Cfg |= FIELD_PREP(MT_EDCA_CFG_TXOP, 0);
-					mt76u_reg_write(pAd, EDCA_AC0_CFG, Ac0Cfg);
-				}
+				u32 Ac0Cfg;
+				u32 Ac2Cfg;
+				Ac2Cfg = mt76u_reg_read(pAd, EDCA_AC2_CFG);
+				Ac0Cfg = mt76u_reg_read(pAd, EDCA_AC0_CFG);
 
-			/* restore default parameter of VI*/
-				if (FIELD_GET(MT_EDCA_CFG_AIFSN, Ac2Cfg) != 0x3) {
-					Ac2Cfg &= ~MT_EDCA_CFG_AIFSN;
-					Ac2Cfg |= FIELD_PREP(MT_EDCA_CFG_AIFSN, 0x3);
-					mt76u_reg_write(pAd, EDCA_AC2_CFG, Ac2Cfg);
+				if ((pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VO] == 0) &&
+				(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BK] == 0) &&
+				(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BE] < 50) &&
+				(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VI] >= 1000))
+				{
+				/*5.2.27/28 T7: Total throughput need to ~36Mbps*/
+					if (FIELD_GET(MT_EDCA_CFG_AIFSN, Ac2Cfg) !=0xc) {
+						Ac2Cfg &= ~MT_EDCA_CFG_AIFSN;
+						Ac2Cfg |= FIELD_PREP(MT_EDCA_CFG_AIFSN, 0xc);
+						mt76u_reg_write(pAd, EDCA_AC2_CFG, Ac2Cfg);
+					}
 				}
+				else if ((pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VO] == 0) &&
+				(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BK] == 0) &&
+				(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_VI] == 0) &&
+				(pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BE] < 10))
+				{
+				/* restore default parameter of BE*/
+					if ((FIELD_GET(MT_EDCA_CFG_AIFSN, Ac0Cfg) !=3)  ||
+					    (FIELD_GET(MT_EDCA_CFG_TXOP, Ac0Cfg) !=0)) {
+						if (FIELD_GET(MT_EDCA_CFG_AIFSN, Ac0Cfg) !=3)
+							Ac0Cfg |= FIELD_PREP(MT_EDCA_CFG_AIFSN, 3);
+						if (FIELD_GET(MT_EDCA_CFG_TXOP, Ac0Cfg) !=0)
+							Ac0Cfg |= FIELD_PREP(MT_EDCA_CFG_TXOP, 0);
+						mt76u_reg_write(pAd, EDCA_AC0_CFG, Ac0Cfg);
+					}
 
+					/* restore default parameter of VI*/
+					if (FIELD_GET(MT_EDCA_CFG_AIFSN, Ac2Cfg) != 0x3) {
+						Ac2Cfg &= ~MT_EDCA_CFG_AIFSN;
+						Ac2Cfg |= FIELD_PREP(MT_EDCA_CFG_AIFSN, 0x3);
+						mt76u_reg_write(pAd, EDCA_AC2_CFG, Ac2Cfg);
+					}
+
+				}
 			}
 		}
-	}
 
 		/* TODO: for debug only. to be removed*/
 		pAd->RalinkCounters.OneSecOsTxCount[QID_AC_BE] = 0;
@@ -1752,36 +1740,33 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 		pAd->RalinkCounters.OneSecTxDoneCount = 0;
 		pAd->RalinkCounters.OneSecTxAggregationCount = 0;
 
-
-
-
-        /*if ((pAd->RalinkCounters.OneSecTxNoRetryOkCount == 0) &&*/
-        /*    (pAd->RalinkCounters.OneSecTxRetryOkCount == 0))*/
-       if ((!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS)))
-        {
-    		if (pAd->StaCfg.UapsdInfo.bAPSDCapable && pAd->CommonCfg.APEdcaParm.bAPSDCapable)
-    		{
-    		    /* When APSD is enabled, the period changes as 20 sec*/
-    			if ((pAd->Mlme.OneSecPeriodicRound % 20) == 8)
-    			{
-    				RTMPSendNullFrame(pAd, pAd->CommonCfg.TxRate, true, pAd->CommonCfg.bAPSDForcePowerSave ? PWR_SAVE : pAd->StaCfg.Psm);
-    			}
-    		}
-    		else
-    		{
-    		    /* Send out a NULL frame every 10 sec to inform AP that STA is still alive (Avoid being age out)*/
-    			if ((pAd->Mlme.OneSecPeriodicRound % 10) == 8)
+		/*if ((pAd->RalinkCounters.OneSecTxNoRetryOkCount == 0) &&*/
+		/*    (pAd->RalinkCounters.OneSecTxRetryOkCount == 0))*/
+		if ((!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BSS_SCAN_IN_PROGRESS)))
+		{
+			if (pAd->StaCfg.UapsdInfo.bAPSDCapable && pAd->CommonCfg.APEdcaParm.bAPSDCapable)
 			{
-				RTMPSendNullFrame(pAd,
-								  pAd->CommonCfg.TxRate,
-								  (pAd->CommonCfg.bWmmCapable & pAd->CommonCfg.APEdcaParm.bValid),
-								  pAd->CommonCfg.bAPSDForcePowerSave ? PWR_SAVE : pAd->StaCfg.Psm);
+			/* When APSD is enabled, the period changes as 20 sec*/
+				if ((pAd->Mlme.OneSecPeriodicRound % 20) == 8)
+				{
+					RTMPSendNullFrame(pAd, pAd->CommonCfg.TxRate, true, pAd->CommonCfg.bAPSDForcePowerSave ? PWR_SAVE : pAd->StaCfg.Psm);
+				}
 			}
-    		}
-        }
+			else
+			{
+			/* Send out a NULL frame every 10 sec to inform AP that STA is still alive (Avoid being age out)*/
+				if ((pAd->Mlme.OneSecPeriodicRound % 10) == 8)
+				{
+					RTMPSendNullFrame(pAd,
+					  pAd->CommonCfg.TxRate,
+					  (pAd->CommonCfg.bWmmCapable & pAd->CommonCfg.APEdcaParm.bValid),
+					  pAd->CommonCfg.bAPSDForcePowerSave ? PWR_SAVE : pAd->StaCfg.Psm);
+				}
+			}
+		}
 
 		if (CQI_IS_DEAD(pAd->Mlme.ChannelQuality))
-			{
+		{
 			DBGPRINT(RT_DEBUG_TRACE, ("MMCHK - No BEACON. Dead CQI. Auto Recovery attempt #%ld\n", pAd->RalinkCounters.BadCQIAutoRecoveryCount));
 
 			if (pAd->StaCfg.bAutoConnectByBssid)
@@ -1801,9 +1786,9 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 
 			/* RTMPPatchMacBbpBug(pAd);*/
 #ifdef WPA_SUPPLICANT_SUPPORT
-		if (pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP == WPA_SUPPLICANT_DISABLE)
+			if (pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP == WPA_SUPPLICANT_DISABLE)
 #endif /* WPA_SUPPLICANT_SUPPORT */
-			MlmeAutoReconnectLastSSID(pAd);
+				MlmeAutoReconnectLastSSID(pAd);
 		}
 		else if (CQI_IS_BAD(pAd->Mlme.ChannelQuality))
 		{
@@ -1830,7 +1815,6 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 				(MaxRssi <= dBmToRoam))
 			{
 				DBGPRINT(RT_DEBUG_TRACE, ("Rssi=%d, dBmToRoam=%d\n", MaxRssi, (CHAR)dBmToRoam));
-
 
 				/* Add auto seamless roaming*/
 				if (rv == false)
@@ -1866,22 +1850,19 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 				if (!IS_ENTRY_CLIENT(pEntry))
 					continue;
 
-				if (RTMP_TIME_AFTER(pAd->Mlme.Now32, pEntry->LastBeaconRxTime + ADHOC_BEACON_LOST_TIME)
-				)
+				if (RTMP_TIME_AFTER(pAd->Mlme.Now32, pEntry->LastBeaconRxTime + ADHOC_BEACON_LOST_TIME))
 					MlmeDeAuthAction(pAd, pEntry, REASON_DISASSOC_STA_LEAVING, false);
 			}
 
-            if (pAd->MacTab.Size == 0)
-            {
-    			OPSTATUS_CLEAR_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED);
-    			RTMP_IndicateMediaState(pAd, NdisMediaStateDisconnected);
-            }
+			if (pAd->MacTab.Size == 0)
+			{
+				OPSTATUS_CLEAR_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED);
+				RTMP_IndicateMediaState(pAd, NdisMediaStateDisconnected);
+			}
 		}
-
 	}
 	else /* no INFRA nor ADHOC connection*/
 	{
-
 
 #ifdef WPA_SUPPLICANT_SUPPORT
 		if (pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP & WPA_SUPPLICANT_ENABLE_WPS)
@@ -1921,19 +1902,17 @@ VOID STAMlmePeriodicExec(struct rtmp_adapter *pAd)
 			else if (pAd->Mlme.CntlMachine.CurrState == CNTL_IDLE
 			)
 			{
-				{
 #ifdef WPA_SUPPLICANT_SUPPORT
-					if(pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP != WPA_SUPPLICANT_ENABLE)
+				if(pAd->StaCfg.wpa_supplicant_info.WpaSupplicantUP != WPA_SUPPLICANT_ENABLE)
 #endif // WPA_SUPPLICANT_SUPPORT //
 					MlmeAutoReconnectLastSSID(pAd);
-				}
 			}
 		}
 	}
 
 SKIP_AUTO_SCAN_CONN:
 
-    if ((pAd->MacTab.Content[BSSID_WCID].TXBAbitmap !=0) && (pAd->MacTab.fAnyBASession == false)
+	if ((pAd->MacTab.Content[BSSID_WCID].TXBAbitmap !=0) && (pAd->MacTab.fAnyBASession == false)
 		&& (!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_IDLE_RADIO_OFF)))
 	{
 		pAd->MacTab.fAnyBASession = true;
@@ -1945,7 +1924,6 @@ SKIP_AUTO_SCAN_CONN:
 		pAd->MacTab.fAnyBASession = false;
 		AsicUpdateProtect(pAd, pAd->MlmeAux.AddHtInfo.AddHtInfo2.OperaionMode,  ALLN_SETPROTECT, false, false);
 	}
-
 
 //YF_TODO
 
