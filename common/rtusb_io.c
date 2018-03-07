@@ -1164,26 +1164,3 @@ VOID CMDHandler(struct rtmp_adapter *pAd)
 		}
 	}	/* end of while */
 }
-
-
-VOID RTUSBWatchDog(struct rtmp_adapter *pAd)
-{
-	PHT_TX_CONTEXT pHTTXContext;
-	int idx;
-	ULONG irqFlags;
-	struct urb *pUrb;
-	bool needDumpSeq = false;
-	uint32_t MACValue;
-
-	if(RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NIC_NOT_EXIST))
-		return;
-
-#ifdef CONFIG_STA_SUPPORT
-	if(RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_IDLE_RADIO_OFF))
-		return;
-#endif /* CONFIG_STA_SUPPORT */
-
-	return;
-}
-
-

@@ -1298,8 +1298,6 @@ VOID MlmePeriodicExec(
 		/* Hint: throughput impact is very serious in the function */
 		NICUpdateRawCounters(pAd);
 
-		RTUSBWatchDog(pAd);
-
    		/* Need statistics after read counter. So put after NICUpdateRawCounters*/
 		ORIBATimerTimeout(pAd);
 
