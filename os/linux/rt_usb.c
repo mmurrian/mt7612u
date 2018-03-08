@@ -815,8 +815,6 @@ INT RTUSBCmdThread(
 	if (pAd == NULL)
 		return 0;
 
-	RtmpOSTaskCustomize(pTask);
-
 	spin_lock_bh(&pAd->CmdQLock);
 	pAd->CmdQState = RTMP_TASK_STAT_RUNNING;
 	spin_unlock_bh(&pAd->CmdQLock);
@@ -855,23 +853,9 @@ INT RTUSBCmdThread(
 
 		spin_unlock_bh(&pAd->CmdQLock);
 	}
-	/* notify the exit routine that we're actually exiting now
-	 *
-	 * complete()/wait_for_completion() is similar to up()/down(),
-	 * except that complete() is safe in the case where the structure
-	 * is getting deleted in a parallel mode of execution (i.e. just
-	 * after the down() -- that's necessary for the thread-shutdown
-	 * case.
-	 *
-	 * complete_and_exit() goes even further than this -- it is safe in
-	 * the case that the thread of the caller is going away (not just
-	 * the structure) -- this is necessary for the module-remove case.
-	 * This is important in preemption kernels, which transfer the flow
-	 * of execution immediately upon a complete().
-	 */
+
 	DBGPRINT(RT_DEBUG_TRACE,( "<---RTUSBCmdThread\n"));
 
-	RtmpOSTaskNotifyToExit(pTask);
 	return 0;
 
 }

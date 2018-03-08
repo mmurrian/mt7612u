@@ -524,15 +524,6 @@ int RtmpOSTaskKill(OS_TASK *pTask)
 	return ret;
 }
 
-int RtmpOSTaskNotifyToExit(OS_TASK *pTask)
-{
-	return 0;
-}
-
-void RtmpOSTaskCustomize(OS_TASK *pTask)
-{
-}
-
 int RtmpOSTaskAttach(
 	IN OS_TASK *pTask,
 	IN RTMP_OS_TASK_CALLBACK fn,

@@ -249,10 +249,6 @@ VOID RtmpOsMlmeUp(RTMP_OS_TASK *pMlmeQTask);
 /* OS Task */
 int RtmpOSTaskKill(RTMP_OS_TASK *pTaskOrg);
 
-INT RtmpOSTaskNotifyToExit(RTMP_OS_TASK *pTaskOrg);
-
-VOID RtmpOSTaskCustomize(RTMP_OS_TASK *pTaskOrg);
-
 int RtmpOSTaskAttach(
 	IN	RTMP_OS_TASK *pTaskOrg,
 	IN	RTMP_OS_TASK_CALLBACK	fn,
