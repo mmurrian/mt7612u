@@ -1130,37 +1130,33 @@ static inline bool ValidCMD(IN PCmdQElmt CMDQelmt)
 
 VOID CMDHandler(struct rtmp_adapter *pAd)
 {
-	PCmdQElmt		cmdqelmt;
 	int 	NdisStatus = NDIS_STATUS_SUCCESS;
 	int 	ntStatus;
-/*	unsigned long	IrqFlags;*/
+	struct list_head *ptr, *se;
 
-	while (pAd && pAd->CmdQ.size > 0) {
-		NdisStatus = NDIS_STATUS_SUCCESS;
+	if (!pAd)
+		return;
+
+	list_for_each_safe(ptr, se, &pAd->CmdQ) {
+		CmdQElmt *pCmdQElmt;
 
 		spin_lock_bh(&pAd->CmdQLock);
-		RTThreadDequeueCmd(&pAd->CmdQ, &cmdqelmt);
+
+		pCmdQElmt = list_entry(ptr, CmdQElmt, list);
+		list_del(&pCmdQElmt->list);
+
 		spin_unlock_bh(&pAd->CmdQLock);
-
-		if (cmdqelmt == NULL)
-			break;
-
 
 		if(!(RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NIC_NOT_EXIST) ||
 		    RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_HALT_IN_PROGRESS)))
 		{
-			if(ValidCMD(cmdqelmt))
-				ntStatus = (*CMDHdlrTable[cmdqelmt->command - CMDTHREAD_FIRST_CMD_ID])(pAd, cmdqelmt);
+			if(ValidCMD(pCmdQElmt))
+				ntStatus = (*CMDHdlrTable[pCmdQElmt->command - CMDTHREAD_FIRST_CMD_ID])(pAd, pCmdQElmt);
+			/* XXX ntStatus isn't checked */
 		}
 
-		if (cmdqelmt->CmdFromNdis == true) {
-			if (cmdqelmt->buffer != NULL)
-				kfree(cmdqelmt->buffer);
-			kfree(cmdqelmt);
-		} else {
-			if ((cmdqelmt->buffer != NULL) && (cmdqelmt->bufferlength != 0))
-				kfree(cmdqelmt->buffer);
-			kfree(cmdqelmt);
-		}
-	}	/* end of while */
+		if (pCmdQElmt->buffer)
+			kfree(pCmdQElmt->buffer);
+		kfree(pCmdQElmt);
+	}
 }

@@ -3121,7 +3121,8 @@ struct rtmp_adapter {
 	spinlock_t irq_lock;
 
 	/*======Cmd Thread in PCI/RBUS/USB */
-	CmdQ CmdQ;
+	struct list_head CmdQ;
+	int CmdQState;
 	spinlock_t CmdQLock;	/* CmdQLock spinlock */
 	RTMP_OS_TASK cmdQTask;
 
@@ -6466,13 +6467,10 @@ VOID RTMPUpdateSwCacheCipherInfo(struct rtmp_adapter *pAd, TX_BLK *pTxBlk, u8 *p
 	OS Related funciton prototype definitions.
 	TODO: Maybe we need to move these function prototypes to other proper place.
 */
-VOID RTInitializeCmdQ(PCmdQ cmdq);
 
 INT RTPCICmdThread(ULONG Context);
 
 VOID CMDHandler(struct rtmp_adapter *pAd);
-
-VOID RTThreadDequeueCmd(PCmdQ cmdq, PCmdQElmt *pcmdqelmt);
 
 int RTEnqueueInternalCmd(
 	IN struct rtmp_adapter *pAd,

@@ -117,7 +117,7 @@ VOID RtmpMgmtTaskExit(
 	RTMP_OS_TASK_LEGALITY(pTask)
 	{
 		spin_lock_bh(&pAd->CmdQLock);
-		pAd->CmdQ.CmdQState = RTMP_TASK_STAT_STOPED;
+		pAd->CmdQState = RTMP_TASK_STAT_STOPED;
 		spin_unlock_bh(&pAd->CmdQLock);
 
 		/*RTUSBCMDUp(&pAd->cmdQTask); */
@@ -128,7 +128,7 @@ VOID RtmpMgmtTaskExit(
 /*					RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev), pTask->taskName)); */
 			DBGPRINT(RT_DEBUG_ERROR, ("kill command task failed!\n"));
 		}
-		pAd->CmdQ.CmdQState = RTMP_TASK_STAT_UNKNOWN;
+		pAd->CmdQState = RTMP_TASK_STAT_UNKNOWN;
 	}
 
 	/* Terminate timer thread */
@@ -818,10 +818,10 @@ INT RTUSBCmdThread(
 	RtmpOSTaskCustomize(pTask);
 
 	spin_lock_bh(&pAd->CmdQLock);
-	pAd->CmdQ.CmdQState = RTMP_TASK_STAT_RUNNING;
+	pAd->CmdQState = RTMP_TASK_STAT_RUNNING;
 	spin_unlock_bh(&pAd->CmdQLock);
 
-	while (pAd->CmdQ.CmdQState == RTMP_TASK_STAT_RUNNING)
+	while (pAd->CmdQState == RTMP_TASK_STAT_RUNNING)
 	{
 		if (RtmpOSTaskWait(pAd, pTask, &status) == false)
 		{
@@ -829,7 +829,7 @@ INT RTUSBCmdThread(
 			break;
 		}
 
-		if (pAd->CmdQ.CmdQState == RTMP_TASK_STAT_STOPED)
+		if (pAd->CmdQState == RTMP_TASK_STAT_STOPED)
 			break;
 
 		if (!pAd->PM_FlgSuspend)
@@ -838,29 +838,20 @@ INT RTUSBCmdThread(
 
 	if (!pAd->PM_FlgSuspend)
 	{	/* Clear the CmdQElements. */
-		CmdQElmt	*pCmdQElmt = NULL;
+		/* XXX Is it need? CMDHandler() will delete all elements from queue */
+		struct list_head *ptr, *se;
 
 		spin_lock_bh(&pAd->CmdQLock);
-		pAd->CmdQ.CmdQState = RTMP_TASK_STAT_STOPED;
-		while(pAd->CmdQ.size)
-		{
-			RTThreadDequeueCmd(&pAd->CmdQ, &pCmdQElmt);
-			if (pCmdQElmt)
-			{
-				if (pCmdQElmt->CmdFromNdis == true)
-				{
-					if (pCmdQElmt->buffer != NULL)
-						kfree(pCmdQElmt->buffer);
-					kfree((u8 *)pCmdQElmt);
-				}
-				else
-				{
-					if ((pCmdQElmt->buffer != NULL) && (pCmdQElmt->bufferlength != 0))
-						kfree(pCmdQElmt->buffer);
-					kfree((u8 *)pCmdQElmt);
-				}
-			}
+		pAd->CmdQState = RTMP_TASK_STAT_STOPED;
+
+		list_for_each_safe(ptr, se, &pAd->CmdQ) {
+			CmdQElmt *pCmdQElmt = list_entry(ptr, CmdQElmt, list);
+			list_del(&pCmdQElmt->list);
+			if (pCmdQElmt->buffer)
+				kfree(pCmdQElmt->buffer);
+			kfree(pCmdQElmt);
 		}
+		INIT_LIST_HEAD(&pAd->CmdQ);
 
 		spin_unlock_bh(&pAd->CmdQLock);
 	}

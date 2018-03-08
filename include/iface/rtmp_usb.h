@@ -94,7 +94,6 @@ int RTUSBReadEEPROM(struct rtmp_adapter *pAd, unsigned short Offset, u8 *buf, un
 bool AsicCheckCommandOk(struct rtmp_adapter *pAd, u8 cmd);
 
 
-VOID RTUSBDequeueCmd(PCmdQ cmdq, PCmdQElmt *pcmdqelmt);
 INT RTUSBCmdThread(ULONG Context);
 
 

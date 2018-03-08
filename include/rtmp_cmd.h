@@ -4,31 +4,11 @@
 #include "rtmp_type.h"
 
 typedef struct _CmdQElmt {
-	UINT command;
-	PVOID buffer;
-	ULONG bufferlength;
-	bool CmdFromNdis;
-	bool SetOperation;
-	struct _CmdQElmt *next;
+	struct list_head list;
+	uint32_t command;
+	void *buffer;
+	uint32_t bufferlength;
 } CmdQElmt, *PCmdQElmt;
-
-typedef struct _CmdQ {
-	UINT size;
-	CmdQElmt *head;
-	CmdQElmt *tail;
-	uint32_t CmdQState;
-} CmdQ, *PCmdQ;
-
-#define EnqueueCmd(cmdq, cmdqelmt)		\
-{										\
-	if (cmdq->size == 0)				\
-		cmdq->head = cmdqelmt;			\
-	else								\
-		cmdq->tail->next = cmdqelmt;	\
-	cmdq->tail = cmdqelmt;				\
-	cmdqelmt->next = NULL;				\
-	cmdq->size++;						\
-}
 
 #define NDIS_OID	UINT
 

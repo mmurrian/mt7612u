@@ -30,65 +30,6 @@
 
 #include "rt_config.h"
 
-
-
-
-/*
-	========================================================================
-
-	Routine Description:
-
-	Arguments:
-
-	Return Value:
-
-	IRQL =
-
-	Note:
-
-	========================================================================
-*/
-VOID	RTInitializeCmdQ(
-	IN	PCmdQ	cmdq)
-{
-	cmdq->head = NULL;
-	cmdq->tail = NULL;
-	cmdq->size = 0;
-	cmdq->CmdQState = RTMP_TASK_STAT_INITED;
-}
-
-
-/*
-	========================================================================
-
-	Routine Description:
-
-	Arguments:
-
-	Return Value:
-
-	IRQL =
-
-	Note:
-
-	========================================================================
-*/
-VOID	RTThreadDequeueCmd(
-	IN	PCmdQ		cmdq,
-	OUT	PCmdQElmt	*pcmdqelmt)
-{
-	*pcmdqelmt = cmdq->head;
-
-	if (*pcmdqelmt != NULL)
-	{
-		cmdq->head = cmdq->head->next;
-		cmdq->size--;
-		if (cmdq->size == 0)
-			cmdq->tail = NULL;
-	}
-}
-
-
 /*
 	========================================================================
 
@@ -138,37 +79,29 @@ int RTEnqueueInternalCmd(
 			cmdqelmt->bufferlength = InformationBufferLength;
 		}
 	}
-	else
-	{
-		cmdqelmt->buffer = NULL;
-		cmdqelmt->bufferlength = 0;
-	}
 
 	cmdqelmt->command = Oid;
-	cmdqelmt->CmdFromNdis = false;
 
-	if (cmdqelmt != NULL)
+	spin_lock_bh(&pAd->CmdQLock);
+	if (pAd->CmdQState & RTMP_TASK_CAN_DO_INSERT)
 	{
-		spin_lock_bh(&pAd->CmdQLock);
-		if (pAd->CmdQ.CmdQState & RTMP_TASK_CAN_DO_INSERT)
-		{
-			EnqueueCmd((&pAd->CmdQ), cmdqelmt);
-			status = NDIS_STATUS_SUCCESS;
-		}
-		else
-		{
-			status = NDIS_STATUS_FAILURE;
-		}
-		spin_unlock_bh(&pAd->CmdQLock);
-
-		if (status == NDIS_STATUS_FAILURE)
-		{
-			if (cmdqelmt->buffer)
-				kfree(cmdqelmt->buffer);
-			kfree(cmdqelmt);
-		}
-		else
-			RTCMDUp(&pAd->cmdQTask);
+		list_add_tail(&cmdqelmt->list, &pAd->CmdQ);
+		status = NDIS_STATUS_SUCCESS;
 	}
+	else
+	{
+		status = NDIS_STATUS_FAILURE;
+	}
+	spin_unlock_bh(&pAd->CmdQLock);
+
+	if (status == NDIS_STATUS_FAILURE)
+	{
+		if (cmdqelmt->buffer)
+			kfree(cmdqelmt->buffer);
+		kfree(cmdqelmt);
+	}
+	else
+		RTCMDUp(&pAd->cmdQTask);
+
 	return(NDIS_STATUS_SUCCESS);
 }
