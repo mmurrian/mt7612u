@@ -58,7 +58,7 @@ int  RtmpMgmtTaskInit(
 
 	pTask = &pAd->timerTask;
 	RTMP_OS_TASK_INIT(pTask, "RtmpTimerTask", pAd);
-	status = RtmpOSTaskAttach(pTask, RtmpTimerQThread, (ULONG)pTask);
+	status = RtmpOSTaskAttach(pTask, RtmpTimerQThread, (void *)pTask);
 	if (status == NDIS_STATUS_FAILURE)
 	{
 		printk (KERN_WARNING "%s: unable to start RtmpTimerQThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
@@ -68,7 +68,7 @@ int  RtmpMgmtTaskInit(
 	/* Creat Command Thread */
 	pTask = &pAd->cmdQTask;
 	RTMP_OS_TASK_INIT(pTask, "RtmpCmdQTask", pAd);
-	status = RtmpOSTaskAttach(pTask, RTUSBCmdThread, (ULONG)pTask);
+	status = RtmpOSTaskAttach(pTask, RTUSBCmdThread, (void *)pTask);
 	if (status == NDIS_STATUS_FAILURE)
 	{
 		printk (KERN_WARNING "%s: unable to start RTUSBCmdThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
@@ -802,7 +802,7 @@ Note:
 ========================================================================
 */
 INT RTUSBCmdThread(
-	IN ULONG Context)
+	IN void *Context)
 {
 	struct rtmp_adapter *pAd;
 	RTMP_OS_TASK *pTask;

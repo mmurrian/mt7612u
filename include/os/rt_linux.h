@@ -325,7 +325,7 @@ do { \
 #define ATE_KILL_THREAD_PID(PID)		KILL_THREAD_PID(PID, SIGTERM, 1)
 
 typedef int (*cast_fn)(void *);
-typedef INT (*RTMP_OS_TASK_CALLBACK)(ULONG);
+typedef INT (*RTMP_OS_TASK_CALLBACK)(void *);
 
 typedef struct tasklet_struct OS_NET_TASK_STRUCT;
 typedef struct tasklet_struct  *POS_NET_TASK_STRUCT;

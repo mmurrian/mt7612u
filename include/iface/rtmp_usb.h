@@ -94,7 +94,7 @@ int RTUSBReadEEPROM(struct rtmp_adapter *pAd, unsigned short Offset, u8 *buf, un
 bool AsicCheckCommandOk(struct rtmp_adapter *pAd, u8 cmd);
 
 
-INT RTUSBCmdThread(ULONG Context);
+INT RTUSBCmdThread(void *Context);
 
 
 VOID RTUSBBssBeaconExit(struct rtmp_adapter *pAd);

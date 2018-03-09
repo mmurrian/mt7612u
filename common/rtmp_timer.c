@@ -158,7 +158,7 @@ static void RtmpTimerQHandle(struct rtmp_adapter *pAd)
 
 
 INT RtmpTimerQThread(
-	IN ULONG Context)
+	IN void *Context)
 {
 	RTMP_OS_TASK	*pTask;
 	struct rtmp_adapter *pAd = NULL;

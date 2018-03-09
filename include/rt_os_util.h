@@ -252,7 +252,7 @@ int RtmpOSTaskKill(RTMP_OS_TASK *pTaskOrg);
 int RtmpOSTaskAttach(
 	IN	RTMP_OS_TASK *pTaskOrg,
 	IN	RTMP_OS_TASK_CALLBACK	fn,
-	IN	ULONG arg);
+	IN	void *arg);
 
 int RtmpOSTaskInit(
 	IN	RTMP_OS_TASK *pTaskOrg,

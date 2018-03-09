@@ -6335,7 +6335,7 @@ void tbtt_tasklet(unsigned long data);
 
 
 
-INT RtmpTimerQThread(ULONG Context);
+INT RtmpTimerQThread(void *Context);
 
 RTMP_TIMER_TASK_ENTRY *RtmpTimerQInsert(
 	IN struct rtmp_adapter *pAd,
@@ -6467,8 +6467,6 @@ VOID RTMPUpdateSwCacheCipherInfo(struct rtmp_adapter *pAd, TX_BLK *pTxBlk, u8 *p
 	OS Related funciton prototype definitions.
 	TODO: Maybe we need to move these function prototypes to other proper place.
 */
-
-INT RTPCICmdThread(ULONG Context);
 
 VOID CMDHandler(struct rtmp_adapter *pAd);
 

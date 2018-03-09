@@ -527,14 +527,13 @@ int RtmpOSTaskKill(OS_TASK *pTask)
 int RtmpOSTaskAttach(
 	IN OS_TASK *pTask,
 	IN RTMP_OS_TASK_CALLBACK fn,
-	IN ULONG arg)
+	IN void *arg)
 {
 	int status = NDIS_STATUS_SUCCESS;
 
 	pTask->task_killed = 0;
-	pTask->kthread_task = NULL;
 	pTask->kthread_task =
-	    kthread_run((cast_fn) fn, (void *)arg, pTask->taskName);
+	    kthread_run((cast_fn) fn, arg, pTask->taskName);
 	if (IS_ERR(pTask->kthread_task))
 		status = NDIS_STATUS_FAILURE;
 

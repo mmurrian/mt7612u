@@ -818,7 +818,7 @@ Return Value:
 Note:
 ========================================================================
 */
-static INT MlmeThread(ULONG Context)
+static INT MlmeThread(void *Context)
 {
 	struct rtmp_adapter *pAd;
 	RTMP_OS_TASK *pTask;
@@ -970,7 +970,7 @@ int MlmeInit(struct rtmp_adapter *pAd)
 		/* Creat MLME Thread */
 		pTask = &pAd->mlmeTask;
 		RTMP_OS_TASK_INIT(pTask, "RtmpMlmeTask", pAd);
-		Status = RtmpOSTaskAttach(pTask, MlmeThread, (ULONG)pTask);
+		Status = RtmpOSTaskAttach(pTask, MlmeThread, (void *)pTask);
 		if (Status == NDIS_STATUS_FAILURE) {
 			DBGPRINT (RT_DEBUG_ERROR,  ("%s: unable to start MlmeThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev)));
 		}
