@@ -51,6 +51,7 @@ int  RtmpMgmtTaskInit(
 	RTMP_OS_TASK *pTask;
 	int status;
 
+#ifdef RTMP_TIMER_TASK_SUPPORT
 	/*
 		Creat TimerQ Thread, We need init timerQ related structure before create the timer thread.
 	*/
@@ -64,6 +65,7 @@ int  RtmpMgmtTaskInit(
 		printk (KERN_WARNING "%s: unable to start RtmpTimerQThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
 		return NDIS_STATUS_FAILURE;
 	}
+#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 	/* Creat Command Thread */
 	pTask = &pAd->cmdQTask;
@@ -109,8 +111,10 @@ VOID RtmpMgmtTaskExit(
 	/* irps. Wait until sends and receives have stopped. */
 	RTUSBCancelPendingIRPs(pAd);
 
+#ifdef RTMP_TIMER_TASK_SUPPORT
 	/* We need clear timerQ related structure before exits of the timer thread. */
 	RtmpTimerQExit(pAd);
+#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 	/* Terminate cmdQ thread */
 	pTask = &pAd->cmdQTask;
@@ -131,6 +135,7 @@ VOID RtmpMgmtTaskExit(
 		pAd->CmdQState = RTMP_TASK_STAT_UNKNOWN;
 	}
 
+#ifdef RTMP_TIMER_TASK_SUPPORT
 	/* Terminate timer thread */
 	pTask = &pAd->timerTask;
 	ret = RtmpOSTaskKill(pTask);
@@ -140,6 +145,7 @@ VOID RtmpMgmtTaskExit(
 /*					RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev), pTask->taskName)); */
 		DBGPRINT(RT_DEBUG_ERROR, ("kill timer task failed!\n"));
 	}
+#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 
 }

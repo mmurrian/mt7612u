@@ -96,6 +96,7 @@ BUILD_TIMER_FUNCTION(eTxBfProbeTimerExec);
 BUILD_TIMER_FUNCTION(PeerDelBATxAdaptTimeOut);
 #endif /* PEER_DELBA_TX_ADAPT */
 
+#ifdef RTMP_TIMER_TASK_SUPPORT
 static void RtmpTimerQHandle(struct rtmp_adapter *pAd)
 {
 	int status;
@@ -312,4 +313,5 @@ void RtmpTimerQInit(struct rtmp_adapter *pAd)
 		spin_unlock_irqrestore(&pAd->TimerQLock, irqFlags);
 	}
 }
+#endif /* RTMP_TIMER_TASK_SUPPORT */
 
