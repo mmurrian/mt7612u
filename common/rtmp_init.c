@@ -2268,6 +2268,7 @@ VOID RTMPInitTimer(
 	/* that we haven't initialize before.*/
 	/* */
 	pTimer->Valid      = true;
+	pTimer->Fired = false;
 
 	pTimer->PeriodicType = Repeat;
 	pTimer->State      = false;

@@ -335,8 +335,9 @@ int mt76u_vendor_request(struct rtmp_adapter *pAd, u8 requesttype, enum mt_vendo
 	int ret = 0;
 	struct usb_device *udev = mt7612u_to_usb_dev(pAd);
 
-	if(in_interrupt()) {
+	if (in_interrupt()) {
 		DBGPRINT(RT_DEBUG_ERROR, ("BUG: mt76u_vendor_request is called from invalid context\n"));
+		BUG();
 		return NDIS_STATUS_FAILURE;
 	}
 

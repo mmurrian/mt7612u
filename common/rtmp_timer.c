@@ -99,6 +99,52 @@ BUILD_TIMER_FUNCTION(PeerDelBATxAdaptTimeOut);
 #ifdef RTMP_TIMER_TASK_SUPPORT
 static void RtmpTimerQHandle(struct rtmp_adapter *pAd)
 {
+#if 1
+	/* Queue handling based on created timers list */
+	int status;
+	RALINK_TIMER_STRUCT	*pTimer;
+	unsigned long	irqFlag;
+	RTMP_OS_TASK *pTask;
+
+	struct list_head *pRscList = &pAd->RscTimerCreateList;
+	struct list_head *ptr, *se;
+
+	pTask = &pAd->timerTask;
+	while(!RTMP_OS_TASK_IS_KILLED(pTask))
+	{
+		if (RtmpOSTaskWait(pAd, pTask, &status) == false)
+		{
+			RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_HALT_IN_PROGRESS);
+			break;
+		}
+
+		if (pAd->TimerQ.status == RTMP_TASK_STAT_STOPED)
+			break;
+
+		list_for_each_safe(ptr, se, pRscList) {
+			RALINK_TIMER_STRUCT *pTimer = list_entry(ptr, RALINK_TIMER_STRUCT, list);
+
+			if (pTimer->Fired){
+			/*
+				DBGPRINT(RT_DEBUG_TRACE,("%s: Timer %p fired, Repeat=%u, State=%u, TimerValue=%lu\n",__FUNCTION__,
+					 pTimer, pTimer->Repeat, pTimer->State, pTimer->TimerValue));
+			*/
+				pTimer->Fired = false;
+				if ((pTimer->handle != NULL) && (!pAd->PM_FlgSuspend))
+					pTimer->handle(NULL, (PVOID) pTimer->cookie, NULL, pTimer);
+				if ((pTimer->Repeat) && (pTimer->State == false))
+					RTMP_OS_Add_Timer(&pTimer->TimerObj, pTimer->TimerValue);
+			}
+		}
+
+		if (status != 0)
+		{
+			pAd->TimerQ.status = RTMP_TASK_STAT_STOPED;
+			RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_HALT_IN_PROGRESS);
+			break;
+		}
+	}
+#else
 	int status;
 	RALINK_TIMER_STRUCT	*pTimer;
 	RTMP_TIMER_TASK_ENTRY	*pEntry;
@@ -155,6 +201,7 @@ static void RtmpTimerQHandle(struct rtmp_adapter *pAd)
 			break;
 		}
 	}
+#endif
 }
 
 

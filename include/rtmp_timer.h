@@ -68,6 +68,7 @@ typedef struct _RALINK_TIMER_STRUCT {
 	struct rtmp_adapter *pAd;
 	struct list_head list;
 #ifdef RTMP_TIMER_TASK_SUPPORT
+	bool Fired;		/* Timer has fired */
 	RTMP_TIMER_TASK_HANDLE handle;
 #endif				/* RTMP_TIMER_TASK_SUPPORT */
 } RALINK_TIMER_STRUCT, *PRALINK_TIMER_STRUCT;
@@ -88,6 +89,15 @@ typedef struct _RTMP_TIMER_TASK_QUEUE_ {
 	RTMP_TIMER_TASK_ENTRY *pQTail;
 } RTMP_TIMER_TASK_QUEUE;
 
+#if 1
+#define BUILD_TIMER_FUNCTION(_func)			\
+void rtmp_timer_##_func(PRALINK_TIMER_STRUCT _pTimer)	\
+{							\
+	_pTimer->handle = _func;			\
+	_pTimer->Fired = true;				\
+	WAKE_UP(&_pTimer->pAd->timerTask);		\
+}
+#else
 #define BUILD_TIMER_FUNCTION(_func)										\
 void rtmp_timer_##_func(PRALINK_TIMER_STRUCT _pTimer)										\
 {																			\
@@ -95,11 +105,13 @@ void rtmp_timer_##_func(PRALINK_TIMER_STRUCT _pTimer)										\
 	struct rtmp_adapter 	*_pAd;											\
 																			\
 	_pTimer->handle = _func;													\
+	_pTimer->Fired = true;	\
 	_pAd = _pTimer->pAd;										\
 	_pQNode = RtmpTimerQInsert(_pAd, _pTimer); 								\
 	if ((_pQNode == NULL) && (_pAd->TimerQ.status & RTMP_TASK_CAN_DO_INSERT))	\
 		RTMP_OS_Add_Timer(&_pTimer->TimerObj, OS_HZ);               					\
 }
+#endif
 #else /* !RTMP_TIMER_TASK_SUPPORT */
 #define BUILD_TIMER_FUNCTION(_func)										\
 void rtmp_timer_##_func(PRALINK_TIMER_STRUCT pTimer)										\
