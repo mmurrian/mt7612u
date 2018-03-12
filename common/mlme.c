@@ -851,6 +851,38 @@ LabelExit:
 
 }
 
+static INT MaintThread(void *Context)
+{
+	struct rtmp_adapter *pAd;
+	RTMP_OS_TASK *pTask;
+	int status;
+	status = 0;
+
+	pTask = (RTMP_OS_TASK *)Context;
+	pAd = (struct rtmp_adapter *)RTMP_OS_TASK_DATA_GET(pTask);
+	if (pAd == NULL)
+		return 0;
+
+	DBGPRINT(RT_DEBUG_TRACE, ("%s: Start\n", __func__));
+
+	while (!RTMP_OS_TASK_IS_KILLED(pTask))
+	{
+		if (RtmpOSTaskWait(pAd, pTask, &status) == false)
+		{
+			RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_HALT_IN_PROGRESS);
+			break;
+		}
+
+		if (!pAd->PM_FlgSuspend)
+			MlmePeriodicExec(NULL, pAd, NULL, NULL);
+		msleep(100);
+	}
+
+	DBGPRINT(RT_DEBUG_TRACE, ("%s: Stop\n", __func__));
+
+	return 0;
+}
+
 #ifdef CONFIG_AP_SUPPORT
 
 static VOID ApMlmeInit(struct rtmp_adapter *pAd)
@@ -937,13 +969,13 @@ int MlmeInit(struct rtmp_adapter *pAd)
 
 
 		ActionStateMachineInit(pAd, &pAd->Mlme.ActMachine, pAd->Mlme.ActFunc);
-
+#if 0
 		/* Init mlme periodic timer*/
 		RTMPInitTimer(pAd, &pAd->Mlme.PeriodicTimer, GET_TIMER_FUNCTION(MlmePeriodicExec), pAd, true);
 
 		/* Set mlme periodic timer*/
 		RTMPSetTimer(&pAd->Mlme.PeriodicTimer, MLME_TASK_EXEC_INTV);
-
+#endif
 		/* software-based RX Antenna diversity*/
 		RTMPInitTimer(pAd, &pAd->Mlme.RxAntEvalTimer, GET_TIMER_FUNCTION(AsicRxAntEvalTimeout), pAd, false);
 
@@ -974,6 +1006,19 @@ int MlmeInit(struct rtmp_adapter *pAd)
 		if (Status == NDIS_STATUS_FAILURE) {
 			DBGPRINT (RT_DEBUG_ERROR,  ("%s: unable to start MlmeThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev)));
 		}
+	}
+
+	{
+		RTMP_OS_TASK *pTask;
+
+		/* Creat MLME Thread */
+		pTask = &pAd->maintTask;
+		RTMP_OS_TASK_INIT(pTask, "RtmpMaintTask", pAd);
+		Status = RtmpOSTaskAttach(pTask, MaintThread, (void *)pTask);
+		if (Status == NDIS_STATUS_FAILURE) {
+			DBGPRINT (RT_DEBUG_ERROR,  ("%s: unable to start MaintThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev)));
+		}
+		WAKE_UP(pTask);
 	}
 	DBGPRINT(RT_DEBUG_TRACE, ("<-- MLME Initialize\n"));
 
@@ -1007,12 +1052,19 @@ VOID MlmeHalt(struct rtmp_adapter *pAd)
 		DBGPRINT(RT_DEBUG_ERROR, ("kill mlme task failed!\n"));
 	}
 
+	pTask = &pAd->maintTask;
+	if (RtmpOSTaskKill(pTask) == NDIS_STATUS_FAILURE) {
+		DBGPRINT(RT_DEBUG_ERROR, ("kill maint task failed!\n"));
+	}
+
 	if (!RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NIC_NOT_EXIST))
 	{
 		/* disable BEACON generation and other BEACON related hardware timers*/
 		AsicDisableSync(pAd);
 	}
+#if 0
 	RTMPCancelTimer(&pAd->Mlme.PeriodicTimer, &Cancelled);
+#endif
 
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
@@ -1135,7 +1187,7 @@ VOID MlmePeriodicExec(
 
 	/* No More 0x84 MCU CMD from v.30 FW*/
 
-#ifndef RTMP_TIMER_TASK_SUPPORT
+#if 0 /* ndef RTMP_TIMER_TASK_SUPPORT */
 	/* XXX
 	  This is broken, should be removed.
 	  When RTMP_TIMER_TASK_SUPPORT is defined, this code runs not in interrupt context,

@@ -2268,7 +2268,10 @@ VOID RTMPInitTimer(
 	/* that we haven't initialize before.*/
 	/* */
 	pTimer->Valid      = true;
+
+#ifdef RTMP_TIMER_TASK_SUPPORT
 	pTimer->Fired = false;
+#endif
 
 	pTimer->PeriodicType = Repeat;
 	pTimer->State      = false;

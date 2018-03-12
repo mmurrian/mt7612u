@@ -3169,6 +3169,7 @@ struct rtmp_adapter {
 	struct rtmp_wifi_dev *wdev_list[WDEV_NUM_MAX];
 
 	RTMP_OS_TASK mlmeTask;
+	RTMP_OS_TASK maintTask;
 #ifdef RTMP_TIMER_TASK_SUPPORT
 	/* If you want use timer task to handle the timer related jobs, enable this. */
 	RTMP_TIMER_TASK_QUEUE TimerQ;
