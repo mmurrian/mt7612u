@@ -1,11 +1,13 @@
 <u>**MT7612U for Linux**</u>
 
-Tested with latest -stable, v4.15.6
-
 Driver for 802.11ac USB Adapter with  
 MT7612U/MT7632U/MT7662U chipset  
 STA, AP are possible  
-  
+
+Tested with 4.16-rc vanilla kernel on ARM64 platform (Hardkernel Odroid-C2)
+Loading/unloading works.
+ifup/ifdown on Debian works with DHCP on.
+
 Current setting for this driver is APSTA mode as default.  
 STA mode is working fine, (your need to set STA in Makefile)
 AP mode **can** crash your kernel if you call `iwconfig` after module loading
@@ -14,9 +16,6 @@ Codepaths for Monitor Mode are missing, detected while fix memory leak in mt7610
 
 <u>At least v4.2 is needed to compile this module</u>  
 sorry people with older kernels, the code is removed.
-
-Tested on X86_64 platform(s) **only**,  
-cross compile possible
 
 For compiling type  
 `make`  
@@ -54,10 +53,7 @@ The only solution is uptream and this is mac80211 support.
 **BUGS**  
 - enable cfg80211  
 - remove stupid AP/STA switch  
-- fix unloading driver  
 - do more function typesafe  
-- cross compile check with real hw on $target  
-- strip fw files and use kernel firmware load  
 - check for wrong typecasts  
 - remove/strip hardcoded `RT2870STA.dat`  
 - check for wrong variable sizes (driver was for 32bit)  
