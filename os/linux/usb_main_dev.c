@@ -338,3 +338,6 @@ MODULE_VERSION(STA_DRIVER_VERSION);
 #endif
 #endif /* CONFIG_STA_SUPPORT */
 
+extern int RTDebugLevel;
+module_param(RTDebugLevel, uint, 0644);
+MODULE_PARM_DESC(RTDebugLevel,"Debug verbosity level (0-5)");

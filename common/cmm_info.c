@@ -749,55 +749,6 @@ INT	Set_IEEE80211H_Proc(
 }
 
 
-#ifdef DBG
-INT rx_temp_dbg = 0;
-
-/*
-    ==========================================================================
-    Description:
-        For Debug information
-    Return:
-        true if all parameters are OK, false otherwise
-    ==========================================================================
-*/
-INT	Set_Debug_Proc(struct rtmp_adapter *pAd, char *arg)
-{
-	ULONG dbg;
-
-	DBGPRINT_S(RT_DEBUG_TRACE, ("==>%s()\n", __FUNCTION__));
-
-	dbg = simple_strtol(arg, 0, 10);
-	if( dbg <= RT_DEBUG_LOUD)
-		RTDebugLevel = dbg;
-
-	DBGPRINT_S(RT_DEBUG_TRACE, ("<==%s(RTDebugLevel = %ld)\n",
-				__FUNCTION__, RTDebugLevel));
-
-	return true;
-}
-
-
-/*
-    ==========================================================================
-    Description:
-        For DebugFunc information
-    Return:
-        true if all parameters are OK, false otherwise
-    ==========================================================================
-*/
-INT	Set_DebugFunc_Proc(
-	IN struct rtmp_adapter *pAd,
-	IN char *arg)
-{
-	DBGPRINT_S(RT_DEBUG_TRACE, ("==>%s()\n", __FUNCTION__));
-	RTDebugFunc = simple_strtol(arg, 0, 10);
-	DBGPRINT_S(RT_DEBUG_TRACE, ("Set RTDebugFunc = 0x%lx\n", RTDebugFunc));
-
-	return true;
-}
-#endif
-
-
 INT	Show_DescInfo_Proc(
 	IN	struct rtmp_adapter *pAd,
 	IN	char *		arg)
