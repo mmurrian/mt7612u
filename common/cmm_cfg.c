@@ -760,21 +760,6 @@ INT RTMP_COM_IoctlHandle(
 			*(ULONG *)pData = pAd->OpMode;
 			break;
 
-
-		case CMD_RTPRIV_IOCTL_TASK_LIST_GET:
-		/* get all Tasks */
-		{
-			RT_CMD_WAIT_QUEUE_LIST *pList = (RT_CMD_WAIT_QUEUE_LIST *)pData;
-
-			pList->pMlmeTask = &pAd->mlmeTask;
-#ifdef RTMP_TIMER_TASK_SUPPORT
-			pList->pTimerTask = &pAd->timerTask;
-#endif /* RTMP_TIMER_TASK_SUPPORT */
-			pList->pCmdQTask = &pAd->cmdQTask;
-		}
-			break;
-
-
 		case CMD_RTPRIV_IOCTL_IRQ_RELEASE:
 			/* release IRQ */
 			RTMP_OS_IRQ_RELEASE(pAd, pAd->net_dev);
