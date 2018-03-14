@@ -51,22 +51,6 @@ int  RtmpMgmtTaskInit(
 	RTMP_OS_TASK *pTask;
 	int status;
 
-#ifdef RTMP_TIMER_TASK_SUPPORT
-	/*
-		Creat TimerQ Thread, We need init timerQ related structure before create the timer thread.
-	*/
-	RtmpTimerQInit(pAd);
-
-	pTask = &pAd->timerTask;
-	RTMP_OS_TASK_INIT(pTask, "RtmpTimerTask", pAd);
-	status = RtmpOSTaskAttach(pTask, RtmpTimerQThread, (void *)pTask);
-	if (status == NDIS_STATUS_FAILURE)
-	{
-		printk (KERN_WARNING "%s: unable to start RtmpTimerQThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
-		return NDIS_STATUS_FAILURE;
-	}
-#endif /* RTMP_TIMER_TASK_SUPPORT */
-
 	/* Creat Command Thread */
 	pTask = &pAd->cmdQTask;
 	RTMP_OS_TASK_INIT(pTask, "RtmpCmdQTask", pAd);
@@ -76,7 +60,6 @@ int  RtmpMgmtTaskInit(
 		printk (KERN_WARNING "%s: unable to start RTUSBCmdThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
 		return NDIS_STATUS_FAILURE;
 	}
-
 
 	return NDIS_STATUS_SUCCESS;
 }
@@ -111,11 +94,6 @@ VOID RtmpMgmtTaskExit(
 	/* irps. Wait until sends and receives have stopped. */
 	RTUSBCancelPendingIRPs(pAd);
 
-#ifdef RTMP_TIMER_TASK_SUPPORT
-	/* We need clear timerQ related structure before exits of the timer thread. */
-	RtmpTimerQExit(pAd);
-#endif /* RTMP_TIMER_TASK_SUPPORT */
-
 	/* Terminate cmdQ thread */
 	pTask = &pAd->cmdQTask;
 	RTMP_OS_TASK_LEGALITY(pTask)
@@ -134,19 +112,6 @@ VOID RtmpMgmtTaskExit(
 		}
 		pAd->CmdQState = RTMP_TASK_STAT_UNKNOWN;
 	}
-
-#ifdef RTMP_TIMER_TASK_SUPPORT
-	/* Terminate timer thread */
-	pTask = &pAd->timerTask;
-	ret = RtmpOSTaskKill(pTask);
-	if (ret == NDIS_STATUS_FAILURE)
-	{
-/*		DBGPRINT(RT_DEBUG_ERROR, ("%s: kill task(%s) failed!\n", */
-/*					RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev), pTask->taskName)); */
-		DBGPRINT(RT_DEBUG_ERROR, ("kill timer task failed!\n"));
-	}
-#endif /* RTMP_TIMER_TASK_SUPPORT */
-
 
 }
 

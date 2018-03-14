@@ -3170,12 +3170,6 @@ struct rtmp_adapter {
 
 	RTMP_OS_TASK mlmeTask;
 	RTMP_OS_TASK maintTask;
-#ifdef RTMP_TIMER_TASK_SUPPORT
-	/* If you want use timer task to handle the timer related jobs, enable this. */
-	RTMP_TIMER_TASK_QUEUE TimerQ;
-	spinlock_t TimerQLock;
-	RTMP_OS_TASK timerTask;
-#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 /*********************************************************/
 /*      Tx related parameters                                                           */
@@ -6336,22 +6330,6 @@ VOID RtmpMgmtTaskExit(struct rtmp_adapter *pAd);
 
 void tbtt_tasklet(unsigned long data);
 
-
-
-#ifdef RTMP_TIMER_TASK_SUPPORT
-INT RtmpTimerQThread(void *Context);
-
-RTMP_TIMER_TASK_ENTRY *RtmpTimerQInsert(
-	IN struct rtmp_adapter *pAd,
-	IN RALINK_TIMER_STRUCT *pTimer);
-
-bool RtmpTimerQRemove(
-	IN struct rtmp_adapter *pAd,
-	IN RALINK_TIMER_STRUCT *pTimer);
-
-void RtmpTimerQExit(struct rtmp_adapter *pAd);
-void RtmpTimerQInit(struct rtmp_adapter *pAd);
-#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 /*////////////////////////////////////*/
 

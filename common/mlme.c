@@ -1187,20 +1187,6 @@ VOID MlmePeriodicExec(
 
 	/* No More 0x84 MCU CMD from v.30 FW*/
 
-#if 0 /* ndef RTMP_TIMER_TASK_SUPPORT */
-	/* XXX
-	  This is broken, should be removed.
-	  When RTMP_TIMER_TASK_SUPPORT is defined, this code runs not in interrupt context,
-	  but timer fires not in time requested and all this breaks tx/rx handling
-	  When it is off, timers fired right in time, but this code isn't interrupt safe
-
-	  But if it is done this way, and RTMP_TIMER_TASK_SUPPORT is disabled, card connects to AP and receives DHCP offer.
-	  With enabled timer task support card connects but DHCP packets aren't go through and works only manual IP mode.
-	 */
-	if(in_interrupt())
-		return;
-#endif /* RTMP_TIMER_TASK_SUPPORT */
-
 #ifdef CONFIG_STA_SUPPORT
 
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd)

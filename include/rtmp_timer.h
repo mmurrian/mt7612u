@@ -45,14 +45,6 @@
 /*   it's not allowed in Linux USB sub-system to do it ( because of sleep issue when */
 /*  submit to ctrl pipe). So we need a wrapper function to take care it. */
 
-#ifdef RTMP_TIMER_TASK_SUPPORT
-typedef VOID(
-	*RTMP_TIMER_TASK_HANDLE) (
-	IN PVOID SystemSpecific1,
-	IN PVOID FunctionContext,
-	IN PVOID SystemSpecific2,
-	IN PVOID SystemSpecific3);
-#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 typedef struct _RALINK_TIMER_STRUCT {
 	struct timer_list TimerObj;	/* Ndis Timer object
@@ -67,52 +59,9 @@ typedef struct _RALINK_TIMER_STRUCT {
 	ULONG cookie;		/* os specific object */
 	struct rtmp_adapter *pAd;
 	struct list_head list;
-#ifdef RTMP_TIMER_TASK_SUPPORT
-	bool Fired;		/* Timer has fired */
-	RTMP_TIMER_TASK_HANDLE handle;
-#endif				/* RTMP_TIMER_TASK_SUPPORT */
 } RALINK_TIMER_STRUCT, *PRALINK_TIMER_STRUCT;
 
 
-#ifdef RTMP_TIMER_TASK_SUPPORT
-typedef struct _RTMP_TIMER_TASK_ENTRY_ {
-	RALINK_TIMER_STRUCT *pRaTimer;
-	struct _RTMP_TIMER_TASK_ENTRY_ *pNext;
-} RTMP_TIMER_TASK_ENTRY;
-
-#define TIMER_QUEUE_SIZE_MAX	128
-typedef struct _RTMP_TIMER_TASK_QUEUE_ {
-	unsigned int status;
-	unsigned char *pTimerQPoll;
-	RTMP_TIMER_TASK_ENTRY *pQPollFreeList;
-	RTMP_TIMER_TASK_ENTRY *pQHead;
-	RTMP_TIMER_TASK_ENTRY *pQTail;
-} RTMP_TIMER_TASK_QUEUE;
-
-#if 1
-#define BUILD_TIMER_FUNCTION(_func)			\
-void rtmp_timer_##_func(PRALINK_TIMER_STRUCT _pTimer)	\
-{							\
-	_pTimer->handle = _func;			\
-	_pTimer->Fired = true;				\
-	WAKE_UP(&_pTimer->pAd->timerTask);		\
-}
-#else
-#define BUILD_TIMER_FUNCTION(_func)										\
-void rtmp_timer_##_func(PRALINK_TIMER_STRUCT _pTimer)										\
-{																			\
-	RTMP_TIMER_TASK_ENTRY	*_pQNode;										\
-	struct rtmp_adapter 	*_pAd;											\
-																			\
-	_pTimer->handle = _func;													\
-	_pTimer->Fired = true;	\
-	_pAd = _pTimer->pAd;										\
-	_pQNode = RtmpTimerQInsert(_pAd, _pTimer); 								\
-	if ((_pQNode == NULL) && (_pAd->TimerQ.status & RTMP_TASK_CAN_DO_INSERT))	\
-		RTMP_OS_Add_Timer(&_pTimer->TimerObj, OS_HZ);               					\
-}
-#endif
-#else /* !RTMP_TIMER_TASK_SUPPORT */
 #define BUILD_TIMER_FUNCTION(_func)										\
 void rtmp_timer_##_func(PRALINK_TIMER_STRUCT pTimer)										\
 {																			\
@@ -120,7 +69,6 @@ void rtmp_timer_##_func(PRALINK_TIMER_STRUCT pTimer)										\
 	if (pTimer->Repeat)														\
 		RTMP_OS_Add_Timer(&pTimer->TimerObj, pTimer->TimerValue);			\
 }
-#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 DECLARE_TIMER_FUNCTION(MlmePeriodicExec);
 DECLARE_TIMER_FUNCTION(MlmeRssiReportExec);

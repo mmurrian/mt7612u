@@ -2269,10 +2269,6 @@ VOID RTMPInitTimer(
 	/* */
 	pTimer->Valid      = true;
 
-#ifdef RTMP_TIMER_TASK_SUPPORT
-	pTimer->Fired = false;
-#endif
-
 	pTimer->PeriodicType = Repeat;
 	pTimer->State      = false;
 	pTimer->cookie = (ULONG) pData;
@@ -2430,12 +2426,6 @@ VOID RTMPCancelTimer(RALINK_TIMER_STRUCT *pTimer, bool *pCancelled)
 		if (*pCancelled == true)
 			pTimer->State = true;
 
-#ifdef RTMP_TIMER_TASK_SUPPORT
-		/* We need to go-through the TimerQ to findout this timer handler and remove it if */
-		/*		it's still waiting for execution.*/
-		RtmpTimerQRemove(pTimer->pAd, pTimer);
-#endif /* RTMP_TIMER_TASK_SUPPORT */
-
 		DBGPRINT(RT_DEBUG_INFO,("%s: %lx\n",__FUNCTION__, (ULONG)pTimer));
 	}
 	else
@@ -2460,12 +2450,6 @@ VOID RTMPReleaseTimer(RALINK_TIMER_STRUCT *pTimer, bool *pCancelled)
 
 		if (*pCancelled == true)
 			pTimer->State = true;
-
-#ifdef RTMP_TIMER_TASK_SUPPORT
-		/* We need to go-through the TimerQ to findout this timer handler and remove it if */
-		/*		it's still waiting for execution.*/
-		RtmpTimerQRemove(pTimer->pAd, pTimer);
-#endif /* RTMP_TIMER_TASK_SUPPORT */
 
 		pTimer->Valid = false;
 
