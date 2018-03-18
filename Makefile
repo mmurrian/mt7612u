@@ -553,6 +553,14 @@ $(MOD_NAME)-objs += \
         common/frq_cal.o
 endif
 
+ifneq ($(KERNELRELEASE),)
+
+obj-$(CONFIG_MT7612U) := $(MOD_NAME).o
+
+ccflags-y += -I$(srctree)/$(src)/include
+ccflags-y += $(EXTRA_CFLAGS)
+
+else
 
 # Declare the contents of the .PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.
@@ -609,5 +617,4 @@ help:
 # Declare the contents of the .PHONY variable as phony.  We keep that information in a variable
 .PHONY: $(PHONY)
 
-
-
+endif
