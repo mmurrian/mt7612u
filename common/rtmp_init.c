@@ -245,10 +245,9 @@ bool RTMPCheckPhyMode(struct rtmp_adapter *pAd, UINT8 band_cap, u8 *pPhyMode)
 }
 
 
-void dump_eeprom(struct rtmp_adapter *pAd)
+static void load_eeprom(struct rtmp_adapter *pAd)
 {
-	unsigned short value, i, j, eeprom[256];
-	char *p = (char *)eeprom;
+	unsigned short i, *eeprom=(void *)pAd->EEPROMImage;
 
 	for (i = 0; i < 256; i++)
 		eeprom[i] = mt76u_read_eeprom(pAd, i<<1);
@@ -290,7 +289,7 @@ VOID NICReadEEPROMParameters(struct rtmp_adapter *pAd)
 
 	DBGPRINT(RT_DEBUG_TRACE, ("--> NICReadEEPROMParameters\n"));
 
-	dump_eeprom(pAd);
+	load_eeprom(pAd);
 
 	/* Read MAC setting from EEPROM and record as permanent MAC address */
 	DBGPRINT(RT_DEBUG_TRACE, ("Initialize MAC Address from E2PROM \n"));
