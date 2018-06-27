@@ -250,7 +250,7 @@ static void load_eeprom(struct rtmp_adapter *pAd)
 	unsigned short i, *eeprom=(void *)pAd->EEPROMImage;
 
 	for (i = 0; i < 256; i++)
-		eeprom[i] = mt76u_read_eeprom(pAd, i<<1);
+		eeprom[i] = __do_mt76u_read_eeprom(pAd, i<<1);
 
 	printk("mt7612u: EEPROM Dump\n");
 	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_OFFSET, 16, 32, eeprom, 512, true);

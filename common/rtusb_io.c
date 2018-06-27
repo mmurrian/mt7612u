@@ -250,7 +250,7 @@ u32 mt76u_sys_read(struct rtmp_adapter *ad, uint16_t offset)
 	========================================================================
 */
 
-u16 mt76u_read_eeprom(struct rtmp_adapter *pAd, unsigned short offset)
+u16 __do_mt76u_read_eeprom(struct rtmp_adapter *pAd, unsigned short offset)
 {
 	u16 val = 0;
 
@@ -258,6 +258,13 @@ u16 mt76u_read_eeprom(struct rtmp_adapter *pAd, unsigned short offset)
 				   MT_VEND_READ_EEPROM, 0, offset, &val, 2);
 
 	return le2cpu16(val);
+}
+
+u16 mt76u_read_eeprom(struct rtmp_adapter *pAd, unsigned short offset)
+{
+//	unsigned short *eeprom=(void *)pAd->EEPROMImage;
+//	return eeprom[offset];
+	return *(u16 *)(pAd->EEPROMImage+offset);
 }
 
 /*
