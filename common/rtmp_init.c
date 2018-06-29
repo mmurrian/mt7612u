@@ -279,13 +279,10 @@ VOID NICReadEEPROMParameters(struct rtmp_adapter *pAd)
 {
 	unsigned short i, value, value2;
 	EEPROM_VERSION_STRUC Version;
-	EEPROM_ANTENNA_STRUC Antenna;
 	EEPROM_NIC_CONFIG0_STRUC NicCfg0;
-	EEPROM_NIC_CONFIG2_STRUC NicConfig2;
 	unsigned short  Addr01,Addr23,Addr45 ;
 	MAC_DW0_STRUC csr2;
 	MAC_DW1_STRUC csr3;
-
 
 	DBGPRINT(RT_DEBUG_TRACE, ("--> NICReadEEPROMParameters\n"));
 
@@ -342,38 +339,15 @@ VOID NICReadEEPROMParameters(struct rtmp_adapter *pAd)
 	DBGPRINT(RT_DEBUG_TRACE, ("E2PROM: Version = %d, FAE release #%d\n", Version.field.Version, Version.field.FaeReleaseNumber));
 
 	/* Read BBP default value from EEPROM and store to array(EEPROMDefaultValue) in pAd */
-	value = mt76u_read_eeprom(pAd, MT_EE_NIC_CONF_0);
-	pAd->EEPROMDefaultValue[MT_EE_NIC_CONF_0] = value;
-	NicCfg0.word = pAd->EEPROMDefaultValue[MT_EE_NIC_CONF_0];
+	NicCfg0.word = mt76u_read_eeprom(pAd, MT_EE_NIC_CONF_0);
 	DBGPRINT(RT_DEBUG_OFF, ("EEPROM_NIC_CFG1_OFFSET = 0x%04x\n", NicCfg0.word));
 
 	/* EEPROM offset 0x36 - NIC Configuration 1 */
-	value = mt76u_read_eeprom(pAd, MT_EE_NIC_CONF_1);
-	pAd->EEPROMDefaultValue[MT_EE_NIC_CONF_1] = value;
-	NicConfig2.word = pAd->EEPROMDefaultValue[MT_EE_NIC_CONF_1];
+	pAd->NicConfig2.word = mt76u_read_eeprom(pAd, MT_EE_NIC_CONF_1);
 
-	value = mt76u_read_eeprom(pAd, MT_EE_NIC_CONF_2);
+	pAd->NicConfig3.word = mt76u_read_eeprom(pAd, MT_EE_NIC_CONF_2);
 
-	pAd->EEPROMDefaultValue[MT_EE_NIC_CONF_2] = value;
-	pAd->NicConfig3.word = pAd->EEPROMDefaultValue[MT_EE_NIC_CONF_2];
 	DBGPRINT(RT_DEBUG_OFF, ("Bluetooth Support word %04x\n", pAd->NicConfig3.word));
-
-	value = mt76u_read_eeprom(pAd, MT_EE_COUNTRY_REGION);	/* Country Region*/
-
-	/*
-	 * ULLI : hard fix for invalid country region on some eeproms
-	 * ULLI : this occurs with missing REGION_30_A_BAND in A-BAND
-	 */
-
-	value = 0xffff;		/* HARD fix */
-
-	pAd->EEPROMDefaultValue[MT_EE_COUNTRY_REGION] = value;
-	DBGPRINT(RT_DEBUG_OFF, ("Country Region from e2p = %x\n", value));
-
-	for(i = 0; i < 8; i++) 	{
-		value = mt76u_read_eeprom(pAd, MT_EE_BBP_BASE_OFFSET + i*2);
-		pAd->EEPROMDefaultValue[i+MT_EE_BBP_BASE_OFFSET] = value;
-	}
 
 	/* We have to parse NIC configuration 0 at here.*/
 	/* If TSSI did not have preloaded value, it should reset the TxAutoAgc to false*/
@@ -385,52 +359,42 @@ VOID NICReadEEPROMParameters(struct rtmp_adapter *pAd)
 	 * ULLI : because we have fix TX/RX streams
 	 */
 
-#if 0	/* ULLI : disabled */
-	Antenna.word = pAd->EEPROMDefaultValue[MT_EE_NIC_CONF_0];
-#endif
-
 	/* must be put here, because RTMP_CHIP_ANTENNA_INFO_DEFAULT_RESET() will clear *
 	 * EPROM 0x34~3 */
 
-	Antenna.word = 0;
-	Antenna.field.RfIcType = RFIC_7662;
-	Antenna.field.TxPath = NicCfg0.field.TxPath;
-	Antenna.field.RxPath = NicCfg0.field.RxPath;
+	pAd->Antenna.word = 0;
+	pAd->Antenna.field.RfIcType = RFIC_7662;
+	pAd->Antenna.field.TxPath = NicCfg0.field.TxPath;
+	pAd->Antenna.field.RxPath = NicCfg0.field.RxPath;
 
 	/* Choose the desired Tx&Rx stream.*/
 	/* ULLI : fixed TX/RX streams */
-	pAd->CommonCfg.TxStream = Antenna.field.TxPath;
-	pAd->CommonCfg.RxStream = Antenna.field.RxPath;
+	pAd->CommonCfg.TxStream = pAd->Antenna.field.TxPath;
+	pAd->CommonCfg.RxStream = pAd->Antenna.field.RxPath;
 
 	DBGPRINT_RAW(RT_DEBUG_TRACE, ("%s(): AfterAdjust, RxPath = %d, TxPath = %d\n",
-					__FUNCTION__, Antenna.field.RxPath, Antenna.field.TxPath));
+					__FUNCTION__, pAd->Antenna.field.RxPath, pAd->Antenna.field.TxPath));
 
 #ifdef CONFIG_AP_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
-		if (NicConfig2.word == 0xffff)
-			NicConfig2.word = 0;
+		if (pAd->NicConfig2.word == 0xffff)
+			pAd->NicConfig2.word = 0;
 	}
 #endif /* CONFIG_AP_SUPPORT */
 
 #ifdef CONFIG_STA_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_STA(pAd) {
-		if ((NicConfig2.word & 0x00ff) == 0xff)
-			NicConfig2.word &= 0xff00;
+		if ((pAd->NicConfig2.word & 0x00ff) == 0xff)
+			pAd->NicConfig2.word &= 0xff00;
 
-		if ((NicConfig2.word >> 8) == 0xff)
-			NicConfig2.word &= 0x00ff;
+		if ((pAd->NicConfig2.word >> 8) == 0xff)
+			pAd->NicConfig2.word &= 0x00ff;
 	}
 #endif /* CONFIG_STA_SUPPORT */
 
-	/* Save value for future using */
-	pAd->NicConfig2.word = NicConfig2.word;
-
-	/* Save the antenna for future use*/
-	pAd->Antenna.word = Antenna.word;
-
 	/* Set the RfICType here, then we can initialize RFIC related operation callbacks*/
-	pAd->Mlme.RealRxPath = (u8) Antenna.field.RxPath;
-	pAd->RfIcType = (u8) Antenna.field.RfIcType;
+	pAd->Mlme.RealRxPath = (u8) pAd->Antenna.field.RxPath;
+	pAd->RfIcType = (u8) pAd->Antenna.field.RfIcType;
 
 	if (IS_MT7662U(pAd))
 		pAd->RfIcType = RFIC_7662;
@@ -474,8 +438,9 @@ VOID NICReadEEPROMParameters(struct rtmp_adapter *pAd)
 
 	/*CountryRegion byte offset (38h)*/
 
-	value = pAd->EEPROMDefaultValue[MT_EE_COUNTRY_REGION] >> 8;		/* 2.4G band*/
-	value2 = pAd->EEPROMDefaultValue[MT_EE_COUNTRY_REGION] & 0x00FF;	/* 5G band*/
+	value2 = mt76u_read_eeprom(pAd, MT_EE_COUNTRY_REGION);
+	value = value2 >> 8;		/* 2.4G band*/
+	value2 = value2 & 0x00FF;	/* 5G band*/
 
 	if ((value <= REGION_MAXIMUM_BG_BAND) || (value == REGION_31_BG_BAND) || (value == REGION_32_BG_BAND) || (value == REGION_33_BG_BAND) )
 		pAd->CommonCfg.CountryRegion = ((u8) value) | EEPROM_IS_PROGRAMMED;
@@ -521,7 +486,6 @@ VOID NICReadEEPROMParameters(struct rtmp_adapter *pAd)
 	}
 
 	value = mt76u_read_eeprom(pAd,  MT_EE_RSSI_OFFSET_2G_1);
-/*			if (IS_RT2860(pAd))  RT2860 supports 3 Rx and the 2.4 GHz RSSI #2 offset is in the EEPROM 0x48*/
 	pAd->BGRssiOffset[2] = value & 0x00ff;
 	pAd->ALNAGain1 = (value >> 8);
 

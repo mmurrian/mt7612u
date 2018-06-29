@@ -3253,7 +3253,6 @@ struct rtmp_adapter {
 
 	ULONG EepromVersion;	/* byte 0: version, byte 1: revision, byte 2~3: unused */
 	ULONG FirmwareVersion;	/* byte 0: Minor version, byte 1: Major version, otherwise unused. */
-	unsigned short EEPROMDefaultValue[MAX_EEPROM_BUFFER_SIZE];
 	u8 EEPROMAddressNum;	/* 93c46=6  93c66=8 */
 	bool EepromAccess;
 	u8 EFuseTag;
