@@ -28,6 +28,9 @@
 #ifndef __EEPROM_H__
 #define __EEPROM_H__
 
+/* File taken from mt76 Linux driver */
+#include <mt76/mt76x2_eeprom.h>
+
 #if defined (CONFIG_RT2880_FLASH_32M)
 #define DEFAULT_RF_OFFSET                                       0x1FE0000
 #else

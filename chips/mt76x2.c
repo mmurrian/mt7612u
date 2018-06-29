@@ -719,7 +719,7 @@ void mt76x2_switch_channel(struct rtmp_adapter *ad, u8 channel, bool scan)
 	}
 
 	if (!ad->MCUCtrl.power_on) {
-		 e2p_value = mt76u_read_eeprom(ad, BT_RCAL_RESULT);
+		 e2p_value = mt76u_read_eeprom(ad, MT_EE_BT_RCAL_RESULT);
 
 		if ((e2p_value & 0xff) != 0xff) {
 			DBGPRINT(RT_DEBUG_OFF, ("r-cal result = %d\n", e2p_value & 0xff));
@@ -1088,7 +1088,7 @@ void mt76x2_init_mac_cr(struct rtmp_adapter *ad)
 	/*
  	 * Check crystal trim2 first
  	 */
-	e2p_value = mt76u_read_eeprom(ad, G_BAND_BANDEDGE_PWR_BACK_OFF);
+	e2p_value = mt76u_read_eeprom(ad, MT_EE_XTAL_TRIM_2);
 
 	if (((e2p_value & 0xff) == 0x00) || ((e2p_value & 0xff) == 0xff))
 		xtal_freq_offset = 0;
@@ -1102,7 +1102,7 @@ void mt76x2_init_mac_cr(struct rtmp_adapter *ad)
 		/*
  		 * Compesate crystal trim1
  		 */
-		e2p_value = mt76u_read_eeprom(ad, XTAL_TRIM1);
+		e2p_value = mt76u_read_eeprom(ad, MT_EE_XTAL_TRIM_1);
 
 		/* crystal trim default value set to 0x14 */
 		if (((e2p_value & 0xff) == 0x00) || ((e2p_value & 0xff) == 0xff))
@@ -1186,7 +1186,7 @@ void mt76x2_get_external_lna_gain(struct rtmp_adapter *ad)
 	UINT8 lna_type = 0;
 
 	/* b'00: 2.4G+5G external LNA, b'01: 5G external LNA, b'10: 2.4G external LNA, b'11: Internal LNA */
-	e2p_val = mt76u_read_eeprom(ad, 0x36);
+	e2p_val = mt76u_read_eeprom(ad, MT_EE_NIC_CONF_1);
 	lna_type = e2p_val & 0xC;
 	if (lna_type == 0xC)
 		ad->chipCap.LNA_type = 0x0;
@@ -1197,14 +1197,14 @@ void mt76x2_get_external_lna_gain(struct rtmp_adapter *ad)
 	else if (lna_type == 0x0)
 		ad->chipCap.LNA_type = 0x11;
 
-	e2p_val = mt76u_read_eeprom(ad, 0x44);
+	e2p_val = mt76u_read_eeprom(ad, MT_EE_LNA_GAIN);
 	ad->BLNAGain = (e2p_val & 0xFF); /* store external LNA gain for 2.4G on EEPROM 0x44h */
 	ad->ALNAGain0 = (e2p_val & 0xFF00) >> 8; /* store external LNA gain for 5G ch#36 ~ ch#64 on EEPROM 0x45h */
 
-	e2p_val = mt76u_read_eeprom(ad, 0x48);
+	e2p_val = mt76u_read_eeprom(ad, MT_EE_RSSI_OFFSET_2G_1);
 	ad->ALNAGain1 = (e2p_val & 0xFF00) >> 8; /* store external LNA gain for 5G ch#100 ~ ch#128 on EEPROM 0x49h */
 
-	e2p_val = mt76u_read_eeprom(ad, 0x4C);
+	e2p_val = mt76u_read_eeprom(ad, MT_EE_RSSI_OFFSET_5G_1);
 	ad->ALNAGain2 = (e2p_val & 0xFF00) >> 8; /* store external LNA gain for 5G ch#132 ~ ch#165 on EEPROM 0x4Dh */
 
 	DBGPRINT(RT_DEBUG_OFF, ("%s::LNA type=0x%x, BLNAGain=0x%x, ALNAGain0=0x%x, ALNAGain1=0x%x, ALNAGain2=0x%x\n",
@@ -2363,14 +2363,14 @@ static void mt76x2_get_tx_pwr_info(struct rtmp_adapter *ad)
 	}
 
 	/* check tssi if enable */
-	value = mt76u_read_eeprom(ad, NIC_CONFIGURE_1);
+	value = mt76u_read_eeprom(ad, MT_EE_NIC_CONF_1);
 	if (value & INTERNAL_TX_ALC_EN)
 		cap->tssi_enable = true;
 	else
 		cap->tssi_enable = false;
 
 	/* check PA type combination */
-	value = mt76u_read_eeprom(ad, EEPROM_NIC1_OFFSET);
+	value = mt76u_read_eeprom(ad, MT_EE_NIC_CONF_0);
 	cap->PAType= GET_PA_TYPE(value);
 	DBGPRINT(RT_DEBUG_OFF, ("PA Type %x\n", cap->PAType));
 }
@@ -2601,13 +2601,13 @@ void mt76x2_read_temp_info_from_eeprom(struct rtmp_adapter *ad)
 	bool is_temp_tx_alc= false;
 	unsigned short e2p_value = 0;
 
-	e2p_value = mt76u_read_eeprom(ad, 0x36);
+	e2p_value = mt76u_read_eeprom(ad, MT_EE_NIC_CONF_1);
 	if ((e2p_value & 0x2) == 0x2)
 		is_temp_tx_alc = true;
 	else
 		is_temp_tx_alc = false;
 
-	e2p_value = mt76u_read_eeprom(ad, 0x54);
+	e2p_value = mt76u_read_eeprom(ad, MT_EE_TX_POWER_EXT_PA_5G);
 	pChipCap->temp_25_ref = (e2p_value & 0x7F00) >> 8;
 	if (((e2p_value & 0x8000) == 0x8000) && is_temp_tx_alc)
 		pChipCap->temp_tx_alc_enable = true;

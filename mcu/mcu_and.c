@@ -1858,8 +1858,8 @@ int mt7612u_mcu_load_cr(struct rtmp_adapter *ad, u32 cr_type, UINT8 temp_level, 
 	mt7612u_mcu_append_cmd_msg(msg, (char *) &value, 4);
 
 	value = 0x80000000;
-	value |= ((ad->EEPROMDefaultValue[EEPROM_NIC_CFG1_OFFSET] >> 8) & 0xFF);
-	value |= ((ad->EEPROMDefaultValue[EEPROM_NIC_CFG2_OFFSET] & 0xFF) << 8);
+	value |= ((ad->EEPROMDefaultValue[MT_EE_NIC_CONF_0] >> 8) & 0xFF);
+	value |= ((ad->EEPROMDefaultValue[MT_EE_NIC_CONF_1] & 0xFF) << 8);
 	value = cpu2le32(value);
 	mt7612u_mcu_append_cmd_msg(msg, (char *) &value, 4);
 
