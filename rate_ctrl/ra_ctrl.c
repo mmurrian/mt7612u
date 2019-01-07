@@ -2068,10 +2068,8 @@ VOID MlmeRALog(
 #ifdef TIMESTAMP_RA_LOG
 	ULONG newTime;
 	static ULONG saveRATime;
-	struct timeval tval;
 
-	do_gettimeofday(&tval);
-	newTime = (tval.tv_sec*1000000L + tval.tv_usec);
+	newTime = ktime_get_real();
 #endif
 
 	if (TxTotalCnt !=0 || raLogType==RAL_QUICK_DRS

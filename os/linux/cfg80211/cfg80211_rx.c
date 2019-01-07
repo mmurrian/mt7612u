@@ -75,12 +75,10 @@ bool CFG80211_CheckActionFrameType(
 		if (ieee80211_is_probe_resp(mgmt->frame_control))
 		{
 			DBGPRINT(RT_DEBUG_INFO, ("CFG80211_PKT: %s ProbeRsp Frame %d\n", preStr, pAd->LatchRfRegs.Channel));
-	        if (!mgmt->u.probe_resp.timestamp)
-    		{
-            		struct timeval tv;
-            		do_gettimeofday(&tv);
-            		mgmt->u.probe_resp.timestamp = ((uint64_t) tv.tv_sec * 1000000) + tv.tv_usec;
-    		}
+			if (!mgmt->u.probe_resp.timestamp)
+			{
+				mgmt->u.probe_resp.timestamp = ktime_get_real();
+			}
 		}
 		else if (ieee80211_is_disassoc(mgmt->frame_control))
 		{

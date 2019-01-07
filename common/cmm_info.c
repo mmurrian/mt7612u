@@ -2931,8 +2931,7 @@ void dbQueueEnqueue(u8 type, u8 *data)
 
 	/* Enqueue data*/
 	oldTail->type = type;
-	do_gettimeofday(&tval);
-	oldTail->timestamp = tval.tv_sec*1000000L + tval.tv_usec;
+	oldTail->timestamp = ktime_get_real();
 	memcpy(oldTail->data, data, DBQ_DATA_LENGTH);
 }
 

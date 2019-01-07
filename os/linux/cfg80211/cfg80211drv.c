@@ -1490,8 +1490,7 @@ bool CFG80211_checkScanTable(
         }
 
 	/* Fake TSF */
-	do_gettimeofday(&tv);
-	timestamp = ((uint64_t)tv.tv_sec * 1000000) + tv.tv_usec;
+	timestamp = ktime_get_real();
 
 	bss = cfg80211_get_bss(pWiphy, NULL, pApCliEntry->MlmeAux.Bssid,
 			       pApCliEntry->MlmeAux.Ssid, pApCliEntry->MlmeAux.SsidLen,
